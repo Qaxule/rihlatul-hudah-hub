@@ -1,10 +1,29 @@
+import { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
-import { Card, CardContent } from "@/components/ui/card";
-import { Book, Heart, Users, Sparkles } from "lucide-react";
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Book, Heart, Users, Sparkles, ArrowRight } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const Index = () => {
+  const navigate = useNavigate();
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user || null);
+    };
+    checkUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user || null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-subtle">
       <Navigation />
@@ -26,12 +45,21 @@ const Index = () => {
           </div>
           
           <div className="flex flex-wrap justify-center gap-4">
-            <Button asChild size="lg" className="shadow-elevated hover:shadow-glow transition-all">
-              <Link to="/quran">Explore Qur'an</Link>
-            </Button>
-            <Button asChild variant="outline" size="lg" className="shadow-soft">
-              <Link to="/guides">New to Islam?</Link>
-            </Button>
+            {user ? (
+              <Button size="lg" className="shadow-elevated hover:shadow-glow transition-all" onClick={() => navigate("/dashboard")}>
+                Go to Dashboard
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            ) : (
+              <>
+                <Button size="lg" className="shadow-elevated hover:shadow-glow transition-all" onClick={() => navigate("/auth")}>
+                  Get Started
+                </Button>
+                <Button asChild variant="outline" size="lg" className="shadow-soft">
+                  <Link to="/quran">Explore Qur'an</Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </section>

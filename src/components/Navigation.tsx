@@ -9,8 +9,16 @@ const Navigation = () => {
 
   const navItems = [
     { path: "/", label: "Home" },
+    { path: "/dashboard", label: "Dashboard" },
     { path: "/quran", label: "Qur'an" },
+    { path: "/hadith", label: "Hadith" },
+    { path: "/duas", label: "Duas" },
     { path: "/names", label: "99 Names" },
+    { path: "/prayer-times", label: "Prayer" },
+    { path: "/dhikr", label: "Dhikr" },
+    { path: "/learning", label: "Learn" },
+    { path: "/calendar", label: "Calendar" },
+    { path: "/community", label: "Community" },
     { path: "/guides", label: "Guides" },
   ];
 
