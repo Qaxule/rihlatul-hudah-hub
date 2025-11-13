@@ -1,1 +1,7 @@
 project_id = "qecaoheqtyxbauxajmvv"
+
+[functions.prayer-times]
+verify_jwt = false
+
+[functions.quran-data]
+verify_jwt = false
