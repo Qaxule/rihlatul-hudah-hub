@@ -1,15 +1,13 @@
 import { Link } from "react-router-dom";
-import { Heart, Mail, FileText, Shield, Info, DollarSign } from "lucide-react";
-
+import { Heart, Mail, FileText, Shield, DollarSign } from "lucide-react";
 const Footer = () => {
-  return (
-    <footer className="bg-muted/30 border-t border-border mt-auto">
+  return <footer className="bg-muted/30 border-t border-border mt-auto">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* About Section */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
-              <Info className="w-5 h-5 text-primary" />
+              
               About Rihlatul Hudah
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
@@ -95,10 +93,7 @@ const Footer = () => {
             <p className="text-sm text-muted-foreground">
               Have questions or feedback? We'd love to hear from you.
             </p>
-            <a 
-              href="mailto:info@rihlatulhudah.com" 
-              className="text-sm text-primary hover:underline"
-            >
+            <a href="mailto:info@rihlatulhudah.com" className="text-sm text-primary hover:underline">
               info@rihlatulhudah.com
             </a>
           </div>
@@ -116,8 +111,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
