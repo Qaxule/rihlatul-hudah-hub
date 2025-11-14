@@ -1,25 +1,12 @@
 import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Sparkles } from "lucide-react";
-
-const namesOfAllah = [
-  { arabic: "الرَّحْمَنُ", transliteration: "Ar-Rahman", meaning: "The Most Merciful", description: "The One who has plenty of mercy for the believers and the blasphemers in this world and especially for the believers in the hereafter." },
-  { arabic: "الرَّحِيمُ", transliteration: "Ar-Raheem", meaning: "The Most Compassionate", description: "The One who has plenty of mercy for the believers." },
-  { arabic: "الْمَلِكُ", transliteration: "Al-Malik", meaning: "The King", description: "The One with the complete dominion, the One whose dominion is clear from imperfection." },
-  { arabic: "الْقُدُّوسُ", transliteration: "Al-Quddus", meaning: "The Most Sacred", description: "The One who is pure from any imperfection and clear from children and adversaries." },
-  { arabic: "السَّلاَمُ", transliteration: "As-Salam", meaning: "The Source of Peace", description: "The One who is free from every imperfection." },
-  { arabic: "الْمُؤْمِنُ", transliteration: "Al-Mu'min", meaning: "The Granter of Security", description: "The One who witnessed for Himself that no one is God but Him and witnessed for His believers that they are truthful in their belief that no one is God but Him." },
-  { arabic: "الْمُهَيْمِنُ", transliteration: "Al-Muhaymin", meaning: "The Guardian", description: "The One who witnesses the saying and deeds of His creatures." },
-  { arabic: "الْعَزِيزُ", transliteration: "Al-Aziz", meaning: "The Almighty", description: "The Defeater who is not defeated." },
-  { arabic: "الْجَبَّارُ", transliteration: "Al-Jabbar", meaning: "The Compeller", description: "The One that nothing happens in His dominion except that which He willed." },
-  { arabic: "الْمُتَكَبِّرُ", transliteration: "Al-Mutakabbir", meaning: "The Supreme", description: "The One who is clear from the attributes of the creatures and from resembling them." },
-  { arabic: "الْخَالِقُ", transliteration: "Al-Khaliq", meaning: "The Creator", description: "The One who brings everything from non-existence to existence." },
-  { arabic: "الْبَارِئُ", transliteration: "Al-Bari", meaning: "The Evolver", description: "The Maker who has the Power to turn the entities." },
-];
+import { namesOfAllah } from "@/data/namesOfAllah";
 
 const Names = () => {
   return (
-    <div className="min-h-screen bg-gradient-subtle">
+    <div className="min-h-screen bg-gradient-subtle flex flex-col">
       <Navigation />
       
       <div className="container mx-auto px-4 py-12">
@@ -87,6 +74,8 @@ const Names = () => {
           </Card>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 };

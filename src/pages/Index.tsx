@@ -1,31 +1,13 @@
-import { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Book, Heart, Users, Sparkles, ArrowRight } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { Book, Heart, Calendar, Sparkles, ArrowRight, Compass, BookOpen } from "lucide-react";
 
 const Index = () => {
-  const navigate = useNavigate();
-  const [user, setUser] = useState<any>(null);
-
-  useEffect(() => {
-    const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setUser(session?.user || null);
-    };
-    checkUser();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user || null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
   return (
-    <div className="min-h-screen bg-gradient-subtle">
+    <div className="min-h-screen bg-gradient-subtle flex flex-col">
       <Navigation />
       
       {/* Hero Section */}
@@ -45,21 +27,15 @@ const Index = () => {
           </div>
           
           <div className="flex flex-wrap justify-center gap-4">
-            {user ? (
-              <Button size="lg" className="shadow-elevated hover:shadow-glow transition-all" onClick={() => navigate("/dashboard")}>
-                Go to Dashboard
+            <Button asChild size="lg" className="shadow-elevated hover:shadow-glow transition-all">
+              <Link to="/quran">
+                Explore Qur'an
                 <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            ) : (
-              <>
-                <Button size="lg" className="shadow-elevated hover:shadow-glow transition-all" onClick={() => navigate("/auth")}>
-                  Get Started
-                </Button>
-                <Button asChild variant="outline" size="lg" className="shadow-soft">
-                  <Link to="/quran">Explore Qur'an</Link>
-                </Button>
-              </>
-            )}
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="lg" className="shadow-soft">
+              <Link to="/guides">New to Islam?</Link>
+            </Button>
           </div>
         </div>
       </section>
@@ -94,115 +70,123 @@ const Index = () => {
 
       {/* Features Grid */}
       <section className="container mx-auto px-4 py-16">
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          <Card className="shadow-soft hover:shadow-elevated transition-all">
-            <CardContent className="p-6 space-y-4">
-              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                <Book className="w-6 h-6 text-primary" />
-              </div>
-              <h3 className="text-xl font-semibold text-foreground">Complete Qur'an</h3>
-              <p className="text-muted-foreground">
-                Read the Holy Qur'an with Arabic text, English translation, and detailed tafsir.
-              </p>
-              <Button asChild variant="link" className="p-0 h-auto text-primary">
-                <Link to="/quran">Explore →</Link>
-              </Button>
-            </CardContent>
-          </Card>
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-12 text-foreground">
+            Explore Islamic Resources
+          </h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Link to="/quran">
+              <Card className="cursor-pointer hover:shadow-elevated transition-all h-full group">
+                <CardContent className="p-6 space-y-4">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    <Book className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">
+                      Holy Qur'an
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Read and reflect on the complete Qur'an with English translation and tafsir
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
 
-          <Card className="shadow-soft hover:shadow-elevated transition-all">
-            <CardContent className="p-6 space-y-4">
-              <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
-                <Sparkles className="w-6 h-6 text-accent" />
-              </div>
-              <h3 className="text-xl font-semibold text-foreground">99 Names of Allah</h3>
-              <p className="text-muted-foreground">
-                Learn the beautiful names and attributes of Allah with meanings and explanations.
-              </p>
-              <Button asChild variant="link" className="p-0 h-auto text-primary">
-                <Link to="/names">Discover →</Link>
-              </Button>
-            </CardContent>
-          </Card>
+            <Link to="/hadith">
+              <Card className="cursor-pointer hover:shadow-elevated transition-all h-full group">
+                <CardContent className="p-6 space-y-4">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    <BookOpen className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">
+                      Hadith Collections
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Explore authentic hadith from Sahih Bukhari, Muslim, and more
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
 
-          <Card className="shadow-soft hover:shadow-elevated transition-all">
-            <CardContent className="p-6 space-y-4">
-              <div className="w-12 h-12 rounded-full bg-secondary/30 flex items-center justify-center">
-                <Heart className="w-6 h-6 text-primary" />
-              </div>
-              <h3 className="text-xl font-semibold text-foreground">Dua & Dhikr</h3>
-              <p className="text-muted-foreground">
-                Access a comprehensive collection of duas and dhikr for every occasion.
-              </p>
-              <Button asChild variant="link" className="p-0 h-auto text-primary">
-                <Link to="/">Coming Soon →</Link>
-              </Button>
-            </CardContent>
-          </Card>
+            <Link to="/prayer-times">
+              <Card className="cursor-pointer hover:shadow-elevated transition-all h-full group">
+                <CardContent className="p-6 space-y-4">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    <Compass className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">
+                      Prayer Times
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Get accurate prayer times for your location with Qibla direction
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
 
-          <Card className="shadow-soft hover:shadow-elevated transition-all">
-            <CardContent className="p-6 space-y-4">
-              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                <Book className="w-6 h-6 text-primary" />
-              </div>
-              <h3 className="text-xl font-semibold text-foreground">Hadith Collections</h3>
-              <p className="text-muted-foreground">
-                Browse authentic Hadith from Sahih Bukhari, Muslim, and other collections.
-              </p>
-              <Button asChild variant="link" className="p-0 h-auto text-primary">
-                <Link to="/">Coming Soon →</Link>
-              </Button>
-            </CardContent>
-          </Card>
+            <Link to="/names">
+              <Card className="cursor-pointer hover:shadow-elevated transition-all h-full group">
+                <CardContent className="p-6 space-y-4">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    <Sparkles className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">
+                      99 Names of Allah
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Learn the beautiful names and attributes of Allah (SWT)
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
 
-          <Card className="shadow-soft hover:shadow-elevated transition-all">
-            <CardContent className="p-6 space-y-4">
-              <div className="w-12 h-12 rounded-full bg-secondary/30 flex items-center justify-center">
-                <Users className="w-6 h-6 text-primary" />
-              </div>
-              <h3 className="text-xl font-semibold text-foreground">New Muslim Guide</h3>
-              <p className="text-muted-foreground">
-                Step-by-step guides for new Muslims covering Salah, Wudhu, and basics of Islam.
-              </p>
-              <Button asChild variant="link" className="p-0 h-auto text-primary">
-                <Link to="/guides">Learn →</Link>
-              </Button>
-            </CardContent>
-          </Card>
+            <Link to="/dhikr">
+              <Card className="cursor-pointer hover:shadow-elevated transition-all h-full group">
+                <CardContent className="p-6 space-y-4">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    <Heart className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">
+                      Dhikr Counter
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Track your daily remembrance of Allah with digital tasbih
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
 
-          <Card className="shadow-soft hover:shadow-elevated transition-all">
-            <CardContent className="p-6 space-y-4">
-              <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
-                <Sparkles className="w-6 h-6 text-accent" />
-              </div>
-              <h3 className="text-xl font-semibold text-foreground">Daily Inspiration</h3>
-              <p className="text-muted-foreground">
-                Receive daily ayahs, hadiths, and reflections to strengthen your faith.
-              </p>
-              <Button asChild variant="link" className="p-0 h-auto text-primary">
-                <Link to="/">View Today's →</Link>
-              </Button>
-            </CardContent>
-          </Card>
+            <Link to="/calendar">
+              <Card className="cursor-pointer hover:shadow-elevated transition-all h-full group">
+                <CardContent className="p-6 space-y-4">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    <Calendar className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">
+                      Islamic Calendar
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      View important Islamic dates and events throughout the year
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-border bg-card mt-20">
-        <div className="container mx-auto px-4 py-12">
-          <div className="text-center space-y-4">
-            <div className="text-2xl font-bold bg-gradient-emerald bg-clip-text text-transparent">
-              رحلة الهدى
-            </div>
-            <p className="text-muted-foreground max-w-md mx-auto">
-              May Allah guide us all on the path of righteousness and grant us beneficial knowledge.
-            </p>
-            <p className="text-sm text-muted-foreground">
-              © 2024 Rihlatul Hudah. Built with devotion.
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };
