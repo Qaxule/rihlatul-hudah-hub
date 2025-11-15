@@ -1,67 +1,15 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, Minus, RotateCcw } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const Dhikr = () => {
-  const navigate = useNavigate();
   const [count, setCount] = useState(0);
   const [target, setTarget] = useState(33);
   const [dhikrName, setDhikrName] = useState("SubhanAllah");
-  const [user, setUser] = useState<any>(null);
-
-  useEffect(() => {
-    const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        navigate("/auth");
-        return;
-      }
-      setUser(session.user);
-      loadProgress(session.user.id);
-    };
-    checkUser();
-  }, [navigate]);
-
-  const loadProgress = async (userId: string) => {
-    const today = new Date().toISOString().split("T")[0];
-    const { data } = await supabase
-      .from("dhikr_progress")
-      .select("*")
-      .eq("user_id", userId)
-      .eq("dhikr_name", dhikrName)
-      .eq("date", today)
-      .maybeSingle();
-
-    if (data) {
-      setCount(data.count || 0);
-      setTarget(data.target_count || 33);
-    }
-  };
-
-  const saveProgress = async () => {
-    if (!user) return;
-
-    const today = new Date().toISOString().split("T")[0];
-    const { error } = await supabase
-      .from("dhikr_progress")
-      .upsert({
-        user_id: user.id,
-        dhikr_name: dhikrName,
-        count,
-        target_count: target,
-        date: today,
-      });
-
-    if (error) {
-      toast.error("Failed to save progress");
-    }
-  };
 
   const increment = () => {
     const newCount = count + 1;
@@ -73,15 +21,7 @@ const Dhikr = () => {
 
   const reset = () => {
     setCount(0);
-    saveProgress();
   };
-
-  useEffect(() => {
-    if (user && count > 0) {
-      const timer = setTimeout(() => saveProgress(), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [count, user]);
 
   const dhikrOptions = [
     { name: "SubhanAllah", arabic: "سُبْحَانَ اللَّهِ", meaning: "Glory be to Allah" },
