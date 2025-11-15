@@ -1,10 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Compass, MapPin, Loader2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const PrayerTimes = () => {
@@ -16,11 +15,21 @@ const PrayerTimes = () => {
   const getPrayerTimes = async (lat: number, lon: number) => {
     try {
       setLoading(true);
-      const { data, error } = await supabase.functions.invoke("prayer-times", {
-        body: { latitude: lat, longitude: lon },
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/prayer-times`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          },
+          body: JSON.stringify({ latitude: lat, longitude: lon }),
+        }
+      );
 
-      if (error) throw error;
+      if (!response.ok) throw new Error("Failed to fetch prayer times");
+      
+      const data = await response.json();
       setPrayerTimes(data.data.timings);
       setQiblaDirection(data.data.meta.qibla_direction);
       toast.success("Prayer times updated!");
