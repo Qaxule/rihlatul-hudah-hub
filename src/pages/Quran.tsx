@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Book, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const surahs = [
   { number: 1, name: "Al-Fatihah", translation: "The Opening", verses: 7, revelation: "Meccan" },
@@ -166,36 +167,35 @@ const Quran = () => {
         {/* Surahs List */}
         <div className="max-w-4xl mx-auto space-y-4">
           {filteredSurahs.map((surah) => (
-            <Card
-              key={surah.number}
-              className="shadow-soft hover:shadow-elevated transition-all cursor-pointer group"
-            >
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-6">
-                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                      <span className="text-primary font-bold">{surah.number}</span>
+            <Link key={surah.number} to={`/surah/${surah.number}`}>
+              <Card className="shadow-soft hover:shadow-elevated transition-all cursor-pointer group">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-6">
+                      <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                        <span className="text-primary font-bold">{surah.number}</span>
+                      </div>
+                      <div className="space-y-1">
+                        <h3 className="text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
+                          {surah.name}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                          {surah.translation}
+                        </p>
+                      </div>
                     </div>
-                    <div className="space-y-1">
-                      <h3 className="text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
-                        {surah.name}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        {surah.translation}
+                    <div className="text-right space-y-1">
+                      <p className="text-sm font-medium text-muted-foreground">
+                        {surah.verses} verses
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {surah.revelation}
                       </p>
                     </div>
                   </div>
-                  <div className="text-right space-y-1">
-                    <p className="text-sm font-medium text-muted-foreground">
-                      {surah.verses} verses
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {surah.revelation}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </div>
 
