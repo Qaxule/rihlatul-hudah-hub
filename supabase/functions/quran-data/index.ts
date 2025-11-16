@@ -13,6 +13,28 @@ serve(async (req) => {
   try {
     const { surah, edition = "en.sahih", type = "surah" } = await req.json();
 
+    // Validate type parameter
+    const allowedTypes = ["surah", "list"];
+    if (!allowedTypes.includes(type)) {
+      throw new Error("Type must be either 'surah' or 'list'");
+    }
+
+    // Validate surah number for surah type
+    if (type === "surah") {
+      if (typeof surah !== 'number' || surah < 1 || surah > 114) {
+        throw new Error("Surah number must be between 1 and 114");
+      }
+    }
+
+    // Validate edition parameter (whitelist common editions)
+    const allowedEditions = [
+      "en.sahih", "en.transliteration", "en.asad", "en.pickthall", "en.yusufali",
+      "ar.alafasy", "ar.husary", "ar.minshawi", "ar.quran"
+    ];
+    if (!allowedEditions.includes(edition)) {
+      throw new Error("Invalid edition parameter");
+    }
+
     console.log(`Fetching Quran data: ${type} ${surah}, edition: ${edition}`);
 
     let url = "";
