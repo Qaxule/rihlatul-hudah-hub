@@ -64,7 +64,7 @@ serve(async (req) => {
     const tafsirAuthor = tafsirId === 1 ? "Ibn Kathir" : tafsirId === 2 ? "Maarif-ul-Quran" : "Tazkirul Quran";
     const tafsirObj = data.tafsirs?.find((t: any) => t.author === tafsirAuthor);
 
-    if (!tafsirObj || !tafsirObj.text) {
+    if (!tafsirObj || !(tafsirObj.content ?? tafsirObj.text)) {
       return new Response(
         JSON.stringify({ error: "Tafsir not found for this verse" }),
         {
@@ -80,7 +80,7 @@ serve(async (req) => {
         ayah,
         tafsirId,
         tafsirName: tafsirAuthor,
-        text: tafsirObj.text,
+        text: tafsirObj.content ?? tafsirObj.text,
       }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
