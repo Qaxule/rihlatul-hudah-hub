@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Bookmark, Search, LogIn, LogOut, User } from "lucide-react";
+import { Menu, X, Bookmark, LogIn, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ThemeSelector from "./ThemeSelector";
 import { useAuth } from "@/contexts/AuthContext";
@@ -13,7 +13,6 @@ const Navigation = () => {
   const navItems = [
     { path: "/", label: "Home" },
     { path: "/quran", label: "Qur'an" },
-    { path: "/search", label: "Search", icon: Search },
     { path: "/hadith", label: "Hadith" },
     { path: "/duas", label: "Duas" },
     { path: "/names", label: "99 Names" },
