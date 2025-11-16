@@ -52,17 +52,35 @@ const Search = () => {
 
     setLoading(true);
     try {
-    const { data, error } = await supabase.functions.invoke("quran-search", {
-      body: { query: searchTerm },
-    });
+      const { data: session } = await supabase.auth.getSession();
+      
+      if (!session?.session) {
+        toast({
+          title: "Authentication Required",
+          description: "Please login to search the Quran",
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
 
-      if (error) throw error;
+      const { data, error } = await supabase.functions.invoke("quran-search", {
+        body: { query: searchTerm },
+      });
+
+      console.log("Search response:", { data, error });
+
+      if (error) {
+        console.error("Search error:", error);
+        throw error;
+      }
 
       setResults(data?.results || []);
     } catch (error) {
+      console.error("Search failed:", error);
       toast({
         title: "Error",
-        description: "Failed to search verses",
+        description: error instanceof Error ? error.message : "Failed to search verses",
         variant: "destructive",
       });
     }
