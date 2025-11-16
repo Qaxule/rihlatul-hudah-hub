@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { surah, ayah, tafsirId = 1 } = await req.json();
+    const { surah, ayah, tafsirId = 1, abridged = true } = await req.json();
 
     // Validate inputs
     if (!surah || !ayah) {
@@ -76,22 +76,22 @@ serve(async (req) => {
 
     let tafsirText = tafsirObj.content ?? tafsirObj.text;
     
-    // For Ibn Kathir (tafsirId 1), provide an abridged version
-    // by taking only the first 2-3 paragraphs (approximately 600 characters)
-    if (tafsirId === 1 && tafsirText.length > 800) {
+    // For Ibn Kathir (tafsirId 1), provide an abridged version if requested
+    // by taking only the first 2-3 paragraphs (approximately 800 characters)
+    if (tafsirId === 1 && abridged && tafsirText.length > 800) {
       // Split by double newlines (paragraphs in markdown)
       const paragraphs = tafsirText.split('\n\n');
       // Take first 2 paragraphs or first 800 characters, whichever is shorter
-      let abridged = paragraphs.slice(0, 2).join('\n\n');
-      if (abridged.length > 800) {
-        abridged = tafsirText.substring(0, 800);
+      let abridgedText = paragraphs.slice(0, 2).join('\n\n');
+      if (abridgedText.length > 800) {
+        abridgedText = tafsirText.substring(0, 800);
         // Try to end at a sentence
-        const lastPeriod = abridged.lastIndexOf('.');
+        const lastPeriod = abridgedText.lastIndexOf('.');
         if (lastPeriod > 400) {
-          abridged = abridged.substring(0, lastPeriod + 1);
+          abridgedText = abridgedText.substring(0, lastPeriod + 1);
         }
       }
-      tafsirText = abridged + '\n\n*[Abridged for readability]*';
+      tafsirText = abridgedText + '\n\n*[Abridged for readability. Toggle off to see full commentary.]*';
     }
 
     return new Response(

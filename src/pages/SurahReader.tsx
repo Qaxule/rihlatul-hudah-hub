@@ -11,6 +11,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 interface Ayah {
   number: number;
@@ -40,6 +42,7 @@ const SurahReader = () => {
   const [tafsirData, setTafsirData] = useState<{ [key: number]: string }>({});
   const [loadingTafsir, setLoadingTafsir] = useState<Set<number>>(new Set());
   const [selectedTafsir, setSelectedTafsir] = useState<string>("1");
+  const [isAbridged, setIsAbridged] = useState<boolean>(true);
   const ayahRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const { user } = useAuth();
 
@@ -116,7 +119,7 @@ const SurahReader = () => {
       return;
     }
 
-    const tafsirKey = `${ayahNumber}-${selectedTafsir}`;
+    const tafsirKey = `${ayahNumber}-${selectedTafsir}-${selectedTafsir === "1" ? isAbridged : "full"}`;
     if (tafsirData[tafsirKey]) {
       return; // Already loaded
     }
@@ -129,6 +132,7 @@ const SurahReader = () => {
           surah: parseInt(surahNumber!),
           ayah: ayahNumber,
           tafsirId: parseInt(selectedTafsir),
+          abridged: selectedTafsir === "1" ? isAbridged : false,
         },
       });
 
@@ -159,12 +163,12 @@ const SurahReader = () => {
     setOpenTafsirs(newOpenTafsirs);
   };
 
-  // Refetch tafsir when selection changes for open verses
+  // Refetch tafsir when selection or abridged mode changes for open verses
   useEffect(() => {
     openTafsirs.forEach((ayahNumber) => {
       fetchTafsir(ayahNumber);
     });
-  }, [selectedTafsir]);
+  }, [selectedTafsir, isAbridged]);
 
   const handleAudioPlay = (ayahNumber: number) => {
     setPlayingAyah(ayahNumber);
@@ -386,7 +390,7 @@ const SurahReader = () => {
                     onOpenChange={(isOpen) => handleTafsirToggle(ayah.numberInSurah, isOpen)}
                     className="border-t pt-4"
                   >
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center justify-between mb-2 gap-4">
                       <CollapsibleTrigger asChild>
                         <Button variant="ghost" className="justify-start p-0 h-auto hover:bg-transparent">
                           <span className="text-sm font-semibold text-primary">View Tafsir (Commentary)</span>
@@ -398,16 +402,30 @@ const SurahReader = () => {
                         </Button>
                       </CollapsibleTrigger>
                       {openTafsirs.has(ayah.numberInSurah) && (
-                        <Select value={selectedTafsir} onValueChange={setSelectedTafsir}>
-                          <SelectTrigger className="w-[200px] h-8">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="1">Ibn Kathir</SelectItem>
-                            <SelectItem value="2">Maarif Ul Quran</SelectItem>
-                            <SelectItem value="3">Tazkirul Quran</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        <div className="flex items-center gap-3">
+                          <Select value={selectedTafsir} onValueChange={setSelectedTafsir}>
+                            <SelectTrigger className="w-[200px] h-8">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="1">Ibn Kathir</SelectItem>
+                              <SelectItem value="2">Maarif Ul Quran</SelectItem>
+                              <SelectItem value="3">Tazkirul Quran</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          {selectedTafsir === "1" && (
+                            <div className="flex items-center gap-2">
+                              <Switch
+                                id="abridged-mode"
+                                checked={isAbridged}
+                                onCheckedChange={setIsAbridged}
+                              />
+                              <Label htmlFor="abridged-mode" className="text-xs text-muted-foreground cursor-pointer">
+                                Abridged
+                              </Label>
+                            </div>
+                          )}
+                        </div>
                       )}
                     </div>
                     <CollapsibleContent className="pt-2">
@@ -418,10 +436,14 @@ const SurahReader = () => {
                       ) : (
                         <div className="bg-muted/50 rounded-lg p-4">
                           <p className="text-sm text-muted-foreground mb-2 font-semibold">
-                            {selectedTafsir === "1" ? "Tafsir Ibn Kathir" : selectedTafsir === "2" ? "Maarif Ul Quran" : "Tazkirul Quran"}
+                            {selectedTafsir === "1" 
+                              ? `Tafsir Ibn Kathir${isAbridged ? " (Abridged)" : " (Full)"}` 
+                              : selectedTafsir === "2" 
+                                ? "Maarif Ul Quran" 
+                                : "Tazkirul Quran"}
                           </p>
-                          <p className="text-sm leading-relaxed">
-                            {tafsirData[`${ayah.numberInSurah}-${selectedTafsir}`] || "Click to load tafsir..."}
+                          <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                            {tafsirData[`${ayah.numberInSurah}-${selectedTafsir}-${selectedTafsir === "1" ? isAbridged : "full"}`] || "Click to load tafsir..."}
                           </p>
                         </div>
                       )}
