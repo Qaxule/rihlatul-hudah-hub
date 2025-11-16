@@ -13,8 +13,22 @@ serve(async (req) => {
   try {
     const { latitude, longitude, method = 2 } = await req.json();
 
-    if (!latitude || !longitude) {
-      throw new Error("Latitude and longitude are required");
+    // Validate latitude and longitude
+    if (typeof latitude !== 'number' || typeof longitude !== 'number') {
+      throw new Error("Latitude and longitude must be numbers");
+    }
+
+    if (latitude < -90 || latitude > 90) {
+      throw new Error("Latitude must be between -90 and 90");
+    }
+
+    if (longitude < -180 || longitude > 180) {
+      throw new Error("Longitude must be between -180 and 180");
+    }
+
+    // Validate method parameter (allowed values: 0-23)
+    if (typeof method !== 'number' || method < 0 || method > 23) {
+      throw new Error("Method must be a number between 0 and 23");
     }
 
     console.log(`Fetching prayer times for: ${latitude}, ${longitude}`);

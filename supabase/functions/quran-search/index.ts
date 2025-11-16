@@ -12,8 +12,21 @@ serve(async (req) => {
 
   try {
     const { query } = await req.json();
+    
+    // Validate query parameter
+    if (!query || typeof query !== 'string') {
+      return new Response(
+        JSON.stringify({ error: "Search query must be a string" }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
 
-    if (!query || query.trim().length < 2) {
+    const trimmedQuery = query.trim();
+    
+    if (trimmedQuery.length < 2) {
       return new Response(
         JSON.stringify({ error: "Search query must be at least 2 characters" }),
         {
@@ -23,14 +36,24 @@ serve(async (req) => {
       );
     }
 
-    console.log(`Searching Quran for: ${query}`);
+    if (trimmedQuery.length > 500) {
+      return new Response(
+        JSON.stringify({ error: "Search query must not exceed 500 characters" }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    console.log(`Searching Quran for: ${trimmedQuery}`);
 
     // Search in both Arabic and English
     const searchPromises = [
       // Search Arabic text
-      fetch(`https://api.alquran.cloud/v1/search/${encodeURIComponent(query)}/all/ar.alafasy`),
+      fetch(`https://api.alquran.cloud/v1/search/${encodeURIComponent(trimmedQuery)}/all/ar.alafasy`),
       // Search English translation
-      fetch(`https://api.alquran.cloud/v1/search/${encodeURIComponent(query)}/all/en.sahih`),
+      fetch(`https://api.alquran.cloud/v1/search/${encodeURIComponent(trimmedQuery)}/all/en.sahih`),
     ];
 
     const [arabicResponse, englishResponse] = await Promise.all(searchPromises);
