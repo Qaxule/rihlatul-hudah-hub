@@ -5,10 +5,11 @@ import Footer from "@/components/Footer";
 import AudioPlayer from "@/components/AudioPlayer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, BookOpen, Loader2, Bookmark, BookmarkCheck } from "lucide-react";
+import { ChevronLeft, ChevronRight, BookOpen, Loader2, Bookmark, BookmarkCheck, ChevronDown, ChevronUp } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface Ayah {
   number: number;
@@ -32,8 +33,10 @@ const SurahReader = () => {
   const [arabicData, setArabicData] = useState<SurahData | null>(null);
   const [translationData, setTranslationData] = useState<SurahData | null>(null);
   const [transliterationData, setTransliterationData] = useState<SurahData | null>(null);
+  const [tafsirData, setTafsirData] = useState<SurahData | null>(null);
   const [bookmarks, setBookmarks] = useState<Set<number>>(new Set());
   const [playingAyah, setPlayingAyah] = useState<number | null>(null);
+  const [openTafsirs, setOpenTafsirs] = useState<Set<number>>(new Set());
   const ayahRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const { user } = useAuth();
 
@@ -168,13 +171,28 @@ const SurahReader = () => {
         }
       );
 
-      if (!arabicResponse.ok || !translationResponse.ok || !transliterationResponse.ok) {
+      // Fetch tafsir
+      const tafsirResponse = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/quran-data`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.access_token}`,
+            "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          },
+          body: JSON.stringify({ surah: number, edition: "en.maududi", type: "surah" }),
+        }
+      );
+
+      if (!arabicResponse.ok || !translationResponse.ok || !transliterationResponse.ok || !tafsirResponse.ok) {
         throw new Error("Failed to fetch Surah data");
       }
 
       const arabicResult = await arabicResponse.json();
       const translationResult = await translationResponse.json();
       const transliterationResult = await transliterationResponse.json();
+      const tafsirResult = await tafsirResponse.json();
 
       // Remove Bismillah from first ayah if present (except for Surah 1 and 9)
       if (number !== 1 && number !== 9 && arabicResult.data.ayahs[0]) {
@@ -185,6 +203,7 @@ const SurahReader = () => {
       setArabicData(arabicResult.data);
       setTranslationData(translationResult.data);
       setTransliterationData(transliterationResult.data);
+      setTafsirData(tafsirResult.data);
     } catch (error: any) {
       toast.error(error.message || "Failed to load Surah");
       console.error("Error fetching Surah:", error);
@@ -310,6 +329,44 @@ const SurahReader = () => {
                     <p className="text-base text-foreground border-t pt-4">
                       {translationData.ayahs[index].text}
                     </p>
+                  )}
+
+                  {/* Tafsir */}
+                  {tafsirData?.ayahs[index] && (
+                    <Collapsible
+                      open={openTafsirs.has(ayah.numberInSurah)}
+                      onOpenChange={() => {
+                        const newOpenTafsirs = new Set(openTafsirs);
+                        if (newOpenTafsirs.has(ayah.numberInSurah)) {
+                          newOpenTafsirs.delete(ayah.numberInSurah);
+                        } else {
+                          newOpenTafsirs.add(ayah.numberInSurah);
+                        }
+                        setOpenTafsirs(newOpenTafsirs);
+                      }}
+                      className="border-t pt-4"
+                    >
+                      <CollapsibleTrigger asChild>
+                        <Button variant="ghost" className="w-full justify-between p-0 h-auto hover:bg-transparent">
+                          <span className="text-sm font-semibold text-primary">View Tafsir (Commentary)</span>
+                          {openTafsirs.has(ayah.numberInSurah) ? (
+                            <ChevronUp className="h-4 w-4" />
+                          ) : (
+                            <ChevronDown className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="pt-4">
+                        <div className="bg-muted/50 rounded-lg p-4">
+                          <p className="text-sm text-muted-foreground mb-2 font-semibold">
+                            Tafhim al-Qur'an by Abul Ala Maududi
+                          </p>
+                          <p className="text-sm leading-relaxed">
+                            {tafsirData.ayahs[index].text}
+                          </p>
+                        </div>
+                      </CollapsibleContent>
+                    </Collapsible>
                   )}
                 </CardContent>
               </Card>
