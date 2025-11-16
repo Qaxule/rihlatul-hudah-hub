@@ -1,16 +1,19 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Bookmark, Search, LogIn, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ThemeSelector from "./ThemeSelector";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { user, signOut } = useAuth();
 
   const navItems = [
     { path: "/", label: "Home" },
     { path: "/quran", label: "Qur'an" },
+    { path: "/search", label: "Search", icon: Search },
     { path: "/hadith", label: "Hadith" },
     { path: "/duas", label: "Duas" },
     { path: "/names", label: "99 Names" },
@@ -52,6 +55,25 @@ const Navigation = () => {
               ))}
             </div>
             <ThemeSelector />
+            {user ? (
+              <>
+                <Link to="/bookmarks">
+                  <Button variant="ghost" size="icon">
+                    <Bookmark className="h-5 w-5" />
+                  </Button>
+                </Link>
+                <Button variant="ghost" size="icon" onClick={() => signOut()}>
+                  <LogOut className="h-5 w-5" />
+                </Button>
+              </>
+            ) : (
+              <Link to="/login">
+                <Button variant="ghost" size="sm">
+                  <LogIn className="h-4 w-4 mr-2" />
+                  Login
+                </Button>
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -84,6 +106,34 @@ const Navigation = () => {
                 {item.label}
               </Link>
             ))}
+            {user ? (
+              <>
+                <Link
+                  to="/bookmarks"
+                  onClick={() => setIsOpen(false)}
+                  className="block px-4 py-2 rounded-md text-sm font-medium text-muted-foreground hover:bg-muted"
+                >
+                  Bookmarks
+                </Link>
+                <button
+                  onClick={() => {
+                    signOut();
+                    setIsOpen(false);
+                  }}
+                  className="block w-full text-left px-4 py-2 rounded-md text-sm font-medium text-muted-foreground hover:bg-muted"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/login"
+                onClick={() => setIsOpen(false)}
+                className="block px-4 py-2 rounded-md text-sm font-medium text-muted-foreground hover:bg-muted"
+              >
+                Login
+              </Link>
+            )}
           </div>
         )}
       </div>

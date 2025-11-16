@@ -1,11 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import AudioPlayer from "@/components/AudioPlayer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, BookOpen, Loader2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, BookOpen, Loader2, Bookmark, BookmarkCheck } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Ayah {
   number: number;
@@ -29,12 +32,81 @@ const SurahReader = () => {
   const [arabicData, setArabicData] = useState<SurahData | null>(null);
   const [translationData, setTranslationData] = useState<SurahData | null>(null);
   const [transliterationData, setTransliterationData] = useState<SurahData | null>(null);
+  const [bookmarks, setBookmarks] = useState<Set<number>>(new Set());
+  const [playingAyah, setPlayingAyah] = useState<number | null>(null);
+  const ayahRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
+  const { user } = useAuth();
 
   useEffect(() => {
     if (surahNumber) {
       fetchSurahData(parseInt(surahNumber));
+      if (user) {
+        fetchBookmarks(parseInt(surahNumber));
+      }
     }
-  }, [surahNumber]);
+  }, [surahNumber, user]);
+
+  const fetchBookmarks = async (surahNum: number) => {
+    const { data, error } = await supabase
+      .from("quran_bookmarks")
+      .select("ayah_number")
+      .eq("surah_number", surahNum);
+
+    if (!error && data) {
+      setBookmarks(new Set(data.map((b) => b.ayah_number)));
+    }
+  };
+
+  const toggleBookmark = async (ayahNumber: number) => {
+    if (!user) {
+      toast.error("Please login to bookmark verses");
+      return;
+    }
+
+    const isBookmarked = bookmarks.has(ayahNumber);
+
+    if (isBookmarked) {
+      const { error } = await supabase
+        .from("quran_bookmarks")
+        .delete()
+        .eq("surah_number", parseInt(surahNumber!))
+        .eq("ayah_number", ayahNumber);
+
+      if (error) {
+        toast.error("Failed to remove bookmark");
+      } else {
+        const newBookmarks = new Set(bookmarks);
+        newBookmarks.delete(ayahNumber);
+        setBookmarks(newBookmarks);
+        toast.success("Bookmark removed");
+      }
+    } else {
+      const { error } = await supabase.from("quran_bookmarks").insert({
+        user_id: user.id,
+        surah_number: parseInt(surahNumber!),
+        ayah_number: ayahNumber,
+      });
+
+      if (error) {
+        toast.error("Failed to add bookmark");
+      } else {
+        const newBookmarks = new Set(bookmarks);
+        newBookmarks.add(ayahNumber);
+        setBookmarks(newBookmarks);
+        toast.success("Bookmark added");
+      }
+    }
+  };
+
+  const handleAudioPlay = (ayahNumber: number) => {
+    setPlayingAyah(ayahNumber);
+    if (ayahRefs.current[ayahNumber]) {
+      ayahRefs.current[ayahNumber]?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  };
 
   const fetchSurahData = async (number: number) => {
     try {
@@ -175,12 +247,35 @@ const SurahReader = () => {
           {/* Ayahs */}
           <div className="space-y-6">
             {arabicData.ayahs.map((ayah, index) => (
-              <Card key={ayah.number} className="shadow-soft">
+              <Card
+                key={ayah.number}
+                className="shadow-soft"
+                ref={(el) => (ayahRefs.current[ayah.numberInSurah] = el)}
+              >
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
                     <span className="text-sm font-medium text-muted-foreground">
                       Ayah {ayah.numberInSurah}
                     </span>
+                    <div className="flex items-center gap-2">
+                      <AudioPlayer
+                        surahNumber={currentSurahNum}
+                        ayahNumber={ayah.numberInSurah}
+                        onPlay={() => handleAudioPlay(ayah.numberInSurah)}
+                      />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => toggleBookmark(ayah.numberInSurah)}
+                        className="h-8 w-8"
+                      >
+                        {bookmarks.has(ayah.numberInSurah) ? (
+                          <BookmarkCheck className="w-4 h-4 text-primary" />
+                        ) : (
+                          <Bookmark className="w-4 h-4" />
+                        )}
+                      </Button>
+                    </div>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
