@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-type Theme = "light" | "dark" | "sepia" | "ocean" | "forest";
+type Theme = "light" | "sepia" | "ocean" | "forest";
 
 type ThemeProviderProps = {
   children: React.ReactNode;
@@ -32,7 +32,7 @@ export function ThemeProvider({
 
   useEffect(() => {
     const root = window.document.documentElement;
-    root.classList.remove("light", "dark", "sepia", "ocean", "forest");
+    root.classList.remove("light", "sepia", "ocean", "forest");
     root.classList.add(theme);
   }, [theme]);
 
