@@ -13,11 +13,11 @@ const Index = () => {
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20 md:py-32">
         <div className="max-w-4xl mx-auto text-center space-y-8">
-          <div className="space-y-4">
-            <h1 className="text-5xl md:text-7xl font-bold bg-gradient-emerald bg-clip-text text-transparent">
+          <div className="space-y-6">
+            <h1 className="text-5xl md:text-7xl font-bold bg-gradient-emerald bg-clip-text text-transparent leading-tight">
               رحلة الهدى
             </h1>
-            <h2 className="text-3xl md:text-4xl font-semibold text-foreground">
+            <h2 className="text-2xl md:text-4xl font-semibold text-foreground">
               Rihlatul Hudah
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
