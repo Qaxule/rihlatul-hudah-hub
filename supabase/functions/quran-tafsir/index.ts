@@ -61,7 +61,7 @@ serve(async (req) => {
     const data = await response.json();
 
     // The API returns tafsirs array with author field
-    const tafsirAuthor = tafsirId === 1 ? "Ibn Kathir" : tafsirId === 2 ? "Maarif-ul-Quran" : "Tazkirul Quran";
+    const tafsirAuthor = tafsirId === 1 ? "Ibn Kathir" : tafsirId === 2 ? "Maarif Ul Quran" : "Tazkirul Quran";
     const tafsirObj = data.tafsirs?.find((t: any) => t.author === tafsirAuthor);
 
     if (!tafsirObj || !(tafsirObj.content ?? tafsirObj.text)) {
@@ -74,13 +74,33 @@ serve(async (req) => {
       );
     }
 
+    let tafsirText = tafsirObj.content ?? tafsirObj.text;
+    
+    // For Ibn Kathir (tafsirId 1), provide an abridged version
+    // by taking only the first 2-3 paragraphs (approximately 600 characters)
+    if (tafsirId === 1 && tafsirText.length > 800) {
+      // Split by double newlines (paragraphs in markdown)
+      const paragraphs = tafsirText.split('\n\n');
+      // Take first 2 paragraphs or first 800 characters, whichever is shorter
+      let abridged = paragraphs.slice(0, 2).join('\n\n');
+      if (abridged.length > 800) {
+        abridged = tafsirText.substring(0, 800);
+        // Try to end at a sentence
+        const lastPeriod = abridged.lastIndexOf('.');
+        if (lastPeriod > 400) {
+          abridged = abridged.substring(0, lastPeriod + 1);
+        }
+      }
+      tafsirText = abridged + '\n\n*[Abridged for readability]*';
+    }
+
     return new Response(
       JSON.stringify({
         surah,
         ayah,
         tafsirId,
         tafsirName: tafsirAuthor,
-        text: tafsirObj.content ?? tafsirObj.text,
+        text: tafsirText,
       }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
