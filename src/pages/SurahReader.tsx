@@ -402,9 +402,9 @@ const SurahReader = () => {
                         </Button>
                       </CollapsibleTrigger>
                       {openTafsirs.has(ayah.numberInSurah) && (
-                        <div className="flex items-center gap-3">
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                           <Select value={selectedTafsir} onValueChange={setSelectedTafsir}>
-                            <SelectTrigger className="w-[200px] h-8">
+                            <SelectTrigger className="w-[140px] sm:w-[200px] h-8">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -420,7 +420,7 @@ const SurahReader = () => {
                                 checked={isAbridged}
                                 onCheckedChange={setIsAbridged}
                               />
-                              <Label htmlFor="abridged-mode" className="text-xs text-muted-foreground cursor-pointer">
+                              <Label htmlFor="abridged-mode" className="text-xs text-muted-foreground cursor-pointer whitespace-nowrap">
                                 Abridged
                               </Label>
                             </div>
