@@ -390,9 +390,9 @@ const SurahReader = () => {
                     onOpenChange={(isOpen) => handleTafsirToggle(ayah.numberInSurah, isOpen)}
                     className="border-t pt-4"
                   >
-                    <div className="flex items-center justify-between mb-2 gap-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-2">
                       <CollapsibleTrigger asChild>
-                        <Button variant="ghost" className="justify-start p-0 h-auto hover:bg-transparent">
+                        <Button variant="ghost" className="justify-start p-0 h-auto hover:bg-transparent w-fit">
                           <span className="text-sm font-semibold text-primary">View Tafsir (Commentary)</span>
                           {openTafsirs.has(ayah.numberInSurah) ? (
                             <ChevronUp className="h-4 w-4 ml-2" />
@@ -404,7 +404,7 @@ const SurahReader = () => {
                       {openTafsirs.has(ayah.numberInSurah) && (
                         <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                           <Select value={selectedTafsir} onValueChange={setSelectedTafsir}>
-                            <SelectTrigger className="w-[140px] sm:w-[200px] h-8">
+                            <SelectTrigger className="w-[160px] sm:w-[200px] h-8">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
