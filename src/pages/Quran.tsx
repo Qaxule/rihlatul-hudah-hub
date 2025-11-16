@@ -165,7 +165,7 @@ const Quran = () => {
         </div>
 
         {/* Surahs List */}
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="max-w-4xl mx-auto space-y-8">
           {filteredSurahs.map((surah) => (
             <Link key={surah.number} to={`/surah/${surah.number}`}>
               <Card className="shadow-soft hover:shadow-elevated transition-all cursor-pointer group">

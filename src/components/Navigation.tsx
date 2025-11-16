@@ -32,9 +32,6 @@ const Navigation = () => {
             <div className="text-2xl font-bold bg-gradient-emerald bg-clip-text text-transparent">
               رحلة الهدى
             </div>
-            <div className="md:hidden text-sm text-muted-foreground">
-              Rihlatul Hudah
-            </div>
           </Link>
 
           {/* Desktop Navigation */}
