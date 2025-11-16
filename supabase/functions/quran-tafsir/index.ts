@@ -60,11 +60,11 @@ serve(async (req) => {
 
     const data = await response.json();
 
-    // The API returns all three tafsirs, so we select the requested one
-    const tafsirKey = tafsirId === 1 ? "ibn_kathir" : tafsirId === 2 ? "maarif_ul_quran" : "tazkirul_quran";
-    const tafsirText = data[tafsirKey];
+    // The API returns tafsirs array with author field
+    const tafsirAuthor = tafsirId === 1 ? "Ibn Kathir" : tafsirId === 2 ? "Maarif-ul-Quran" : "Tazkirul Quran";
+    const tafsirObj = data.tafsirs?.find((t: any) => t.author === tafsirAuthor);
 
-    if (!tafsirText) {
+    if (!tafsirObj || !tafsirObj.text) {
       return new Response(
         JSON.stringify({ error: "Tafsir not found for this verse" }),
         {
@@ -79,8 +79,8 @@ serve(async (req) => {
         surah,
         ayah,
         tafsirId,
-        tafsirName: tafsirId === 1 ? "Ibn Kathir" : tafsirId === 2 ? "Maarif Ul Quran" : "Tazkirul Quran",
-        text: tafsirText,
+        tafsirName: tafsirAuthor,
+        text: tafsirObj.text,
       }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
