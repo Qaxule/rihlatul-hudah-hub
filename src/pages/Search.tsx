@@ -19,14 +19,15 @@ interface SearchResult {
 }
 
 const Search = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [searching, setSearching] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
+    if (authLoading) return;
     if (!user) {
       toast({
         title: "Authentication Required",
@@ -35,7 +36,7 @@ const Search = () => {
       });
       navigate("/login");
     }
-  }, [user, navigate, toast]);
+  }, [user, authLoading, navigate, toast]);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,7 +51,7 @@ const Search = () => {
       return;
     }
 
-    setLoading(true);
+    setSearching(true);
     try {
       const { data: session } = await supabase.auth.getSession();
       
@@ -60,7 +61,7 @@ const Search = () => {
           description: "Please login to search the Quran",
           variant: "destructive",
         });
-        setLoading(false);
+        setSearching(false);
         return;
       }
 
@@ -84,7 +85,7 @@ const Search = () => {
         variant: "destructive",
       });
     }
-    setLoading(false);
+    setSearching(false);
   };
 
   return (
@@ -102,17 +103,17 @@ const Search = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="text-lg"
             />
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={searching || authLoading}>
               <SearchIcon className="w-5 h-5" />
             </Button>
           </div>
         </form>
 
-        {loading && (
+        {searching && (
           <p className="text-center text-muted-foreground">Searching...</p>
         )}
 
-        {!loading && results.length === 0 && searchTerm && (
+        {!searching && results.length === 0 && searchTerm && (
           <Card className="p-8 text-center max-w-2xl mx-auto">
             <p className="text-muted-foreground">No results found</p>
           </Card>
