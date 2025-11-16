@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface SearchResult {
   surahNumber: number;
@@ -18,15 +19,36 @@ interface SearchResult {
 }
 
 const Search = () => {
+  const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  useEffect(() => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please login to search the Quran",
+        variant: "destructive",
+      });
+      navigate("/login");
+    }
+  }, [user, navigate, toast]);
+
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchTerm.trim()) return;
+
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please login to search the Quran",
+        variant: "destructive",
+      });
+      return;
+    }
 
     setLoading(true);
     try {

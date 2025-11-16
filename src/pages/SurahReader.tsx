@@ -109,6 +109,17 @@ const SurahReader = () => {
   };
 
   const fetchSurahData = async (number: number) => {
+    if (!user) {
+      toast.error("Please login to read the Quran");
+      return;
+    }
+
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      toast.error("Please login to read the Quran");
+      return;
+    }
+
     try {
       setLoading(true);
 
@@ -122,6 +133,7 @@ const SurahReader = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.access_token}`,
             "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
           },
           body: JSON.stringify({ surah: number, edition: "ar.alafasy", type: "surah" }),
@@ -135,6 +147,7 @@ const SurahReader = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.access_token}`,
             "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
           },
           body: JSON.stringify({ surah: number, edition: "en.sahih", type: "surah" }),
@@ -148,6 +161,7 @@ const SurahReader = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.access_token}`,
             "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
           },
           body: JSON.stringify({ surah: number, edition: "en.transliteration", type: "surah" }),

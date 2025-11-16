@@ -1,18 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Compass, MapPin, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 const PrayerTimes = () => {
+  const { user, session } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [location, setLocation] = useState<{ lat: number; lon: number } | null>(null);
   const [prayerTimes, setPrayerTimes] = useState<any>(null);
   const [qiblaDirection, setQiblaDirection] = useState<number | null>(null);
 
+  useEffect(() => {
+    if (!user) {
+      toast.error("Please login to access prayer times");
+      navigate("/login");
+    }
+  }, [user, navigate]);
+
   const getPrayerTimes = async (lat: number, lon: number) => {
+    if (!session) {
+      toast.error("Please login to access prayer times");
+      return;
+    }
+
     try {
       setLoading(true);
       const response = await fetch(
@@ -21,6 +38,7 @@ const PrayerTimes = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.access_token}`,
             "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
           },
           body: JSON.stringify({ latitude: lat, longitude: lon }),
