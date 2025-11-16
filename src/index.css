@@ -93,6 +93,105 @@ All colors MUST be HSL.
     --input: 220 30% 18%;
     --ring: 160 50% 45%;
   }
+
+  .sepia {
+    --background: 35 45% 92%;
+    --foreground: 30 30% 20%;
+
+    --card: 35 35% 96%;
+    --card-foreground: 30 30% 20%;
+
+    --popover: 35 35% 96%;
+    --popover-foreground: 30 30% 20%;
+
+    --primary: 30 55% 35%;
+    --primary-foreground: 35 45% 92%;
+
+    --secondary: 35 30% 80%;
+    --secondary-foreground: 30 55% 25%;
+
+    --muted: 35 25% 85%;
+    --muted-foreground: 30 20% 40%;
+
+    --accent: 38 85% 50%;
+    --accent-foreground: 30 30% 20%;
+
+    --navy: 30 40% 25%;
+    --navy-foreground: 35 45% 92%;
+
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 35 45% 92%;
+
+    --border: 35 20% 82%;
+    --input: 35 20% 82%;
+    --ring: 30 55% 35%;
+  }
+
+  .ocean {
+    --background: 200 40% 94%;
+    --foreground: 210 50% 15%;
+
+    --card: 200 35% 98%;
+    --card-foreground: 210 50% 15%;
+
+    --popover: 200 35% 98%;
+    --popover-foreground: 210 50% 15%;
+
+    --primary: 195 85% 35%;
+    --primary-foreground: 200 40% 94%;
+
+    --secondary: 195 45% 75%;
+    --secondary-foreground: 195 85% 25%;
+
+    --muted: 200 25% 88%;
+    --muted-foreground: 210 20% 45%;
+
+    --accent: 180 75% 45%;
+    --accent-foreground: 210 50% 15%;
+
+    --navy: 210 60% 25%;
+    --navy-foreground: 200 40% 94%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 200 40% 94%;
+
+    --border: 200 20% 85%;
+    --input: 200 20% 85%;
+    --ring: 195 85% 35%;
+  }
+
+  .forest {
+    --background: 120 25% 93%;
+    --foreground: 140 40% 15%;
+
+    --card: 120 20% 97%;
+    --card-foreground: 140 40% 15%;
+
+    --popover: 120 20% 97%;
+    --popover-foreground: 140 40% 15%;
+
+    --primary: 145 70% 28%;
+    --primary-foreground: 120 25% 93%;
+
+    --secondary: 145 35% 75%;
+    --secondary-foreground: 145 70% 20%;
+
+    --muted: 120 18% 87%;
+    --muted-foreground: 140 20% 45%;
+
+    --accent: 85 75% 50%;
+    --accent-foreground: 140 40% 15%;
+
+    --navy: 140 50% 20%;
+    --navy-foreground: 120 25% 93%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 120 25% 93%;
+
+    --border: 120 18% 84%;
+    --input: 120 18% 84%;
+    --ring: 145 70% 28%;
+  }
 }
 
 @layer base {

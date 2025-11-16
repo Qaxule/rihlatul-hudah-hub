@@ -40,6 +40,9 @@ const SurahReader = () => {
     try {
       setLoading(true);
 
+      // Bismillah text to filter out
+      const bismillah = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
+
       // Fetch Arabic text
       const arabicResponse = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/quran-data`,
@@ -86,6 +89,12 @@ const SurahReader = () => {
       const arabicResult = await arabicResponse.json();
       const translationResult = await translationResponse.json();
       const transliterationResult = await transliterationResponse.json();
+
+      // Remove Bismillah from first ayah if present (except for Surah 1 and 9)
+      if (number !== 1 && number !== 9 && arabicResult.data.ayahs[0]) {
+        const firstAyah = arabicResult.data.ayahs[0];
+        firstAyah.text = firstAyah.text.replace(bismillah, '').trim();
+      }
 
       setArabicData(arabicResult.data);
       setTranslationData(translationResult.data);
