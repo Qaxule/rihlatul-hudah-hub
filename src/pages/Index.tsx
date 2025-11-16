@@ -4,10 +4,8 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Book, Heart, Calendar, Sparkles, ArrowRight, Compass, BookOpen } from "lucide-react";
-
 const Index = () => {
-  return (
-    <div className="min-h-screen bg-gradient-subtle flex flex-col">
+  return <div className="min-h-screen bg-gradient-subtle flex flex-col">
       <Navigation />
       
       {/* Hero Section */}
@@ -46,7 +44,7 @@ const Index = () => {
           <CardContent className="p-8 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-primary flex items-center gap-2">
-                <Sparkles className="w-5 h-5" />
+                
                 Ayah of the Day
               </h3>
               <span className="text-sm text-muted-foreground">Surah Al-Baqarah 2:286</span>
@@ -187,8 +185,6 @@ const Index = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
