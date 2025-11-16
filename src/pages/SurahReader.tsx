@@ -5,10 +5,12 @@ import Footer from "@/components/Footer";
 import AudioPlayer from "@/components/AudioPlayer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, BookOpen, Loader2, Bookmark, BookmarkCheck } from "lucide-react";
+import { ChevronLeft, ChevronRight, BookOpen, Loader2, Bookmark, BookmarkCheck, ChevronDown, ChevronUp } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Ayah {
   number: number;
@@ -34,6 +36,10 @@ const SurahReader = () => {
   const [transliterationData, setTransliterationData] = useState<SurahData | null>(null);
   const [bookmarks, setBookmarks] = useState<Set<number>>(new Set());
   const [playingAyah, setPlayingAyah] = useState<number | null>(null);
+  const [openTafsirs, setOpenTafsirs] = useState<Set<number>>(new Set());
+  const [tafsirData, setTafsirData] = useState<{ [key: number]: string }>({});
+  const [loadingTafsir, setLoadingTafsir] = useState<Set<number>>(new Set());
+  const [selectedTafsir, setSelectedTafsir] = useState<string>("1");
   const ayahRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const { user } = useAuth();
 
@@ -97,6 +103,68 @@ const SurahReader = () => {
       }
     }
   };
+
+  const fetchTafsir = async (ayahNumber: number) => {
+    if (!user) {
+      toast.error("Please login to view tafsir");
+      return;
+    }
+
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      toast.error("Please login to view tafsir");
+      return;
+    }
+
+    const tafsirKey = `${ayahNumber}-${selectedTafsir}`;
+    if (tafsirData[tafsirKey]) {
+      return; // Already loaded
+    }
+
+    setLoadingTafsir(new Set(loadingTafsir).add(ayahNumber));
+
+    try {
+      const { data, error } = await supabase.functions.invoke("quran-tafsir", {
+        body: {
+          surah: parseInt(surahNumber!),
+          ayah: ayahNumber,
+          tafsirId: parseInt(selectedTafsir),
+        },
+      });
+
+      if (error) throw error;
+
+      setTafsirData({
+        ...tafsirData,
+        [tafsirKey]: data.text,
+      });
+    } catch (error) {
+      console.error("Error fetching tafsir:", error);
+      toast.error("Failed to load tafsir");
+    } finally {
+      const newLoadingTafsir = new Set(loadingTafsir);
+      newLoadingTafsir.delete(ayahNumber);
+      setLoadingTafsir(newLoadingTafsir);
+    }
+  };
+
+  const handleTafsirToggle = async (ayahNumber: number, isOpen: boolean) => {
+    const newOpenTafsirs = new Set(openTafsirs);
+    if (isOpen) {
+      newOpenTafsirs.add(ayahNumber);
+      await fetchTafsir(ayahNumber);
+    } else {
+      newOpenTafsirs.delete(ayahNumber);
+    }
+    setOpenTafsirs(newOpenTafsirs);
+  };
+
+  // Refetch tafsir when selection changes for open verses
+  useEffect(() => {
+    openTafsirs.forEach((ayahNumber) => {
+      fetchTafsir(ayahNumber);
+    });
+  }, [selectedTafsir]);
 
   const handleAudioPlay = (ayahNumber: number) => {
     setPlayingAyah(ayahNumber);
@@ -311,6 +379,54 @@ const SurahReader = () => {
                       {translationData.ayahs[index].text}
                     </p>
                   )}
+
+                  {/* Tafsir */}
+                  <Collapsible
+                    open={openTafsirs.has(ayah.numberInSurah)}
+                    onOpenChange={(isOpen) => handleTafsirToggle(ayah.numberInSurah, isOpen)}
+                    className="border-t pt-4"
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <CollapsibleTrigger asChild>
+                        <Button variant="ghost" className="justify-start p-0 h-auto hover:bg-transparent">
+                          <span className="text-sm font-semibold text-primary">View Tafsir (Commentary)</span>
+                          {openTafsirs.has(ayah.numberInSurah) ? (
+                            <ChevronUp className="h-4 w-4 ml-2" />
+                          ) : (
+                            <ChevronDown className="h-4 w-4 ml-2" />
+                          )}
+                        </Button>
+                      </CollapsibleTrigger>
+                      {openTafsirs.has(ayah.numberInSurah) && (
+                        <Select value={selectedTafsir} onValueChange={setSelectedTafsir}>
+                          <SelectTrigger className="w-[200px] h-8">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="1">Ibn Kathir</SelectItem>
+                            <SelectItem value="2">Maarif Ul Quran</SelectItem>
+                            <SelectItem value="3">Tazkirul Quran</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      )}
+                    </div>
+                    <CollapsibleContent className="pt-2">
+                      {loadingTafsir.has(ayah.numberInSurah) ? (
+                        <div className="flex items-center justify-center py-8">
+                          <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                        </div>
+                      ) : (
+                        <div className="bg-muted/50 rounded-lg p-4">
+                          <p className="text-sm text-muted-foreground mb-2 font-semibold">
+                            {selectedTafsir === "1" ? "Tafsir Ibn Kathir" : selectedTafsir === "2" ? "Maarif Ul Quran" : "Tazkirul Quran"}
+                          </p>
+                          <p className="text-sm leading-relaxed">
+                            {tafsirData[`${ayah.numberInSurah}-${selectedTafsir}`] || "Click to load tafsir..."}
+                          </p>
+                        </div>
+                      )}
+                    </CollapsibleContent>
+                  </Collapsible>
                 </CardContent>
               </Card>
             ))}
