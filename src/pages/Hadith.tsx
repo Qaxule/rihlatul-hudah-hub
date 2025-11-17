@@ -65,7 +65,7 @@ const Hadith = () => {
     try {
       const randomNum = Math.floor(Math.random() * 100) + 1;
       const { data, error } = await supabase.functions.invoke('hadith-data', {
-        body: { collection: 'eng-bukhari', hadith: randomNum }
+        body: { collection: 'eng-bukhari', hadith: randomNum.toString() }
       });
 
       if (error) throw error;
@@ -83,7 +83,7 @@ const Hadith = () => {
     
     try {
       const { data, error } = await supabase.functions.invoke('hadith-data', {
-        body: { collection: collectionId, page: 1, limit: 20 }
+        body: { collection: collectionId }
       });
 
       if (error) throw error;
