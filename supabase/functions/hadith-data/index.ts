@@ -27,9 +27,10 @@ serve(async (req) => {
   }
 
   try {
-    const url = new URL(req.url);
-    const collection = url.searchParams.get('collection') || 'eng-bukhari';
-    const hadithNumber = url.searchParams.get('hadith');
+    // Read from request body for POST requests
+    const requestData = await req.json().catch(() => ({}));
+    const collection = requestData.collection || 'eng-bukhari';
+    const hadithNumber = requestData.hadith;
 
     console.log(`Fetching hadith data: collection=${collection}, hadith=${hadithNumber}`);
 
