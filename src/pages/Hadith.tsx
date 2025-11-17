@@ -55,6 +55,90 @@ const Hadith = () => {
       description: "Includes weak narrations with notes",
       color: "bg-orange-500/10 border-orange-500/20 hover:bg-orange-500/20"
     },
+    { 
+      id: "eng-nasai", 
+      name: "Sunan an-Nasa'i", 
+      count: "5758 Hadiths", 
+      description: "Focus on jurisprudence",
+      color: "bg-cyan-500/10 border-cyan-500/20 hover:bg-cyan-500/20"
+    },
+    { 
+      id: "eng-ibnmajah", 
+      name: "Sunan Ibn Majah", 
+      count: "4341 Hadiths", 
+      description: "Sixth major hadith collection",
+      color: "bg-indigo-500/10 border-indigo-500/20 hover:bg-indigo-500/20"
+    },
+    { 
+      id: "eng-malik", 
+      name: "Muwatta Malik", 
+      count: "1849 Hadiths", 
+      description: "Earliest collection of hadith",
+      color: "bg-rose-500/10 border-rose-500/20 hover:bg-rose-500/20"
+    },
+    { 
+      id: "eng-ahmad", 
+      name: "Musnad Ahmad", 
+      count: "27000+ Hadiths", 
+      description: "Comprehensive collection by Imam Ahmad",
+      color: "bg-amber-500/10 border-amber-500/20 hover:bg-amber-500/20"
+    },
+    { 
+      id: "eng-darimi", 
+      name: "Sunan ad-Darimi", 
+      count: "3500+ Hadiths", 
+      description: "Early hadith collection",
+      color: "bg-lime-500/10 border-lime-500/20 hover:bg-lime-500/20"
+    },
+    { 
+      id: "eng-nawawi40", 
+      name: "An-Nawawi's 40 Hadith", 
+      count: "42 Hadiths", 
+      description: "Essential hadiths for every Muslim",
+      color: "bg-teal-500/10 border-teal-500/20 hover:bg-teal-500/20"
+    },
+    { 
+      id: "eng-riyadussaliheen", 
+      name: "Riyad as-Salihin", 
+      count: "1900+ Hadiths", 
+      description: "Gardens of the Righteous",
+      color: "bg-green-500/10 border-green-500/20 hover:bg-green-500/20"
+    },
+    { 
+      id: "eng-adab", 
+      name: "Al-Adab al-Mufrad", 
+      count: "1300+ Hadiths", 
+      description: "Code of Islamic manners",
+      color: "bg-sky-500/10 border-sky-500/20 hover:bg-sky-500/20"
+    },
+    { 
+      id: "eng-hisnulmuslim", 
+      name: "Hisn al-Muslim", 
+      count: "260+ Hadiths", 
+      description: "Fortress of the Muslim - Daily supplications",
+      color: "bg-violet-500/10 border-violet-500/20 hover:bg-violet-500/20"
+    },
+    { 
+      id: "eng-bulugh", 
+      name: "Bulugh al-Maram", 
+      count: "1358 Hadiths", 
+      description: "Attainment of the objective",
+      color: "bg-fuchsia-500/10 border-fuchsia-500/20 hover:bg-fuchsia-500/20"
+    },
+    { 
+      id: "eng-qudsi40", 
+      name: "40 Hadith Qudsi", 
+      count: "40 Hadiths", 
+      description: "Divine sayings of Allah",
+      color: "bg-pink-500/10 border-pink-500/20 hover:bg-pink-500/20"
+    },
+    { 
+      id: "eng-mishkat", 
+      name: "Mishkat al-Masabih", 
+      count: "6000+ Hadiths", 
+      description: "Comprehensive hadith compilation",
+      color: "bg-red-500/10 border-red-500/20 hover:bg-red-500/20"
+    },
   ];
 
   useEffect(() => {
@@ -69,8 +153,10 @@ const Hadith = () => {
       });
 
       if (error) throw error;
-      if (data?.hadith) {
-        setRandomHadith(data.hadith);
+      
+      // The API returns the full response with metadata, we need to extract the hadith
+      if (data?.hadiths && data.hadiths.length > 0) {
+        setRandomHadith(data.hadiths[0]);
       }
     } catch (error) {
       console.error('Error fetching random hadith:', error);
@@ -103,9 +189,14 @@ const Hadith = () => {
     }
   };
 
-  const filteredHadiths = hadiths.filter((hadith) =>
-    hadith.text?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Filter hadiths by reference number if search term is a number, otherwise by text
+  const filteredHadiths = hadiths.filter((hadith) => {
+    const isNumber = /^\d+$/.test(searchTerm);
+    if (isNumber) {
+      return hadith.hadithnumber?.toString() === searchTerm;
+    }
+    return hadith.text?.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   return (
     <div className="min-h-screen bg-gradient-subtle flex flex-col">
@@ -155,9 +246,9 @@ const Hadith = () => {
 
         {/* Collections */}
         {!selectedCollection && (
-          <div className="max-w-4xl mx-auto mb-12">
+          <div className="max-w-6xl mx-auto mb-12">
             <h2 className="text-3xl font-bold mb-8 text-center">Major Collections</h2>
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {collections.map((collection) => (
                 <Card 
                   key={collection.id}
@@ -167,15 +258,15 @@ const Hadith = () => {
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div className="space-y-2 flex-1">
-                        <CardTitle className="text-2xl">{collection.name}</CardTitle>
-                        <CardDescription className="text-base">
+                        <CardTitle className="text-xl">{collection.name}</CardTitle>
+                        <CardDescription className="text-sm">
                           {collection.description}
                         </CardDescription>
-                        <p className="text-sm font-medium text-muted-foreground">
+                        <p className="text-xs font-medium text-muted-foreground">
                           {collection.count}
                         </p>
                       </div>
-                      <ChevronRight className="h-6 w-6 text-primary" />
+                      <ChevronRight className="h-5 w-5 text-primary flex-shrink-0" />
                     </div>
                   </CardHeader>
                 </Card>
@@ -200,18 +291,31 @@ const Hadith = () => {
               </Button>
             </div>
 
+            {/* Collection Title */}
+            <div className="mb-8 text-center">
+              <h2 className="text-3xl font-bold text-foreground">
+                {collections.find(c => c.id === selectedCollection)?.name}
+              </h2>
+              <p className="text-muted-foreground mt-2">
+                {collections.find(c => c.id === selectedCollection)?.description}
+              </p>
+            </div>
+
             {/* Search */}
             <div className="mb-8">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
                 <Input
                   type="text"
-                  placeholder="Search hadiths..."
+                  placeholder="Search by hadith number or text..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10 h-12 shadow-soft"
                 />
               </div>
+              <p className="text-sm text-muted-foreground mt-2 text-center">
+                Enter a hadith reference number or search by text
+              </p>
             </div>
 
             {/* Hadiths */}
