@@ -39,9 +39,9 @@ serve(async (req) => {
     // If specific hadith is requested
     if (hadithNumber) {
       const urls = [
-        `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${collection}/hadith/${hadithNumber}.min.json`,
-        `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${collection}/hadith/${hadithNumber}.json`,
-        `https://raw.githubusercontent.com/fawazahmed0/hadith-api/1/editions/${collection}/hadith/${hadithNumber}.json`
+        `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${collection}/${hadithNumber}.min.json`,
+        `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${collection}/${hadithNumber}.json`,
+        `https://raw.githubusercontent.com/fawazahmed0/hadith-api/1/editions/${collection}/${hadithNumber}.json`
       ];
       data = await fetchWithFallback(urls);
     }
