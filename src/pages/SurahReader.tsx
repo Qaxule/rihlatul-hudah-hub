@@ -181,17 +181,6 @@ const SurahReader = () => {
   };
 
   const fetchSurahData = async (number: number) => {
-    if (!user) {
-      toast.error("Please login to read the Quran");
-      return;
-    }
-
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      toast.error("Please login to read the Quran");
-      return;
-    }
-
     try {
       setLoading(true);
 
@@ -199,54 +188,32 @@ const SurahReader = () => {
       const bismillah = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
 
       // Fetch Arabic text
-      const arabicResponse = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/quran-data`,
+      const { data: arabicResult, error: arabicError } = await supabase.functions.invoke(
+        "quran-data",
         {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${session.access_token}`,
-            "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-          },
-          body: JSON.stringify({ surah: number, edition: "ar.alafasy", type: "surah" }),
+          body: { surah: number, edition: "ar.alafasy", type: "surah" },
         }
       );
 
       // Fetch English translation
-      const translationResponse = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/quran-data`,
+      const { data: translationResult, error: translationError } = await supabase.functions.invoke(
+        "quran-data",
         {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${session.access_token}`,
-            "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-          },
-          body: JSON.stringify({ surah: number, edition: "en.sahih", type: "surah" }),
+          body: { surah: number, edition: "en.sahih", type: "surah" },
         }
       );
 
       // Fetch transliteration
-      const transliterationResponse = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/quran-data`,
+      const { data: transliterationResult, error: transliterationError } = await supabase.functions.invoke(
+        "quran-data",
         {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${session.access_token}`,
-            "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-          },
-          body: JSON.stringify({ surah: number, edition: "en.transliteration", type: "surah" }),
+          body: { surah: number, edition: "en.transliteration", type: "surah" },
         }
       );
 
-      if (!arabicResponse.ok || !translationResponse.ok || !transliterationResponse.ok) {
+      if (arabicError || translationError || transliterationError) {
         throw new Error("Failed to fetch Surah data");
       }
-
-      const arabicResult = await arabicResponse.json();
-      const translationResult = await translationResponse.json();
-      const transliterationResult = await transliterationResponse.json();
 
       // Remove Bismillah from first ayah if present (except for Surah 1 and 9)
       if (number !== 1 && number !== 9 && arabicResult.data.ayahs[0]) {
@@ -264,7 +231,6 @@ const SurahReader = () => {
       setLoading(false);
     }
   };
-
   const currentSurahNum = parseInt(surahNumber || "1");
   const prevSurah = currentSurahNum > 1 ? currentSurahNum - 1 : null;
   const nextSurah = currentSurahNum < 114 ? currentSurahNum + 1 : null;
