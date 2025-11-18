@@ -1,13 +1,15 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Book, Search, ChevronRight, BookOpen } from "lucide-react";
+import { Book, Search, ChevronRight, BookOpen, Languages } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 interface HadithData {
   hadithnumber: number;
@@ -25,7 +27,15 @@ const Hadith = () => {
   const [hadiths, setHadiths] = useState<HadithData[]>([]);
   const [loading, setLoading] = useState(false);
   const [randomHadith, setRandomHadith] = useState<HadithData | null>(null);
+  const [showArabic, setShowArabic] = useState(() => {
+    const saved = localStorage.getItem('hadith-show-arabic');
+    return saved === null ? true : saved === 'true';
+  });
   const { toast } = useToast();
+
+  useEffect(() => {
+    localStorage.setItem('hadith-show-arabic', showArabic.toString());
+  }, [showArabic]);
 
   const collections = [
     { 
@@ -172,6 +182,19 @@ const Hadith = () => {
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Explore authentic sayings and actions of Prophet Muhammad (ﷺ)
           </p>
+          
+          {/* Arabic Toggle */}
+          <div className="flex items-center justify-center gap-3 pt-4">
+            <Languages className="w-5 h-5 text-muted-foreground" />
+            <Label htmlFor="arabic-toggle" className="text-sm font-medium cursor-pointer">
+              Show Arabic Text
+            </Label>
+            <Switch
+              id="arabic-toggle"
+              checked={showArabic}
+              onCheckedChange={setShowArabic}
+            />
+          </div>
         </div>
 
         {/* Hadith of the Day */}
@@ -186,7 +209,7 @@ const Hadith = () => {
             {randomHadith ? (
               <>
                 {/* Arabic Text */}
-                {randomHadith.arabictext && (
+                {showArabic && randomHadith.arabictext && (
                   <div className="bg-muted/30 rounded-lg p-6 border border-border/50">
                     <p className="text-2xl leading-loose text-right font-amiri" dir="rtl">
                       {randomHadith.arabictext}
@@ -310,7 +333,7 @@ const Hadith = () => {
                         </div>
                         <div className="flex-1 space-y-4">
                           {/* Arabic Text */}
-                          {hadith.arabictext && (
+                          {showArabic && hadith.arabictext && (
                             <div className="bg-muted/30 rounded-lg p-4 border border-border/50">
                               <p className="text-xl leading-loose text-right font-amiri" dir="rtl">
                                 {hadith.arabictext}
