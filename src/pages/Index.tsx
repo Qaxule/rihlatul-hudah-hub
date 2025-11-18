@@ -9,22 +9,22 @@ const Index = () => {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-20 md:py-32">
-        <div className="max-w-4xl mx-auto text-center space-y-8">
-          <div className="space-y-6">
-            <h1 className="text-5xl md:text-7xl font-bold bg-gradient-emerald bg-clip-text text-transparent leading-tight">
+      <section className="container mx-auto px-4 py-16 md:py-24 lg:py-32">
+        <div className="max-w-4xl mx-auto text-center space-y-10 md:space-y-12">
+          <div className="space-y-4 md:space-y-6">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold bg-gradient-emerald bg-clip-text text-transparent leading-relaxed md:leading-relaxed lg:leading-relaxed px-4 md:whitespace-nowrap">
               رحلة الهدى
             </h1>
-            <h2 className="text-2xl md:text-4xl font-semibold text-foreground">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold text-foreground mt-2 md:mt-4">
               Rihlatul Hudah
             </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed px-4 mt-4 md:mt-6">
               Your comprehensive Islamic knowledge hub. Explore the Qur'an, Hadith, 
               and spiritual guidance all in one place.
             </p>
           </div>
           
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-wrap justify-center gap-4 pt-4">
             <Button asChild size="lg" className="shadow-elevated hover:shadow-glow transition-all">
               <Link to="/quran">
                 Explore Qur'an
