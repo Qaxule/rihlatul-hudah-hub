@@ -62,6 +62,9 @@ export default {
         'elevated': 'var(--shadow-elevated)',
         'glow': 'var(--shadow-glow)',
       },
+      fontFamily: {
+        'amiri': ['Amiri', 'serif'],
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

@@ -12,6 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 interface HadithData {
   hadithnumber: number;
   text: string;
+  arabictext?: string;
   reference?: {
     book?: string;
     hadith?: string;
@@ -184,9 +185,20 @@ const Hadith = () => {
           <CardContent className="space-y-4">
             {randomHadith ? (
               <>
+                {/* Arabic Text */}
+                {randomHadith.arabictext && (
+                  <div className="bg-muted/30 rounded-lg p-6 border border-border/50">
+                    <p className="text-2xl leading-loose text-right font-amiri" dir="rtl">
+                      {randomHadith.arabictext}
+                    </p>
+                  </div>
+                )}
+                
+                {/* English Translation */}
                 <p className="text-lg leading-relaxed italic text-foreground">
                   "{randomHadith.text}"
                 </p>
+                
                 <div className="flex justify-between items-center pt-4 border-t">
                   <p className="text-sm text-muted-foreground">
                     Sahih Bukhari - Hadith {randomHadith.hadithnumber}
@@ -296,10 +308,21 @@ const Hadith = () => {
                             {hadith.hadithnumber}
                           </span>
                         </div>
-                        <div className="flex-1 space-y-2">
+                        <div className="flex-1 space-y-4">
+                          {/* Arabic Text */}
+                          {hadith.arabictext && (
+                            <div className="bg-muted/30 rounded-lg p-4 border border-border/50">
+                              <p className="text-xl leading-loose text-right font-amiri" dir="rtl">
+                                {hadith.arabictext}
+                              </p>
+                            </div>
+                          )}
+                          
+                          {/* English Translation */}
                           <p className="text-base leading-relaxed text-foreground">
                             {hadith.text}
                           </p>
+                          
                           {hadith.reference && (
                             <p className="text-sm text-muted-foreground">
                               {hadith.reference.book && `Book: ${hadith.reference.book}`}
