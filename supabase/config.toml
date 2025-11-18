@@ -1,1 +1,20 @@
 project_id = "qecaoheqtyxbauxajmvv"
+
+# Disable JWT verification for public edge functions
+[functions.quran-data]
+verify_jwt = false
+
+[functions.hadith-data]
+verify_jwt = false
+
+[functions.prayer-times]
+verify_jwt = false
+
+[functions.quran-search]
+verify_jwt = false
+
+[functions.quran-tafsir]
+verify_jwt = false
+
+[functions.hadith-collections]
+verify_jwt = false
