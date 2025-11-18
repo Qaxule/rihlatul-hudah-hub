@@ -90,7 +90,7 @@ const Index = () => {
               </> : ayatOfTheDay ? <>
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-primary flex items-center gap-2">
-                    <Sparkles className="w-5 h-5" />
+                    
                     Ayah of the Day
                   </h3>
                   <span className="text-sm text-muted-foreground">
