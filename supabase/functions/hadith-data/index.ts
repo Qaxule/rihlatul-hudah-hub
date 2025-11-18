@@ -36,6 +36,9 @@ serve(async (req) => {
 
     let data;
 
+    // Get Arabic collection name
+    const arabicCollection = collection.replace('eng-', 'ara-');
+
     // If specific hadith is requested
     if (hadithNumber) {
       const urls = [
@@ -43,7 +46,25 @@ serve(async (req) => {
         `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${collection}/${hadithNumber}.json`,
         `https://raw.githubusercontent.com/fawazahmed0/hadith-api/1/editions/${collection}/${hadithNumber}.json`
       ];
-      data = await fetchWithFallback(urls);
+      const englishData = await fetchWithFallback(urls);
+      
+      // Try to fetch Arabic version
+      const arabicUrls = [
+        `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${arabicCollection}/${hadithNumber}.min.json`,
+        `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${arabicCollection}/${hadithNumber}.json`,
+        `https://raw.githubusercontent.com/fawazahmed0/hadith-api/1/editions/${arabicCollection}/${hadithNumber}.json`
+      ];
+      try {
+        const arabicData = await fetchWithFallback(arabicUrls);
+        // Merge Arabic text into English data
+        if (englishData?.hadiths && arabicData?.hadiths) {
+          englishData.hadiths[0].arabictext = arabicData.hadiths[0]?.text;
+        }
+      } catch (_) {
+        // If Arabic not available, continue with English only
+      }
+      
+      data = englishData;
     }
     // Otherwise, get collection metadata and first few hadiths
     else {
@@ -68,6 +89,20 @@ serve(async (req) => {
           const item = await fetchWithFallback(urls);
           if (!metadata && item?.metadata) metadata = item.metadata;
           if (item?.hadiths && item.hadiths[0]) {
+            // Try to fetch Arabic version for this hadith
+            const arabicUrls = [
+              `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${arabicCollection}/${num}.min.json`,
+              `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${arabicCollection}/${num}.json`,
+              `https://raw.githubusercontent.com/fawazahmed0/hadith-api/1/editions/${arabicCollection}/${num}.json`
+            ];
+            try {
+              const arabicItem = await fetchWithFallback(arabicUrls);
+              if (arabicItem?.hadiths?.[0]?.text) {
+                item.hadiths[0].arabictext = arabicItem.hadiths[0].text;
+              }
+            } catch (_) {
+              // If Arabic not available, continue with English only
+            }
             hadiths.push(item.hadiths[0]);
           }
         } catch (_) {
