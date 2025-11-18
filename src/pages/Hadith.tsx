@@ -49,7 +49,7 @@ const Hadith = () => {
       color: "bg-purple-500/10 border-purple-500/20 hover:bg-purple-500/20"
     },
     { 
-      id: "eng-tirmidzi", 
+      id: "eng-tirmidhi", 
       name: "Jami at-Tirmidhi", 
       count: "3956 Hadiths", 
       description: "Includes weak narrations with notes",
@@ -77,60 +77,18 @@ const Hadith = () => {
       color: "bg-rose-500/10 border-rose-500/20 hover:bg-rose-500/20"
     },
     { 
-      id: "eng-ahmad", 
-      name: "Musnad Ahmad", 
-      count: "27000+ Hadiths", 
-      description: "Comprehensive collection by Imam Ahmad",
-      color: "bg-amber-500/10 border-amber-500/20 hover:bg-amber-500/20"
-    },
-    { 
-      id: "eng-darimi", 
-      name: "Sunan ad-Darimi", 
-      count: "3500+ Hadiths", 
-      description: "Early hadith collection",
-      color: "bg-lime-500/10 border-lime-500/20 hover:bg-lime-500/20"
-    },
-    { 
-      id: "eng-nawawi40", 
+      id: "eng-nawawi", 
       name: "An-Nawawi's 40 Hadith", 
       count: "42 Hadiths", 
       description: "Essential hadiths for every Muslim",
       color: "bg-teal-500/10 border-teal-500/20 hover:bg-teal-500/20"
     },
     { 
-      id: "eng-riyadussaliheen", 
-      name: "Riyad as-Salihin", 
-      count: "1900+ Hadiths", 
-      description: "Gardens of the Righteous",
-      color: "bg-green-500/10 border-green-500/20 hover:bg-green-500/20"
-    },
-    { 
-      id: "eng-adab", 
-      name: "Al-Adab al-Mufrad", 
-      count: "1300+ Hadiths", 
-      description: "Code of Islamic manners",
-      color: "bg-sky-500/10 border-sky-500/20 hover:bg-sky-500/20"
-    },
-    { 
-      id: "eng-hisnulmuslim", 
-      name: "Hisn al-Muslim", 
-      count: "260+ Hadiths", 
-      description: "Fortress of the Muslim - Daily supplications",
-      color: "bg-violet-500/10 border-violet-500/20 hover:bg-violet-500/20"
-    },
-    { 
-      id: "eng-bulugh", 
-      name: "Bulugh al-Maram", 
-      count: "1358 Hadiths", 
-      description: "Attainment of the objective",
-      color: "bg-fuchsia-500/10 border-fuchsia-500/20 hover:bg-fuchsia-500/20"
-    },
-    { 
-      id: "eng-qudsi40", 
+      id: "eng-qudsi", 
       name: "40 Hadith Qudsi", 
       count: "40 Hadiths", 
-      description: "Divine sayings of Allah",
-      color: "bg-pink-500/10 border-pink-500/20 hover:bg-pink-500/20"
+      description: "Sacred words of Allah",
+      color: "bg-fuchsia-500/10 border-fuchsia-500/20 hover:bg-fuchsia-500/20"
     },
     { 
       id: "eng-mishkat", 
