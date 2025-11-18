@@ -77,15 +77,9 @@ serve(async (req) => {
         attempts++;
       }
 
-      // If nothing could be fetched for this collection, fall back to Bukhari 1 so UI shows something
+      // If nothing could be fetched, return error
       if (!metadata && hadiths.length === 0) {
-        const fallback = await fetchWithFallback([
-          `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari/1.min.json`,
-          `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari/1.json`,
-          `https://raw.githubusercontent.com/fawazahmed0/hadith-api/1/editions/eng-bukhari/1.json`
-        ]);
-        metadata = fallback?.metadata ?? { name: 'Sahih al Bukhari' };
-        if (fallback?.hadiths?.[0]) hadiths.push(fallback.hadiths[0]);
+        throw new Error(`Collection "${collection}" not found or contains no accessible hadiths`);
       }
 
       data = { metadata: metadata ?? { name: collection }, hadiths };
