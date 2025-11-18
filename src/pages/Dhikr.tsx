@@ -96,6 +96,7 @@ const Dhikr = () => {
           </Card>
         </div>
       </main>
+      <Footer />
     </div>
   );
 };

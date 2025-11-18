@@ -99,6 +99,7 @@ const Duas = () => {
           ))}
         </div>
       </main>
+      <Footer />
     </div>
   );
 };

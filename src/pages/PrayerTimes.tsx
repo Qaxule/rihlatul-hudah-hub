@@ -152,6 +152,7 @@ const PrayerTimes = () => {
           )}
         </div>
       </main>
+      <Footer />
     </div>
   );
 };

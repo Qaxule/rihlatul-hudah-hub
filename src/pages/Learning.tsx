@@ -94,6 +94,7 @@ const Learning = () => {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 };

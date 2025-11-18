@@ -187,6 +187,7 @@ const Calendar = () => {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 };
