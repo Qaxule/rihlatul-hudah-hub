@@ -165,30 +165,30 @@ const Quran = () => {
         </div>
 
         {/* Surahs List */}
-        <div className="max-w-4xl mx-auto space-y-12 md:space-y-16">
+        <div className="max-w-4xl mx-auto space-y-6 md:space-y-8">
           {filteredSurahs.map((surah) => (
             <Link key={surah.number} to={`/surah/${surah.number}`}>
-              <Card className="shadow-soft hover:shadow-elevated transition-all cursor-pointer group">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-6">
-                      <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                        <span className="text-primary font-bold">{surah.number}</span>
+              <Card className="shadow-soft hover:shadow-elevated transition-all duration-300 cursor-pointer group border-border/50">
+                <CardContent className="p-6 md:p-8">
+                  <div className="flex items-center justify-between gap-6">
+                    <div className="flex items-center gap-6 md:gap-8">
+                      <div className="flex-shrink-0 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                        <span className="text-primary font-bold text-lg md:text-xl">{surah.number}</span>
                       </div>
-                      <div className="space-y-1">
-                        <h3 className="text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
+                      <div className="space-y-2">
+                        <h3 className="text-xl md:text-2xl font-semibold text-foreground group-hover:text-primary transition-colors">
                           {surah.name}
                         </h3>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm md:text-base text-muted-foreground">
                           {surah.translation}
                         </p>
                       </div>
                     </div>
-                    <div className="text-right space-y-1">
-                      <p className="text-sm font-medium text-muted-foreground">
+                    <div className="text-right space-y-2 flex-shrink-0">
+                      <p className="text-sm md:text-base font-medium text-muted-foreground">
                         {surah.verses} verses
                       </p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs md:text-sm text-muted-foreground">
                         {surah.revelation}
                       </p>
                     </div>
