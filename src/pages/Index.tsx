@@ -7,7 +7,6 @@ import { Book, Heart, Calendar, Sparkles, ArrowRight, Compass, BookOpen } from "
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
-
 interface AyatOfTheDay {
   surah: {
     number: number;
@@ -22,21 +21,19 @@ interface AyatOfTheDay {
     translation: string;
   };
 }
-
 const Index = () => {
   const [ayatOfTheDay, setAyatOfTheDay] = useState<AyatOfTheDay | null>(null);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     fetchAyatOfTheDay();
   }, []);
-
   const fetchAyatOfTheDay = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke('ayat-of-the-day');
-      
+      const {
+        data,
+        error
+      } = await supabase.functions.invoke('ayat-of-the-day');
       if (error) throw error;
-      
       setAyatOfTheDay(data);
     } catch (error) {
       console.error('Error fetching Ayat of the Day:', error);
@@ -82,8 +79,7 @@ const Index = () => {
       <section className="container mx-auto px-4 py-16">
         <Card className="max-w-3xl mx-auto shadow-elevated border-primary/20">
           <CardContent className="p-8 space-y-4">
-            {loading ? (
-              <>
+            {loading ? <>
                 <div className="flex items-center justify-between">
                   <Skeleton className="h-6 w-32" />
                   <Skeleton className="h-4 w-40" />
@@ -91,9 +87,7 @@ const Index = () => {
                 <Skeleton className="h-16 w-full" />
                 <Skeleton className="h-6 w-full" />
                 <Skeleton className="h-20 w-full" />
-              </>
-            ) : ayatOfTheDay ? (
-              <>
+              </> : ayatOfTheDay ? <>
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-primary flex items-center gap-2">
                     <Sparkles className="w-5 h-5" />
@@ -111,12 +105,10 @@ const Index = () => {
                     "{ayatOfTheDay.ayah.translation}"
                   </p>
                 </div>
-              </>
-            ) : (
-              <>
+              </> : <>
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-primary flex items-center gap-2">
-                    <Sparkles className="w-5 h-5" />
+                    
                     Ayah of the Day
                   </h3>
                   <span className="text-sm text-muted-foreground">Surah Al-Baqarah 2:286</span>
@@ -134,8 +126,7 @@ const Index = () => {
                     opportunity for growth in faith.
                   </p>
                 </div>
-              </>
-            )}
+              </>}
           </CardContent>
         </Card>
       </section>
