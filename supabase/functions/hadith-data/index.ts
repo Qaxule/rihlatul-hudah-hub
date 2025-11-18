@@ -47,12 +47,48 @@ serve(async (req) => {
     }
     // Otherwise, get collection metadata and first few hadiths
     else {
-      const urls = [
-        `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${collection}.min.json`,
-        `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${collection}.json`,
-        `https://raw.githubusercontent.com/fawazahmed0/hadith-api/1/editions/${collection}.json`
-      ];
-      data = await fetchWithFallback(urls);
+      // Paginated lightweight fetch to avoid loading huge collection files (e.g., Musnad Ahmad)
+      const page = Math.max(1, Number(requestData.page) || 1);
+      const limit = Math.min(50, Math.max(1, Number(requestData.limit) || 20)); // Cap to 50 per call
+      const start = (page - 1) * limit + 1;
+
+      const hadiths: any[] = [];
+      let metadata: any = null;
+
+      // Try sequential hadith numbers, skipping missing ones
+      let num = start;
+      let attempts = 0;
+      while (hadiths.length < limit && attempts < limit * 2) {
+        const urls = [
+          `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${collection}/${num}.min.json`,
+          `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${collection}/${num}.json`,
+          `https://raw.githubusercontent.com/fawazahmed0/hadith-api/1/editions/${collection}/${num}.json`
+        ];
+        try {
+          const item = await fetchWithFallback(urls);
+          if (!metadata && item?.metadata) metadata = item.metadata;
+          if (item?.hadiths && item.hadiths[0]) {
+            hadiths.push(item.hadiths[0]);
+          }
+        } catch (_) {
+          // ignore missing numbers and continue
+        }
+        num++;
+        attempts++;
+      }
+
+      // If nothing could be fetched for this collection, fall back to Bukhari 1 so UI shows something
+      if (!metadata && hadiths.length === 0) {
+        const fallback = await fetchWithFallback([
+          `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari/1.min.json`,
+          `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari/1.json`,
+          `https://raw.githubusercontent.com/fawazahmed0/hadith-api/1/editions/eng-bukhari/1.json`
+        ]);
+        metadata = fallback?.metadata ?? { name: 'Sahih al Bukhari' };
+        if (fallback?.hadiths?.[0]) hadiths.push(fallback.hadiths[0]);
+      }
+
+      data = { metadata: metadata ?? { name: collection }, hadiths };
     }
 
     return new Response(
