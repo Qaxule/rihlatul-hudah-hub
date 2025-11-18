@@ -211,6 +211,7 @@ const Guides = () => {
           </Card>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
