@@ -4,7 +4,47 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Book, Heart, Calendar, Sparkles, ArrowRight, Compass, BookOpen } from "lucide-react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { Skeleton } from "@/components/ui/skeleton";
+
+interface AyatOfTheDay {
+  surah: {
+    number: number;
+    name: string;
+    englishName: string;
+    arabicName: string;
+  };
+  ayah: {
+    number: number;
+    numberInSurah: number;
+    arabic: string;
+    translation: string;
+  };
+}
+
 const Index = () => {
+  const [ayatOfTheDay, setAyatOfTheDay] = useState<AyatOfTheDay | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchAyatOfTheDay();
+  }, []);
+
+  const fetchAyatOfTheDay = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('ayat-of-the-day');
+      
+      if (error) throw error;
+      
+      setAyatOfTheDay(data);
+    } catch (error) {
+      console.error('Error fetching Ayat of the Day:', error);
+      // Keep null to show fallback content
+    } finally {
+      setLoading(false);
+    }
+  };
   return <div className="min-h-screen bg-gradient-subtle flex flex-col">
       <Navigation />
       
@@ -42,26 +82,60 @@ const Index = () => {
       <section className="container mx-auto px-4 py-16">
         <Card className="max-w-3xl mx-auto shadow-elevated border-primary/20">
           <CardContent className="p-8 space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-primary flex items-center gap-2">
-                
-                Ayah of the Day
-              </h3>
-              <span className="text-sm text-muted-foreground">Surah Al-Baqarah 2:286</span>
-            </div>
-            <div className="space-y-4">
-              <p className="text-2xl text-right leading-loose font-arabic text-foreground" dir="rtl">
-                لَا يُكَلِّفُ ٱللَّهُ نَفْسًا إِلَّا وُسْعَهَا
-              </p>
-              <p className="text-lg text-muted-foreground italic">
-                "Allah does not burden a soul beyond that it can bear."
-              </p>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                This beautiful verse reminds us that Allah knows our capabilities perfectly. 
-                He never tests us with more than we can handle, and every challenge is an 
-                opportunity for growth in faith.
-              </p>
-            </div>
+            {loading ? (
+              <>
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-6 w-32" />
+                  <Skeleton className="h-4 w-40" />
+                </div>
+                <Skeleton className="h-16 w-full" />
+                <Skeleton className="h-6 w-full" />
+                <Skeleton className="h-20 w-full" />
+              </>
+            ) : ayatOfTheDay ? (
+              <>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-primary flex items-center gap-2">
+                    <Sparkles className="w-5 h-5" />
+                    Ayah of the Day
+                  </h3>
+                  <span className="text-sm text-muted-foreground">
+                    Surah {ayatOfTheDay.surah.englishName} {ayatOfTheDay.surah.number}:{ayatOfTheDay.ayah.numberInSurah}
+                  </span>
+                </div>
+                <div className="space-y-4">
+                  <p className="text-2xl text-right leading-loose font-arabic text-foreground" dir="rtl">
+                    {ayatOfTheDay.ayah.arabic}
+                  </p>
+                  <p className="text-lg text-muted-foreground italic">
+                    "{ayatOfTheDay.ayah.translation}"
+                  </p>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-primary flex items-center gap-2">
+                    <Sparkles className="w-5 h-5" />
+                    Ayah of the Day
+                  </h3>
+                  <span className="text-sm text-muted-foreground">Surah Al-Baqarah 2:286</span>
+                </div>
+                <div className="space-y-4">
+                  <p className="text-2xl text-right leading-loose font-arabic text-foreground" dir="rtl">
+                    لَا يُكَلِّفُ ٱللَّهُ نَفْسًا إِلَّا وُسْعَهَا
+                  </p>
+                  <p className="text-lg text-muted-foreground italic">
+                    "Allah does not burden a soul beyond that it can bear."
+                  </p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    This beautiful verse reminds us that Allah knows our capabilities perfectly. 
+                    He never tests us with more than we can handle, and every challenge is an 
+                    opportunity for growth in faith.
+                  </p>
+                </div>
+              </>
+            )}
           </CardContent>
         </Card>
       </section>
