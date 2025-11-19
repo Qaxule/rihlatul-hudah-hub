@@ -47,6 +47,11 @@ serve(async (req) => {
         `https://raw.githubusercontent.com/fawazahmed0/hadith-api/1/editions/${collection}/${hadithNumber}.json`
       ];
       const englishData = await fetchWithFallback(urls);
+
+      // Ensure we have at least some English text; otherwise treat as missing
+      if (!englishData?.hadiths || !englishData.hadiths[0] || !englishData.hadiths[0].text) {
+        throw new Error(`Hadith ${hadithNumber} in collection "${collection}" has no English text`);
+      }
       
       // Try to fetch Arabic version
       const arabicUrls = [
@@ -57,8 +62,8 @@ serve(async (req) => {
       try {
         const arabicData = await fetchWithFallback(arabicUrls);
         // Merge Arabic text into English data
-        if (englishData?.hadiths && arabicData?.hadiths) {
-          englishData.hadiths[0].arabictext = arabicData.hadiths[0]?.text;
+        if (arabicData?.hadiths && arabicData.hadiths[0]?.text) {
+          englishData.hadiths[0].arabictext = arabicData.hadiths[0].text;
         }
       } catch (_) {
         // If Arabic not available, continue with English only
@@ -91,7 +96,10 @@ serve(async (req) => {
         try {
           const item = await fetchWithFallback(urls);
           if (!metadata && item?.metadata) metadata = item.metadata;
-          if (item?.hadiths && item.hadiths[0]) {
+
+          const baseHadith = item?.hadiths?.[0];
+          // Skip entries that don't have English text
+          if (baseHadith && baseHadith.text) {
             // Try to fetch Arabic version for this hadith
             const arabicUrls = [
               `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${arabicCollection}/${num}.min.json`,
@@ -101,13 +109,16 @@ serve(async (req) => {
             try {
               const arabicItem = await fetchWithFallback(arabicUrls);
               if (arabicItem?.hadiths?.[0]?.text) {
-                item.hadiths[0].arabictext = arabicItem.hadiths[0].text;
+                baseHadith.arabictext = arabicItem.hadiths[0].text;
               }
             } catch (_) {
               // If Arabic not available, continue with English only
             }
-            hadiths.push(item.hadiths[0]);
+            hadiths.push(baseHadith);
             consecutiveFailures = 0; // Reset on success
+          } else {
+            // No usable English text, treat as failure for paging purposes
+            consecutiveFailures++;
           }
         } catch (_) {
           // Count consecutive failures to detect end of collection
