@@ -113,7 +113,8 @@ serve(async (req) => {
           if (!metadata && item?.metadata) metadata = item.metadata;
 
           const baseHadith = item?.hadiths?.[0];
-          // Skip entries that don't have English text
+          // Skip entries that don't have English text, but DON'T count as failure
+          // Only actual API failures should count toward consecutiveFailures
           if (baseHadith && baseHadith.text) {
             // Try to fetch Arabic version for this hadith
             const arabicUrls = [
@@ -130,13 +131,11 @@ serve(async (req) => {
               // If Arabic not available, continue with English only
             }
             hadiths.push(baseHadith);
-            consecutiveFailures = 0; // Reset on success
-          } else {
-            // No usable English text, treat as failure for paging purposes
-            consecutiveFailures++;
+            consecutiveFailures = 0; // Reset on finding a valid hadith
           }
+          // If hadith exists but has no text, just skip it without counting as failure
         } catch (_) {
-          // Count consecutive failures to detect end of collection
+          // Only actual API failures count toward consecutive failures
           consecutiveFailures++;
         }
         num++;
