@@ -7,6 +7,19 @@ import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { z } from "zod";
+
+const loginSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .email({ message: "Invalid email address" })
+    .max(255, { message: "Email must be less than 255 characters" }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters" })
+    .max(100, { message: "Password must be less than 100 characters" }),
+});
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -19,26 +32,45 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      // Validate input
+      const validatedData = loginSchema.parse({ email, password });
 
-    if (error) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
+      const { error } = await supabase.auth.signInWithPassword({
+        email: validatedData.email,
+        password: validatedData.password,
       });
-    } else {
-      toast({
-        title: "Success",
-        description: "Logged in successfully",
-      });
-      navigate("/");
+
+      if (error) {
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Success",
+          description: "Logged in successfully",
+        });
+        navigate("/");
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "Validation Error",
+          description: error.errors[0].message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "An unexpected error occurred",
+          variant: "destructive",
+        });
+      }
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
@@ -55,6 +87,7 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                maxLength={255}
               />
             </div>
             <div>
@@ -64,6 +97,8 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                minLength={6}
+                maxLength={100}
               />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
