@@ -66,7 +66,7 @@ export function QuranNavigator({
     
     // If we're not on the same surah page, navigate to it
     if (currentSurah !== surah.number) {
-      navigate(`/quran/surah/${surah.number}`);
+      navigate(`/surah/${surah.number}`);
       onOpenChange(false);
     }
   };
@@ -78,7 +78,7 @@ export function QuranNavigator({
       onOpenChange(false);
     } else if (selectedSurah) {
       // Different surah, navigate with hash
-      navigate(`/quran/surah/${selectedSurah}#ayah-${ayahNumber}`);
+      navigate(`/surah/${selectedSurah}#ayah-${ayahNumber}`);
       onOpenChange(false);
     }
   };
