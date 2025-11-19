@@ -46,30 +46,45 @@ serve(async (req) => {
         `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${collection}/${hadithNumber}.json`,
         `https://raw.githubusercontent.com/fawazahmed0/hadith-api/1/editions/${collection}/${hadithNumber}.json`
       ];
-      const englishData = await fetchWithFallback(urls);
-
-      // Ensure we have at least some English text; otherwise treat as missing
-      if (!englishData?.hadiths || !englishData.hadiths[0] || !englishData.hadiths[0].text) {
-        throw new Error(`Hadith ${hadithNumber} in collection "${collection}" has no English text`);
-      }
       
-      // Try to fetch Arabic version
-      const arabicUrls = [
-        `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${arabicCollection}/${hadithNumber}.min.json`,
-        `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${arabicCollection}/${hadithNumber}.json`,
-        `https://raw.githubusercontent.com/fawazahmed0/hadith-api/1/editions/${arabicCollection}/${hadithNumber}.json`
-      ];
       try {
-        const arabicData = await fetchWithFallback(arabicUrls);
-        // Merge Arabic text into English data
-        if (arabicData?.hadiths && arabicData.hadiths[0]?.text) {
-          englishData.hadiths[0].arabictext = arabicData.hadiths[0].text;
+        const englishData = await fetchWithFallback(urls);
+
+        // Check if we have valid English text
+        if (!englishData?.hadiths || !englishData.hadiths[0] || !englishData.hadiths[0].text) {
+          // Return empty result instead of throwing error - let frontend handle gracefully
+          console.log(`Hadith ${hadithNumber} in collection "${collection}" has no English text - returning empty result`);
+          return new Response(
+            JSON.stringify({ metadata: { name: collection }, hadiths: [] }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
         }
-      } catch (_) {
-        // If Arabic not available, continue with English only
+        
+        // Try to fetch Arabic version
+        const arabicUrls = [
+          `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${arabicCollection}/${hadithNumber}.min.json`,
+          `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${arabicCollection}/${hadithNumber}.json`,
+          `https://raw.githubusercontent.com/fawazahmed0/hadith-api/1/editions/${arabicCollection}/${hadithNumber}.json`
+        ];
+        try {
+          const arabicData = await fetchWithFallback(arabicUrls);
+          // Merge Arabic text into English data
+          if (arabicData?.hadiths && arabicData.hadiths[0]?.text) {
+            englishData.hadiths[0].arabictext = arabicData.hadiths[0].text;
+          }
+        } catch (_) {
+          // If Arabic not available, continue with English only
+        }
+        
+        data = englishData;
+      } catch (error) {
+        // Hadith number doesn't exist at all - return empty result
+        console.log(`Hadith ${hadithNumber} not found in collection "${collection}" - returning empty result`);
+        return new Response(
+          JSON.stringify({ metadata: { name: collection }, hadiths: [] }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
       }
-      
-      data = englishData;
     }
     // Otherwise, get collection metadata and first few hadiths
     else {
