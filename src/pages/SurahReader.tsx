@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import AudioPlayer from "@/components/AudioPlayer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, BookOpen, Loader2, Bookmark, BookmarkCheck, ChevronDown, ChevronUp, Share2 } from "lucide-react";
@@ -37,7 +36,6 @@ const SurahReader = () => {
   const [translationData, setTranslationData] = useState<SurahData | null>(null);
   const [transliterationData, setTransliterationData] = useState<SurahData | null>(null);
   const [bookmarks, setBookmarks] = useState<Set<number>>(new Set());
-  const [playingAyah, setPlayingAyah] = useState<number | null>(null);
   const [openTafsirs, setOpenTafsirs] = useState<Set<number>>(new Set());
   const [tafsirData, setTafsirData] = useState<{ [key: number]: string }>({});
   const [loadingTafsir, setLoadingTafsir] = useState<Set<number>>(new Set());
@@ -211,16 +209,6 @@ const SurahReader = () => {
     });
   }, [selectedTafsir, isAbridged]);
 
-  const handleAudioPlay = (ayahNumber: number) => {
-    setPlayingAyah(ayahNumber);
-    if (ayahRefs.current[ayahNumber]) {
-      ayahRefs.current[ayahNumber]?.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
-    }
-  };
-
   const fetchSurahData = async (number: number) => {
     try {
       setLoading(true);
@@ -348,14 +336,9 @@ const SurahReader = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
                     <span className="text-sm font-medium text-muted-foreground">
-                      Ayah {ayah.numberInSurah}
+                      {currentSurahNum}:{ayah.numberInSurah}
                     </span>
                     <div className="flex items-center gap-2">
-                      <AudioPlayer
-                        surahNumber={currentSurahNum}
-                        ayahNumber={ayah.numberInSurah}
-                        onPlay={() => handleAudioPlay(ayah.numberInSurah)}
-                      />
                       <Button
                         variant="ghost"
                         size="icon"
