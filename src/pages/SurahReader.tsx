@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { QuranNavigator } from "@/components/QuranNavigator";
+import { TajweedLegend } from "@/components/TajweedLegend";
 
 interface Ayah {
   number: number;
@@ -36,6 +37,8 @@ const SurahReader = () => {
   const [arabicData, setArabicData] = useState<SurahData | null>(null);
   const [translationData, setTranslationData] = useState<SurahData | null>(null);
   const [transliterationData, setTransliterationData] = useState<SurahData | null>(null);
+  const [tajweedData, setTajweedData] = useState<SurahData | null>(null);
+  const [showTajweed, setShowTajweed] = useState(false);
   const [bookmarks, setBookmarks] = useState<Set<number>>(new Set());
   const [openTafsirs, setOpenTafsirs] = useState<Set<number>>(new Set());
   const [tafsirData, setTafsirData] = useState<{ [key: number]: string }>({});
@@ -340,8 +343,23 @@ const SurahReader = () => {
         }
       );
 
+      // Fetch tajweed version
+      const { data: tajweedResult, error: tajweedError } = await supabase.functions.invoke(
+        "quran-data",
+        {
+          body: { surah: number, edition: "quran-tajweed", type: "surah" },
+        }
+      );
+
       if (arabicError || translationError || transliterationError) {
         throw new Error("Failed to fetch Surah data");
+      }
+
+      // Tajweed data is optional, log if not available
+      if (tajweedError) {
+        console.warn("Tajweed data not available:", tajweedError);
+      } else if (tajweedResult?.data) {
+        setTajweedData(tajweedResult.data);
       }
 
       // Remove Bismillah from first ayah if present (except for Surah 1 and 9)
@@ -401,15 +419,17 @@ const SurahReader = () => {
                 <BookOpen className="h-4 w-4 mr-2" />
                 Back to Quran
               </Link>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setNavigatorOpen(true)}
-                className="gap-2"
-              >
-                <Menu className="h-4 w-4" />
-                Navigate
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setNavigatorOpen(true)}
+                  className="gap-2"
+                >
+                  <Menu className="h-4 w-4" />
+                  Navigate
+                </Button>
+              </div>
             </div>
             <h1 className="text-4xl font-bold mb-2" dir="rtl">
               {arabicData.name}
@@ -420,6 +440,23 @@ const SurahReader = () => {
             <p className="text-muted-foreground">
               {arabicData.englishNameTranslation} • {arabicData.revelationType} • {arabicData.numberOfAyahs} Ayahs
             </p>
+
+            {/* Tajweed Controls */}
+            {tajweedData && (
+              <div className="flex items-center justify-center gap-3 mt-4 p-3 bg-muted/50 rounded-lg">
+                <div className="flex items-center gap-2">
+                  <Switch
+                    id="tajweed-mode"
+                    checked={showTajweed}
+                    onCheckedChange={setShowTajweed}
+                  />
+                  <Label htmlFor="tajweed-mode" className="text-sm cursor-pointer">
+                    Tajweed Colors
+                  </Label>
+                </div>
+                {showTajweed && <TajweedLegend />}
+              </div>
+            )}
           </div>
 
           {/* Bismillah */}
@@ -477,9 +514,17 @@ const SurahReader = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {/* Arabic Text */}
-                  <p className="text-3xl leading-loose text-right text-foreground" dir="rtl">
-                    {ayah.text}
-                  </p>
+                  {showTajweed && tajweedData?.ayahs[index] ? (
+                    <div 
+                      className="text-3xl leading-loose text-right text-foreground tajweed-text"
+                      dir="rtl"
+                      dangerouslySetInnerHTML={{ __html: tajweedData.ayahs[index].text }}
+                    />
+                  ) : (
+                    <p className="text-3xl leading-loose text-right text-foreground" dir="rtl">
+                      {ayah.text}
+                    </p>
+                  )}
 
                   {/* Transliteration */}
                   {transliterationData?.ayahs[index] && (
