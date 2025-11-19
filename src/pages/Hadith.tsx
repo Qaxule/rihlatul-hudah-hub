@@ -1,7 +1,7 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Book, Search, ChevronRight, BookOpen, Languages } from "lucide-react";
+import { Book, Search, ChevronRight, BookOpen, Languages, Bookmark, BookmarkCheck } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface HadithData {
   hadithnumber: number;
@@ -31,7 +32,9 @@ const Hadith = () => {
     const saved = localStorage.getItem('hadith-show-arabic');
     return saved === null ? true : saved === 'true';
   });
+  const [bookmarkedHadiths, setBookmarkedHadiths] = useState<Set<string>>(new Set());
   const { toast } = useToast();
+  const { user } = useAuth();
 
   useEffect(() => {
     localStorage.setItem('hadith-show-arabic', showArabic.toString());
@@ -112,7 +115,99 @@ const Hadith = () => {
 
   useEffect(() => {
     fetchRandomHadith();
-  }, []);
+    if (user) {
+      fetchBookmarkedHadiths();
+    }
+  }, [user]);
+
+  const fetchBookmarkedHadiths = async () => {
+    if (!user) return;
+    
+    try {
+      const { data, error } = await supabase
+        .from('hadith_bookmarks')
+        .select('collection_id, hadith_number');
+      
+      if (error) throw error;
+      
+      const bookmarked = new Set(
+        data?.map(b => `${b.collection_id}-${b.hadith_number}`) || []
+      );
+      setBookmarkedHadiths(bookmarked);
+    } catch (error) {
+      console.error('Error fetching bookmarks:', error);
+    }
+  };
+
+  const isBookmarked = (collectionId: string, hadithNumber: number) => {
+    return bookmarkedHadiths.has(`${collectionId}-${hadithNumber}`);
+  };
+
+  const toggleBookmark = async (hadith: HadithData, collectionId: string) => {
+    if (!user) {
+      toast({
+        title: "Login Required",
+        description: "Please login to bookmark hadiths",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const bookmarkKey = `${collectionId}-${hadith.hadithnumber}`;
+    const isCurrentlyBookmarked = bookmarkedHadiths.has(bookmarkKey);
+
+    try {
+      if (isCurrentlyBookmarked) {
+        // Remove bookmark
+        const { error } = await supabase
+          .from('hadith_bookmarks')
+          .delete()
+          .eq('user_id', user.id)
+          .eq('collection_id', collectionId)
+          .eq('hadith_number', hadith.hadithnumber);
+
+        if (error) throw error;
+
+        setBookmarkedHadiths(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(bookmarkKey);
+          return newSet;
+        });
+
+        toast({
+          title: "Bookmark Removed",
+          description: "Hadith removed from your bookmarks"
+        });
+      } else {
+        // Add bookmark
+        const { error } = await supabase
+          .from('hadith_bookmarks')
+          .insert({
+            user_id: user.id,
+            collection_id: collectionId,
+            hadith_number: hadith.hadithnumber,
+            hadith_text: hadith.text,
+            hadith_arabic_text: hadith.arabictext
+          });
+
+        if (error) throw error;
+
+        setBookmarkedHadiths(prev => new Set([...prev, bookmarkKey]));
+
+        toast({
+          title: "Bookmark Added",
+          description: "Hadith saved to your bookmarks"
+        });
+      }
+    } catch (error) {
+      console.error('Error toggling bookmark:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update bookmark",
+        variant: "destructive"
+      });
+    }
+  };
 
   const fetchRandomHadith = async () => {
     try {
@@ -266,9 +361,28 @@ const Hadith = () => {
                   <p className="text-sm text-muted-foreground">
                     Sahih Bukhari - Hadith {randomHadith.hadithnumber}
                   </p>
-                  <Button variant="ghost" size="sm" onClick={fetchRandomHadith}>
-                    Get Another
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => toggleBookmark(randomHadith, 'eng-bukhari')}
+                    >
+                      {isBookmarked('eng-bukhari', randomHadith.hadithnumber) ? (
+                        <>
+                          <BookmarkCheck className="w-4 h-4 mr-1 fill-primary text-primary" />
+                          Bookmarked
+                        </>
+                      ) : (
+                        <>
+                          <Bookmark className="w-4 h-4 mr-1" />
+                          Bookmark
+                        </>
+                      )}
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={fetchRandomHadith}>
+                      Get Another
+                    </Button>
+                  </div>
                 </div>
               </>
             ) : (
@@ -392,12 +506,32 @@ const Hadith = () => {
                             {hadith.text}
                           </p>
                           
-                          {hadith.reference && (
-                            <p className="text-sm text-muted-foreground">
-                              {hadith.reference.book && `Book: ${hadith.reference.book}`}
-                              {hadith.reference.hadith && ` • Hadith: ${hadith.reference.hadith}`}
-                            </p>
-                          )}
+                          <div className="flex items-center justify-between pt-2">
+                            {hadith.reference && (
+                              <p className="text-sm text-muted-foreground">
+                                {hadith.reference.book && `Book: ${hadith.reference.book}`}
+                                {hadith.reference.hadith && ` • Hadith: ${hadith.reference.hadith}`}
+                              </p>
+                            )}
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => toggleBookmark(hadith, selectedCollection!)}
+                              className="ml-auto"
+                            >
+                              {isBookmarked(selectedCollection!, hadith.hadithnumber) ? (
+                                <>
+                                  <BookmarkCheck className="w-4 h-4 mr-1 fill-primary text-primary" />
+                                  Bookmarked
+                                </>
+                              ) : (
+                                <>
+                                  <Bookmark className="w-4 h-4 mr-1" />
+                                  Bookmark
+                                </>
+                              )}
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </CardContent>
