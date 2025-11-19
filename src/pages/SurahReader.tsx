@@ -169,21 +169,27 @@ const SurahReader = () => {
     try {
       // Try Web Share API first (if supported)
       if (navigator.share) {
-        await navigator.share({
-          title: `${arabicData.englishName} - Ayah ${ayahNumber}`,
-          text: shareText,
-        });
-        toast.success("Shared successfully");
-      } else {
-        // Fallback to clipboard
-        await navigator.clipboard.writeText(shareText);
-        toast.success("Copied to clipboard");
+        try {
+          await navigator.share({
+            title: `${arabicData.englishName} - Ayah ${ayahNumber}`,
+            text: shareText,
+          });
+          toast.success("Shared successfully");
+          return;
+        } catch (shareError) {
+          // If share fails (NotAllowedError, etc.), fall through to clipboard
+          if (shareError instanceof Error && shareError.name === "AbortError") {
+            return; // User cancelled, don't show error
+          }
+        }
       }
+      
+      // Fallback to clipboard
+      await navigator.clipboard.writeText(shareText);
+      toast.success("Copied to clipboard");
     } catch (error) {
-      if (error instanceof Error && error.name !== "AbortError") {
-        console.error("Error sharing:", error);
-        toast.error("Failed to share");
-      }
+      console.error("Error sharing:", error);
+      toast.error("Failed to copy to clipboard");
     }
   };
 
