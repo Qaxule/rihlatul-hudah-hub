@@ -86,7 +86,7 @@ export function QuranNavigator({
   const NavigatorContent = () => (
     <div className="grid grid-cols-3 gap-2 h-[60vh] md:h-[500px]">
       {/* Juz Column */}
-      <div className="flex flex-col">
+      <div className="flex flex-col min-h-0">
         <div className="text-sm font-semibold mb-2 px-2 py-1 bg-muted rounded-t-md">Juz</div>
         <ScrollArea className="flex-1 rounded-b-md border">
           <div className="p-2 space-y-1">
@@ -109,7 +109,7 @@ export function QuranNavigator({
       </div>
 
       {/* Surah Column */}
-      <div className="flex flex-col">
+      <div className="flex flex-col min-h-0">
         <div className="text-sm font-semibold mb-2 px-2 py-1 bg-muted rounded-t-md">Surah</div>
         <ScrollArea className="flex-1 rounded-b-md border">
           <div className="p-2 space-y-1">
@@ -133,7 +133,7 @@ export function QuranNavigator({
       </div>
 
       {/* Ayah Column */}
-      <div className="flex flex-col">
+      <div className="flex flex-col min-h-0">
         <div className="text-sm font-semibold mb-2 px-2 py-1 bg-muted rounded-t-md">Ayah</div>
         <ScrollArea className="flex-1 rounded-b-md border">
           {selectedSurah ? (
