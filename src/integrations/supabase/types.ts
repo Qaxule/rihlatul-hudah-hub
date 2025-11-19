@@ -191,6 +191,33 @@ export type Database = {
         }
         Relationships: []
       }
+      reading_progress: {
+        Row: {
+          ayah_number: number
+          created_at: string
+          id: string
+          last_read_at: string
+          surah_number: number
+          user_id: string
+        }
+        Insert: {
+          ayah_number: number
+          created_at?: string
+          id?: string
+          last_read_at?: string
+          surah_number: number
+          user_id: string
+        }
+        Update: {
+          ayah_number?: number
+          created_at?: string
+          id?: string
+          last_read_at?: string
+          surah_number?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       reflections: {
         Row: {
           content: string
