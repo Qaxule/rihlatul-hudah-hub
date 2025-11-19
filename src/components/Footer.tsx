@@ -58,28 +58,28 @@ const Footer = () => {
             <h3 className="text-lg font-semibold text-foreground">Legal & Support</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
+                <Link to="/privacy-policy" className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
                   <FileText className="w-4 h-4" />
                   Privacy Policy
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
+                <Link to="/terms-of-use" className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
                   <FileText className="w-4 h-4" />
                   Terms of Use
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
+                <Link to="/disclaimer" className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
                   <Shield className="w-4 h-4" />
                   Disclaimer
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
+                <Link to="/support" className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
                   <DollarSign className="w-4 h-4" />
                   Support the Project
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
