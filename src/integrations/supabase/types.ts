@@ -47,6 +47,36 @@ export type Database = {
         }
         Relationships: []
       }
+      hadith_bookmarks: {
+        Row: {
+          collection_id: string
+          created_at: string
+          hadith_arabic_text: string | null
+          hadith_number: number
+          hadith_text: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          collection_id: string
+          created_at?: string
+          hadith_arabic_text?: string | null
+          hadith_number: number
+          hadith_text: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          collection_id?: string
+          created_at?: string
+          hadith_arabic_text?: string | null
+          hadith_number?: number
+          hadith_text?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       learning_progress: {
         Row: {
           completed: boolean | null
