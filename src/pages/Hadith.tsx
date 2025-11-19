@@ -107,13 +107,6 @@ const Hadith = () => {
       description: "Sacred words of Allah",
       color: "bg-fuchsia-500/10 border-fuchsia-500/20 hover:bg-fuchsia-500/20"
     },
-    { 
-      id: "eng-mishkat", 
-      name: "Mishkat al-Masabih", 
-      count: "6000+ Hadiths", 
-      description: "Comprehensive hadith compilation",
-      color: "bg-red-500/10 border-red-500/20 hover:bg-red-500/20"
-    },
   ];
 
   useEffect(() => {
