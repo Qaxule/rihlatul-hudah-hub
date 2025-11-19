@@ -79,7 +79,10 @@ serve(async (req) => {
       // Try sequential hadith numbers, skipping missing ones
       let num = start;
       let attempts = 0;
-      while (hadiths.length < limit && attempts < limit * 2) {
+      let consecutiveFailures = 0;
+      const maxConsecutiveFailures = 50; // Stop if we hit 50 consecutive failures
+      
+      while (hadiths.length < limit && consecutiveFailures < maxConsecutiveFailures) {
         const urls = [
           `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${collection}/${num}.min.json`,
           `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${collection}/${num}.json`,
@@ -104,9 +107,11 @@ serve(async (req) => {
               // If Arabic not available, continue with English only
             }
             hadiths.push(item.hadiths[0]);
+            consecutiveFailures = 0; // Reset on success
           }
         } catch (_) {
-          // ignore missing numbers and continue
+          // Count consecutive failures to detect end of collection
+          consecutiveFailures++;
         }
         num++;
         attempts++;
