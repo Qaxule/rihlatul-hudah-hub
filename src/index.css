@@ -203,3 +203,25 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+/* Tajweed text styling */
+.tajweed-text {
+  font-family: 'Traditional Arabic', 'Arabic Typesetting', 'Amiri', serif;
+  line-height: 2.5;
+  word-spacing: 0.5rem;
+}
+
+/* Preserve tajweed colors from API */
+.tajweed-text span[style*="color"] {
+  font-weight: 500;
+}
+
+/* Smooth color transitions for better readability */
+.tajweed-text span {
+  transition: opacity 0.2s ease;
+}
+
+.tajweed-text span:hover {
+  opacity: 0.8;
+}
+
