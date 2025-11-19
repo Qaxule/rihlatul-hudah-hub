@@ -4,7 +4,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, BookOpen, Loader2, Bookmark, BookmarkCheck, ChevronDown, ChevronUp, Share2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, BookOpen, Loader2, Bookmark, BookmarkCheck, ChevronDown, ChevronUp, Share2, Menu } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -12,6 +12,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { QuranNavigator } from "@/components/QuranNavigator";
 
 interface Ayah {
   number: number;
@@ -41,6 +42,8 @@ const SurahReader = () => {
   const [loadingTafsir, setLoadingTafsir] = useState<Set<number>>(new Set());
   const [selectedTafsir, setSelectedTafsir] = useState<string>("1");
   const [isAbridged, setIsAbridged] = useState<boolean>(true);
+  const [navigatorOpen, setNavigatorOpen] = useState(false);
+  const [currentVisibleAyah, setCurrentVisibleAyah] = useState<number>(1);
   const ayahRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const { user } = useAuth();
 
@@ -60,6 +63,7 @@ const SurahReader = () => {
           const ayahNumber = parseInt(entry.target.getAttribute('data-ayah') || '0');
           if (ayahNumber > 0) {
             saveReadingProgress(parseInt(surahNumber), ayahNumber);
+            setCurrentVisibleAyah(ayahNumber);
           }
         }
       });
@@ -278,6 +282,33 @@ const SurahReader = () => {
     });
   }, [selectedTafsir, isAbridged]);
 
+  // Handle hash navigation to specific ayah
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      const ayahMatch = hash.match(/#ayah-(\d+)/);
+      if (ayahMatch) {
+        const ayahNumber = parseInt(ayahMatch[1]);
+        setTimeout(() => scrollToAyah(ayahNumber), 500);
+      }
+    }
+  }, [arabicData]);
+
+  const scrollToAyah = (ayahNumber: number) => {
+    const ayahElement = ayahRefs.current[ayahNumber];
+    if (ayahElement) {
+      ayahElement.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'center' 
+      });
+      // Highlight the ayah briefly
+      ayahElement.classList.add('ring-2', 'ring-primary');
+      setTimeout(() => {
+        ayahElement.classList.remove('ring-2', 'ring-primary');
+      }, 2000);
+    }
+  };
+
   const fetchSurahData = async (number: number) => {
     try {
       setLoading(true);
@@ -365,10 +396,21 @@ const SurahReader = () => {
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
-            <Link to="/quran" className="inline-flex items-center text-primary hover:underline mb-4">
-              <BookOpen className="h-4 w-4 mr-2" />
-              Back to Quran
-            </Link>
+            <div className="flex items-center justify-between mb-4">
+              <Link to="/quran" className="inline-flex items-center text-primary hover:underline">
+                <BookOpen className="h-4 w-4 mr-2" />
+                Back to Quran
+              </Link>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setNavigatorOpen(true)}
+                className="gap-2"
+              >
+                <Menu className="h-4 w-4" />
+                Navigate
+              </Button>
+            </div>
             <h1 className="text-4xl font-bold mb-2" dir="rtl">
               {arabicData.name}
             </h1>
@@ -547,6 +589,15 @@ const SurahReader = () => {
             )}
           </div>
         </div>
+
+        {/* Quran Navigator */}
+        <QuranNavigator
+          open={navigatorOpen}
+          onOpenChange={setNavigatorOpen}
+          currentSurah={currentSurahNum}
+          currentAyah={currentVisibleAyah}
+          onAyahSelect={scrollToAyah}
+        />
       </main>
 
       <Footer />
