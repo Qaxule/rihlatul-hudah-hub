@@ -132,13 +132,13 @@ const Hadith = () => {
     }
   };
 
-  const fetchHadiths = async (collectionId: string) => {
+  const fetchHadiths = async (collectionId: string, page: number = 1) => {
     setLoading(true);
     setSelectedCollection(collectionId);
     
     try {
       const { data, error } = await supabase.functions.invoke('hadith-data', {
-        body: { collection: collectionId }
+        body: { collection: collectionId, page, limit: 50 }
       });
 
       if (error) throw error;
@@ -158,14 +158,54 @@ const Hadith = () => {
     }
   };
 
-  // Filter hadiths by reference number if search term is a number, otherwise by text
-  const filteredHadiths = hadiths.filter((hadith) => {
-    const isNumber = /^\d+$/.test(searchTerm);
-    if (isNumber) {
-      return hadith.hadithnumber?.toString() === searchTerm;
+  const fetchSpecificHadith = async (collectionId: string, hadithNumber: string) => {
+    setLoading(true);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('hadith-data', {
+        body: { collection: collectionId, hadith: hadithNumber }
+      });
+
+      if (error) throw error;
+      
+      if (data?.hadiths && data.hadiths.length > 0) {
+        setHadiths(data.hadiths);
+      } else {
+        toast({
+          title: "Not Found",
+          description: `Hadith #${hadithNumber} not found in this collection.`,
+          variant: "destructive"
+        });
+        setHadiths([]);
+      }
+    } catch (error) {
+      console.error('Error fetching specific hadith:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load hadith. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
     }
-    return hadith.text?.toLowerCase().includes(searchTerm.toLowerCase());
-  });
+  };
+
+  const handleSearch = () => {
+    if (!selectedCollection) return;
+    
+    const isNumber = /^\d+$/.test(searchTerm.trim());
+    if (isNumber && searchTerm.trim()) {
+      fetchSpecificHadith(selectedCollection, searchTerm.trim());
+    } else {
+      // Reload the collection if searching text or clearing search
+      fetchHadiths(selectedCollection);
+    }
+  };
+
+  // Filter hadiths by text search only (number search now uses fetchSpecificHadith)
+  const filteredHadiths = searchTerm && !/^\d+$/.test(searchTerm) 
+    ? hadiths.filter((hadith) => hadith.text?.toLowerCase().includes(searchTerm.toLowerCase()))
+    : hadiths;
 
   return (
     <div className="min-h-screen bg-gradient-subtle flex flex-col">
@@ -296,18 +336,24 @@ const Hadith = () => {
 
             {/* Search */}
             <div className="mb-8">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
-                <Input
-                  type="text"
-                  placeholder="Search by hadith number or text..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 h-12 shadow-soft"
-                />
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+                  <Input
+                    type="text"
+                    placeholder="Search by hadith number or text..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                    className="pl-10 h-12 shadow-soft"
+                  />
+                </div>
+                <Button onClick={handleSearch} className="h-12 px-6">
+                  Search
+                </Button>
               </div>
               <p className="text-sm text-muted-foreground mt-2 text-center">
-                Enter a hadith reference number or search by text
+                Enter a hadith reference number (e.g., 100, 500) or search by text
               </p>
             </div>
 
