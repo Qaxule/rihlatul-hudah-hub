@@ -47,6 +47,39 @@ const SurahReader = () => {
   const ayahRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const { user } = useAuth();
 
+  // Save reading position to localStorage whenever visible ayah changes
+  useEffect(() => {
+    if (surahNumber && currentVisibleAyah > 0) {
+      const position = {
+        surahNumber: parseInt(surahNumber),
+        ayahNumber: currentVisibleAyah,
+        timestamp: Date.now()
+      };
+      localStorage.setItem('quran-reading-position', JSON.stringify(position));
+    }
+  }, [surahNumber, currentVisibleAyah]);
+
+  // Restore reading position after data is loaded
+  useEffect(() => {
+    if (!arabicData || !surahNumber) return;
+
+    const savedPosition = localStorage.getItem('quran-reading-position');
+    if (savedPosition) {
+      try {
+        const position = JSON.parse(savedPosition);
+        // Only restore if it's for the current surah
+        if (position.surahNumber === parseInt(surahNumber)) {
+          // Wait for DOM to be ready, then scroll to saved position
+          setTimeout(() => {
+            scrollToAyah(position.ayahNumber);
+          }, 300);
+        }
+      } catch (e) {
+        console.error('Failed to restore reading position:', e);
+      }
+    }
+  }, [arabicData, surahNumber]);
+
   // Save reading progress when ayahs are viewed
   useEffect(() => {
     if (!user || !surahNumber || !arabicData) return;
