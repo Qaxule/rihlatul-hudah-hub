@@ -242,10 +242,13 @@ const Hadith = () => {
       if (error) throw error;
       
       if (data?.hadiths) {
+        // Filter out any entries without text or arabictext to avoid blank tiles
+        const cleaned = data.hadiths.filter((h: any) => h?.text || h?.arabictext);
+
         if (append) {
-          setHadiths(prev => [...prev, ...data.hadiths]);
+          setHadiths(prev => [...prev, ...cleaned]);
         } else {
-          setHadiths(data.hadiths);
+          setHadiths(cleaned);
         }
         
         // Check if there are more hadiths to load
@@ -284,7 +287,8 @@ const Hadith = () => {
       if (error) throw error;
       
       if (data?.hadiths && data.hadiths.length > 0) {
-        setHadiths(data.hadiths);
+        const cleaned = data.hadiths.filter((h: any) => h?.text || h?.arabictext);
+        setHadiths(cleaned);
       } else {
         toast({
           title: "Not Found",
