@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import AudioPlayer from "@/components/AudioPlayer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, BookOpen, Loader2, Bookmark, BookmarkCheck, ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronLeft, ChevronRight, BookOpen, Loader2, Bookmark, BookmarkCheck, ChevronDown, ChevronUp, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -138,6 +138,52 @@ const SurahReader = () => {
       const newLoadingTafsir = new Set(loadingTafsir);
       newLoadingTafsir.delete(ayahNumber);
       setLoadingTafsir(newLoadingTafsir);
+    }
+  };
+
+  const handleShareAyah = async (ayahNumber: number) => {
+    if (!arabicData || !translationData) return;
+    
+    const index = ayahNumber - 1;
+    const arabicText = arabicData.ayahs[index]?.text || "";
+    const transliteration = transliterationData?.ayahs[index]?.text || "";
+    const translation = translationData.ayahs[index]?.text || "";
+    
+    // Get tafsir if available
+    const tafsirKey = `${ayahNumber}-${selectedTafsir}-${selectedTafsir === "1" ? isAbridged : "full"}`;
+    const tafsir = tafsirData[tafsirKey];
+    
+    // Format the share text
+    let shareText = `${arabicData.englishName} (${arabicData.name}) - Ayah ${ayahNumber}\n\n`;
+    shareText += `${arabicText}\n\n`;
+    if (transliteration) {
+      shareText += `${transliteration}\n\n`;
+    }
+    shareText += `Translation: ${translation}`;
+    
+    if (tafsir && openTafsirs.has(ayahNumber)) {
+      const tafsirName = selectedTafsir === "1" ? "Ibn Kathir" : selectedTafsir === "2" ? "Maarif Ul Quran" : "Tazkirul Quran";
+      shareText += `\n\nTafsir (${tafsirName}):\n${tafsir}`;
+    }
+    
+    try {
+      // Try Web Share API first (if supported)
+      if (navigator.share) {
+        await navigator.share({
+          title: `${arabicData.englishName} - Ayah ${ayahNumber}`,
+          text: shareText,
+        });
+        toast.success("Shared successfully");
+      } else {
+        // Fallback to clipboard
+        await navigator.clipboard.writeText(shareText);
+        toast.success("Copied to clipboard");
+      }
+    } catch (error) {
+      if (error instanceof Error && error.name !== "AbortError") {
+        console.error("Error sharing:", error);
+        toast.error("Failed to share");
+      }
     }
   };
 
@@ -304,6 +350,15 @@ const SurahReader = () => {
                         ayahNumber={ayah.numberInSurah}
                         onPlay={() => handleAudioPlay(ayah.numberInSurah)}
                       />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleShareAyah(ayah.numberInSurah)}
+                        className="h-8 w-8"
+                        title="Share ayah"
+                      >
+                        <Share2 className="w-4 h-4" />
+                      </Button>
                       <Button
                         variant="ghost"
                         size="icon"
