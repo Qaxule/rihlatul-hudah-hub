@@ -11,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
+import { HadithSkeleton } from "@/components/HadithSkeleton";
 
 interface HadithData {
   hadithnumber: number;
@@ -497,11 +498,7 @@ const Hadith = () => {
             <div className="space-y-6">
               {loading ? (
                 Array.from({ length: 5 }).map((_, i) => (
-                  <Card key={i}>
-                    <CardContent className="p-6">
-                      <Skeleton className="h-20 w-full" />
-                    </CardContent>
-                  </Card>
+                  <HadithSkeleton key={i} />
                 ))
               ) : filteredHadiths.length > 0 ? (
                 filteredHadiths.map((hadith, index) => (

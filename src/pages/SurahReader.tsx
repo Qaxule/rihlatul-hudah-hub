@@ -4,7 +4,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, BookOpen, Loader2, Bookmark, BookmarkCheck, ChevronDown, ChevronUp, Share2, Menu } from "lucide-react";
+import { ChevronLeft, ChevronRight, BookOpen, Bookmark, BookmarkCheck, ChevronDown, ChevronUp, Share2, Menu } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -13,6 +13,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { QuranNavigator } from "@/components/QuranNavigator";
+import { AyahSkeleton } from "@/components/AyahSkeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface Ayah {
   number: number;
@@ -401,8 +403,12 @@ const SurahReader = () => {
     return (
       <div className="min-h-screen bg-gradient-subtle flex flex-col">
         <Navigation />
-        <div className="flex-1 flex items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <div className="flex-1 container mx-auto px-4 py-8">
+          <div className="max-w-4xl mx-auto space-y-6">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <AyahSkeleton key={i} />
+            ))}
+          </div>
         </div>
         <Footer />
       </div>
@@ -576,8 +582,10 @@ const SurahReader = () => {
                     </div>
                     <CollapsibleContent className="pt-2">
                       {loadingTafsir.has(ayah.numberInSurah) ? (
-                        <div className="flex items-center justify-center py-8">
-                          <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                        <div className="space-y-2 py-4">
+                          <Skeleton className="h-4 w-full" />
+                          <Skeleton className="h-4 w-11/12" />
+                          <Skeleton className="h-4 w-5/6" />
                         </div>
                       ) : (
                         <div className="bg-muted/50 rounded-lg p-4">
