@@ -27,6 +27,9 @@ const Hadith = () => {
   const [selectedCollection, setSelectedCollection] = useState<string | null>(null);
   const [hadiths, setHadiths] = useState<HadithData[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMoreHadiths, setHasMoreHadiths] = useState(true);
   const [randomHadith, setRandomHadith] = useState<HadithData | null>(null);
   const [showArabic, setShowArabic] = useState(() => {
     const saved = localStorage.getItem('hadith-show-arabic');
@@ -227,19 +230,33 @@ const Hadith = () => {
     }
   };
 
-  const fetchHadiths = async (collectionId: string, page: number = 1) => {
-    setLoading(true);
+  const fetchHadiths = async (collectionId: string, page: number = 1, append: boolean = false) => {
+    if (append) {
+      setLoadingMore(true);
+    } else {
+      setLoading(true);
+      setCurrentPage(1);
+      setHasMoreHadiths(true);
+    }
     setSelectedCollection(collectionId);
     
     try {
       const { data, error } = await supabase.functions.invoke('hadith-data', {
-        body: { collection: collectionId, page, limit: 50 }
+        body: { collection: collectionId, page, limit: 20 }
       });
 
       if (error) throw error;
       
       if (data?.hadiths) {
-        setHadiths(data.hadiths);
+        if (append) {
+          setHadiths(prev => [...prev, ...data.hadiths]);
+        } else {
+          setHadiths(data.hadiths);
+        }
+        
+        // Check if there are more hadiths to load
+        // If we got fewer than requested, we've reached the end
+        setHasMoreHadiths(data.hadiths.length >= 20);
       }
     } catch (error) {
       console.error('Error fetching hadiths:', error);
@@ -250,7 +267,16 @@ const Hadith = () => {
       });
     } finally {
       setLoading(false);
+      setLoadingMore(false);
     }
+  };
+
+  const loadMoreHadiths = async () => {
+    if (!selectedCollection || !hasMoreHadiths || loadingMore) return;
+    
+    const nextPage = currentPage + 1;
+    setCurrentPage(nextPage);
+    await fetchHadiths(selectedCollection, nextPage, true);
   };
 
   const fetchSpecificHadith = async (collectionId: string, hadithNumber: string) => {
@@ -291,6 +317,7 @@ const Hadith = () => {
     const isNumber = /^\d+$/.test(searchTerm.trim());
     if (isNumber && searchTerm.trim()) {
       fetchSpecificHadith(selectedCollection, searchTerm.trim());
+      setHasMoreHadiths(false); // Disable load more for specific hadith search
     } else {
       // Reload the collection if searching text or clearing search
       fetchHadiths(selectedCollection);
@@ -432,6 +459,8 @@ const Hadith = () => {
                   setSelectedCollection(null);
                   setHadiths([]);
                   setSearchTerm("");
+                  setCurrentPage(1);
+                  setHasMoreHadiths(true);
                 }}
               >
                 ← Back to Collections
@@ -543,6 +572,28 @@ const Hadith = () => {
                     <p className="text-muted-foreground">No hadiths found matching your search.</p>
                   </CardContent>
                 </Card>
+              )}
+
+              {/* Load More Button */}
+              {!loading && filteredHadiths.length > 0 && hasMoreHadiths && !searchTerm && (
+                <div className="flex justify-center mt-8">
+                  <Button
+                    onClick={loadMoreHadiths}
+                    disabled={loadingMore}
+                    size="lg"
+                    variant="outline"
+                    className="min-w-[200px]"
+                  >
+                    {loadingMore ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin mr-2" />
+                        Loading...
+                      </>
+                    ) : (
+                      'Load More Hadiths'
+                    )}
+                  </Button>
+                </div>
               )}
             </div>
           </div>
