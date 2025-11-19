@@ -44,6 +44,75 @@ const SurahReader = () => {
   const ayahRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const { user } = useAuth();
 
+  // Save reading progress when ayahs are viewed
+  useEffect(() => {
+    if (!user || !surahNumber || !arabicData) return;
+
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.5, // Trigger when 50% of ayah is visible
+    };
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const ayahNumber = parseInt(entry.target.getAttribute('data-ayah') || '0');
+          if (ayahNumber > 0) {
+            saveReadingProgress(parseInt(surahNumber), ayahNumber);
+          }
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    // Observe all ayah cards
+    Object.values(ayahRefs.current).forEach((ref) => {
+      if (ref) observer.observe(ref);
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [user, surahNumber, arabicData]);
+
+  const saveReadingProgress = async (surahNum: number, ayahNum: number) => {
+    if (!user) return;
+
+    try {
+      // Check if progress exists
+      const { data: existing } = await supabase
+        .from('reading_progress')
+        .select('id')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (existing) {
+        // Update existing progress
+        await supabase
+          .from('reading_progress')
+          .update({
+            surah_number: surahNum,
+            ayah_number: ayahNum,
+            last_read_at: new Date().toISOString(),
+          })
+          .eq('user_id', user.id);
+      } else {
+        // Insert new progress
+        await supabase
+          .from('reading_progress')
+          .insert({
+            user_id: user.id,
+            surah_number: surahNum,
+            ayah_number: ayahNum,
+          });
+      }
+    } catch (error) {
+      console.error('Error saving reading progress:', error);
+    }
+  };
+
   useEffect(() => {
     if (surahNumber) {
       fetchSurahData(parseInt(surahNumber));
@@ -332,6 +401,7 @@ const SurahReader = () => {
                 key={ayah.number}
                 className="shadow-soft"
                 ref={(el) => (ayahRefs.current[ayah.numberInSurah] = el)}
+                data-ayah={ayah.numberInSurah}
               >
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">

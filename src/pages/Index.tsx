@@ -7,6 +7,8 @@ import { Book, Heart, Calendar, Sparkles, ArrowRight, Compass, BookOpen } from "
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAuth } from "@/contexts/AuthContext";
+
 interface AyatOfTheDay {
   surah: {
     number: number;
@@ -21,12 +23,43 @@ interface AyatOfTheDay {
     translation: string;
   };
 }
+
+interface ReadingProgress {
+  surah_number: number;
+  ayah_number: number;
+}
+
 const Index = () => {
   const [ayatOfTheDay, setAyatOfTheDay] = useState<AyatOfTheDay | null>(null);
   const [loading, setLoading] = useState(true);
+  const [readingProgress, setReadingProgress] = useState<ReadingProgress | null>(null);
+  const { user } = useAuth();
+
   useEffect(() => {
     fetchAyatOfTheDay();
-  }, []);
+    if (user) {
+      fetchReadingProgress();
+    }
+  }, [user]);
+
+  const fetchReadingProgress = async () => {
+    if (!user) return;
+
+    try {
+      const { data } = await supabase
+        .from('reading_progress')
+        .select('surah_number, ayah_number')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (data) {
+        setReadingProgress(data);
+      }
+    } catch (error) {
+      console.error('Error fetching reading progress:', error);
+    }
+  };
+
   const fetchAyatOfTheDay = async () => {
     try {
       const {
@@ -62,12 +95,21 @@ const Index = () => {
           </div>
           
           <div className="flex flex-wrap justify-center gap-4 pt-4 animate-fade-in [animation-delay:0.7s]">
-            <Button asChild size="lg" className="shadow-elevated hover:shadow-glow transition-all">
-              <Link to="/quran">
-                Explore Qur'an
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
+            {readingProgress ? (
+              <Button asChild size="lg" className="shadow-elevated hover:shadow-glow transition-all">
+                <Link to={`/surah/${readingProgress.surah_number}`}>
+                  <BookOpen className="mr-2 h-5 w-5" />
+                  Continue Reading
+                </Link>
+              </Button>
+            ) : (
+              <Button asChild size="lg" className="shadow-elevated hover:shadow-glow transition-all">
+                <Link to="/quran">
+                  Explore Qur'an
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+            )}
             <Button asChild variant="outline" size="lg" className="shadow-soft">
               <Link to="/guides">New to Islam?</Link>
             </Button>
