@@ -3,7 +3,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Book, Heart, Calendar, Sparkles, ArrowRight, Compass, BookOpen } from "lucide-react";
+import { Book, Heart, Calendar, Sparkles, ArrowRight, Compass, BookOpen, Gem } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -238,7 +238,7 @@ const Index = () => {
               <Card className="cursor-pointer hover:shadow-elevated transition-all h-full group">
                 <CardContent className="p-6 space-y-4">
                   <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <Sparkles className="w-6 h-6 text-primary" />
+                    <Gem className="w-6 h-6 text-primary" />
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">
