@@ -108,17 +108,6 @@ const SurahReader = () => {
   };
 
   const fetchTafsir = async (ayahNumber: number) => {
-    if (!user) {
-      toast.error("Please login to view tafsir");
-      return;
-    }
-
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      toast.error("Please login to view tafsir");
-      return;
-    }
-
     const tafsirKey = `${ayahNumber}-${selectedTafsir}-${selectedTafsir === "1" ? isAbridged : "full"}`;
     if (tafsirData[tafsirKey]) {
       return; // Already loaded
