@@ -160,6 +160,39 @@ All colors MUST be HSL.
     --input: 120 18% 84%;
     --ring: 145 70% 28%;
   }
+
+  .midnight {
+    --background: 240 45% 8%;
+    --foreground: 240 15% 95%;
+
+    --card: 240 40% 11%;
+    --card-foreground: 240 15% 95%;
+
+    --popover: 240 40% 11%;
+    --popover-foreground: 240 15% 95%;
+
+    --primary: 270 60% 55%;
+    --primary-foreground: 240 15% 98%;
+
+    --secondary: 240 35% 16%;
+    --secondary-foreground: 240 15% 95%;
+
+    --muted: 240 35% 14%;
+    --muted-foreground: 240 10% 72%;
+
+    --accent: 280 70% 60%;
+    --accent-foreground: 240 15% 98%;
+
+    --navy: 240 45% 10%;
+    --navy-foreground: 240 15% 95%;
+
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 240 15% 98%;
+
+    --border: 240 30% 20%;
+    --input: 240 35% 17%;
+    --ring: 270 60% 55%;
+  }
 }
 
 @layer base {
