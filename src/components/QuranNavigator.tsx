@@ -53,25 +53,22 @@ export function QuranNavigator({
 
   const handleJuzSelect = (juzNumber: number) => {
     setSelectedJuz(juzNumber);
-    // Auto-select first surah in the juz
+    // Auto-select first surah in the juz but don't navigate yet
     const surahs = getSurahsByJuz(juzNumber);
     if (surahs.length > 0) {
-      handleSurahSelect(surahs[0]);
+      setSelectedSurah(surahs[0].number);
+      setAyahCount(surahs[0].numberOfAyahs);
     }
   };
 
   const handleSurahSelect = (surah: SurahInfo) => {
+    // Just update the selection, don't navigate until ayah is selected
     setSelectedSurah(surah.number);
     setAyahCount(surah.numberOfAyahs);
-    
-    // If we're not on the same surah page, navigate to it
-    if (currentSurah !== surah.number) {
-      navigate(`/surah/${surah.number}`);
-      onOpenChange(false);
-    }
   };
 
   const handleAyahSelect = (ayahNumber: number) => {
+    // Only navigate when an ayah is actually selected
     if (onAyahSelect && selectedSurah === currentSurah) {
       // Same surah, just scroll to ayah
       onAyahSelect(ayahNumber);
