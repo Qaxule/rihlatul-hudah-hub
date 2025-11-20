@@ -16,7 +16,6 @@ const ThemeSelector = () => {
     { value: "sepia", label: "Sepia", icon: FileText },
     { value: "ocean", label: "Ocean", icon: Waves },
     { value: "forest", label: "Forest", icon: Trees },
-    { value: "midnight", label: "Midnight", icon: Moon },
   ];
 
   const currentTheme = themes.find(t => t.value === theme);
