@@ -13,6 +13,7 @@ const ThemeSelector = () => {
 
   const themes = [
     { value: "light", label: "Light", icon: Sun },
+    { value: "dark", label: "Dark", icon: Moon },
     { value: "sepia", label: "Sepia", icon: FileText },
     { value: "ocean", label: "Ocean", icon: Waves },
     { value: "forest", label: "Forest", icon: Trees },
