@@ -596,562 +596,1138 @@ export const tajwidRules: TajwidRule[] = [
   {
     id: "noon-sakinah-idgham",
     title: "Noon Sakinah - Idgham (Merging)",
-    description: "When Noon Sakinah or Tanween is followed by ي ر م ل و ن, it merges with the following letter. Letters: يرملون (YARMALOON)",
+    description: "When Noon Sakinah (نْ) or Tanween is followed by one of six letters ي ر م ل و ن (YARMALOON), the noon sound merges into the following letter. With ي و م ن there is ghunna (nasal sound) for 2 counts. With ر ل there is no ghunna. This rule beautifies recitation by creating smooth transitions between words.",
     examples: [
       {
-        arabic: "مَنْ يَقُولُ",
+        arabic: "مَنْ يَقُولُ - Surah Al-Baqarah 2:8",
         transliteration: "may-yaqoolu",
         highlight: "نْ ي",
-        explanation: "Idgham with Ghunna - Noon merges with Ya (ي), nasal sound held for 2 counts"
+        explanation: "Idgham with Ghunna - The noon sakinah completely merges with Ya (ي), creating a nasal 'yy' sound held for 2 counts. From the verse 'And among the people are those who say...'"
       },
       {
-        arabic: "مِنْ رَبِّهِمْ",
+        arabic: "مِنْ رَبِّهِمْ - Surah Al-Baqarah 2:5",
         transliteration: "mir-rabbihim",
         highlight: "نْ ر",
-        explanation: "Idgham without Ghunna - Noon merges with Ra (ر), no nasal sound"
+        explanation: "Idgham without Ghunna - Noon completely disappears into Ra (ر) with no nasal sound, lips don't close for 'n'. From 'They are on guidance from their Lord.' The noon is completely absorbed."
       },
       {
-        arabic: "مِنْ مَاءٍ",
+        arabic: "مِنْ مَاءٍ - Surah Al-Anbiya 21:30",
         transliteration: "mim-ma'in",
         highlight: "نْ م",
-        explanation: "Idgham with Ghunna - Noon merges with Meem (م), nasal sound for 2 counts"
+        explanation: "Idgham with Ghunna - Noon merges completely with Meem (م), hold nasal sound for 2 counts. From 'And We made from water every living thing.' The sound comes purely from the nose."
       },
       {
-        arabic: "مِنْ لَدُنْهُ",
+        arabic: "مِنْ لَدُنْهُ - Surah Al-Kahf 18:2",
         transliteration: "mil-ladunhu",
         highlight: "نْ ل",
-        explanation: "Idgham without Ghunna - Noon merges with Lam (ل), no nasal sound"
+        explanation: "Idgham without Ghunna - Noon is absorbed into Lam (ل) without any nasal resonance. From the verse about guidance 'from His presence.' Tongue goes directly to 'l' position."
       },
       {
-        arabic: "مَنْ وَلِيًّا",
+        arabic: "مَنْ وَلِيًّا - Surah Al-Kahf 18:17",
         transliteration: "maw-waliyyan",
         highlight: "نْ و",
-        explanation: "Idgham with Ghunna - Noon merges with Waw (و), nasal sound for 2 counts"
+        explanation: "Idgham with Ghunna - Noon merges with Waw (و) with nasal sound for 2 counts, creating prolonged 'ww' sound from the nose. From 'And whom Allah sends astray, you will never find for him a protecting guide.'"
       },
       {
-        arabic: "مِنْ نِعْمَةٍ",
+        arabic: "مِنْ نِعْمَةٍ - Surah An-Nahl 16:53",
         transliteration: "min-ni'matin",
         highlight: "نْ ن",
-        explanation: "Idgham with Ghunna - Noon merges with Noon (ن), strong nasal sound for 2 counts"
+        explanation: "Idgham Mutamathlain - Two identical letters (Noon into Noon). Hold strong nasal ghunna for 2 counts. From 'And whatever you have of favor, it is from Allah.' This creates the strongest nasal sound."
+      },
+      {
+        arabic: "عَلِيمٌ حَكِيمٌ - Surah Al-Baqarah 2:32",
+        transliteration: "aleemun hakeemun",
+        highlight: "مٌ ح",
+        explanation: "Note: This is NOT Idgham - Tanween before throat letter Ha (ح) requires Idhar (clear pronunciation). This shows what Idgham is NOT. Say the 'n' sound clearly before 'h'."
       }
     ]
   },
   {
     id: "noon-sakinah-ikhfa",
     title: "Noon Sakinah - Ikhfa (Concealment)",
-    description: "When Noon Sakinah or Tanween is followed by 15 specific letters (ص ذ ث ك ج ش ق س د ط ز ف ت ض ظ), pronounce it with a nasal sound between clear pronunciation and merging.",
+    description: "When Noon Sakinah (نْ) or Tanween is followed by 15 specific letters (ص ذ ث ك ج ش ق س د ط ز ف ت ض ظ), the noon is concealed - pronounced somewhere between clear (Idhar) and merged (Idgham). Produce a light nasal ghunna for 2 counts without pressing tongue to roof of mouth. These 15 letters are neither throat letters (Idhar) nor YARMALOON letters (Idgham) nor Ba (Iqlab).",
     examples: [
       {
-        arabic: "مَنْ صَدَّ",
+        arabic: "مَنْ صَدَّ - Surah An-Nisa 4:115",
         transliteration: "man sadda (with nasal)",
         highlight: "نْ ص",
-        explanation: "Ikhfa before Sad (ص) - Conceal the noon with ghunna for 2 counts"
+        explanation: "Ikhfa before Sad (ص) - Conceal the noon with gentle ghunna for 2 counts. Don't say 'man' clearly, don't merge completely - hover between them. From 'And whoever opposes the Messenger...' The tongue doesn't touch the roof of mouth."
       },
       {
-        arabic: "مِنْ ذَكَرٍ",
+        arabic: "مِنْ ذَكَرٍ - Surah Al-An'am 6:143",
         transliteration: "min dhakarin (with nasal)",
         highlight: "نْ ذ",
-        explanation: "Ikhfa before Dhal (ذ) - Partially hide the noon with nasal sound"
+        explanation: "Ikhfa before Dhal (ذ) - Hide the noon with nasal resonance. From 'Of the male or female?' in the verse about eight pairs of livestock. The noon sound is present but concealed, coming through the nose only."
       },
       {
-        arabic: "مِنْ ثَمَرَةٍ",
+        arabic: "مِنْ ثَمَرَةٍ - Surah Al-Baqarah 2:22",
         transliteration: "min thamaratin (with nasal)",
         highlight: "نْ ث",
-        explanation: "Ikhfa before Tha (ث) - Conceal with ghunna"
+        explanation: "Ikhfa before Tha (ث) - Conceal with gentle ghunna. From the verse about Allah bringing forth fruits as provision. Keep the mouth relaxed, let the nasal sound flow naturally without tongue touching roof."
       },
       {
-        arabic: "أَنْ كَانَ",
+        arabic: "أَنْ كَانَ - Surah Al-Insan 76:1",
         transliteration: "an kaana (with nasal)",
         highlight: "نْ ك",
-        explanation: "Ikhfa before Kaf (ك) - Hide noon with nasal resonance"
+        explanation: "Ikhfa before Kaf (ك) - Hide noon with nasal resonance for 2 counts. From Surah Al-Insan: 'Has there come upon man a period of time when he was not a thing mentioned?' The noon whispers through the nose."
       },
       {
-        arabic: "مَنْ جَاءَ",
+        arabic: "مَنْ جَاءَ - Surah Yunus 10:26",
         transliteration: "man ja'a (with nasal)",
         highlight: "نْ ج",
-        explanation: "Ikhfa before Jeem (ج) - Conceal the noon sound"
+        explanation: "Ikhfa before Jeem (ج) - Conceal the noon with ghunna. From 'For them who have done good is the best reward and extra.' Pronounce with nose while preparing mouth for 'j' sound."
+      },
+      {
+        arabic: "يَنْشُرُ - Surah Fatir 35:9",
+        transliteration: "yanshuru (with nasal)",
+        highlight: "نْ ش",
+        explanation: "Ikhfa before Sheen (ش) - From the verse about Allah sending winds. The noon is concealed with nasal quality while transitioning to 'sh' sound. This is in the middle of a word, showing Ikhfa can occur mid-word too."
+      },
+      {
+        arabic: "أَنْ قَالَ - Surah Al-Qasas 28:34",
+        transliteration: "an qaala (with nasal)",
+        highlight: "نْ ق",
+        explanation: "Ikhfa before Qaf (ق) - Conceal with ghunna. From the story of Musa (Moses). The heavy 'q' sound is prepared while the noon hides in nasal resonance for 2 counts."
+      },
+      {
+        arabic: "مِنْ سُوءٍ - Surah Yusuf 12:25",
+        transliteration: "min soo'in (with nasal)",
+        highlight: "نْ س",
+        explanation: "Ikhfa before Seen (س) - From the story of Prophet Yusuf. Light ghunna flows from nose while lips prepare for 's' sound, without stopping for a clear 'n'."
+      },
+      {
+        arabic: "مِنْ دُونِهِ - Surah Al-Isra 17:22",
+        transliteration: "min doonihi (with nasal)",
+        highlight: "نْ د",
+        explanation: "Ikhfa before Dal (د) - From 'So do not set up with Allah another deity.' Conceal noon with nasal sound. Very common pattern in Quran when speaking about 'other than Him'."
+      },
+      {
+        arabic: "مِنْ طَعَامٍ - Surah Al-Baqarah 2:61",
+        transliteration: "min ta'aamin (with nasal)",
+        highlight: "نْ ط",
+        explanation: "Ikhfa before Ta (ط) - From the story of Bani Israel asking for food. The heavy 'ṭ' is preceded by concealed noon with ghunna. Prepare the tongue for emphatic 't' while nasal sound resonates."
+      },
+      {
+        arabic: "يَنْزِلُ - Surah Al-Qadr 97:4",
+        transliteration: "yanzilu (with nasal)",
+        highlight: "نْ ز",
+        explanation: "Ikhfa before Zay (ز) - From Surah Al-Qadr: 'The angels and the Spirit descend.' Within a word, the noon sakinah is concealed before 'z' with ghunna. Very melodious when recited properly."
+      },
+      {
+        arabic: "مِنْ فَوْقِهِمْ - Surah Al-Baqarah 2:26",
+        transliteration: "min fawqihim (with nasal)",
+        highlight: "نْ ف",
+        explanation: "Ikhfa before Fa (ف) - From a parable Allah strikes. Noon concealed with nasal ghunna while lips begin to form 'f' sound. The transition should be smooth and natural."
+      },
+      {
+        arabic: "مِنْ تَحْتِهِمْ - Surah Al-Baqarah 2:25",
+        transliteration: "min tahtihim (with nasal)",
+        highlight: "نْ ت",
+        explanation: "Ikhfa before Ta (ت) - From description of Paradise with rivers flowing beneath. Conceal noon with nasal quality. Very frequent combination in Quran."
+      },
+      {
+        arabic: "مِنْ ضَرَرٍ - Surah Al-Baqarah 2:231",
+        transliteration: "min dhararin (with nasal)",
+        highlight: "نْ ض",
+        explanation: "Ikhfa before Dhad (ض) - From rulings about divorce. The heavy emphatic 'ḍ' is preceded by concealed noon. Rare but important - Dhad is unique to Arabic."
+      },
+      {
+        arabic: "يُنْظَرُونَ - Surah Al-Baqarah 2:162",
+        transliteration: "yunzharoona (with nasal)",
+        highlight: "نْ ظ",
+        explanation: "Ikhfa before Dha (ظ) - From 'They will not be reprieved.' Within the word, noon sakinah concealed before the heavy 'ẓ' with ghunna. Another emphatic letter requiring Ikhfa."
       }
     ]
   },
   {
     id: "noon-sakinah-iqlab",
     title: "Noon Sakinah - Iqlab (Conversion)",
-    description: "When Noon Sakinah or Tanween is followed by Ba (ب), convert the noon sound to Meem (م) with ghunna for 2 counts.",
+    description: "When Noon Sakinah (نْ) or Tanween is followed by Ba (ب), convert the noon sound completely to a Meem (م) sound with ghunna for 2 counts. Close your lips as if saying Meem while producing nasal resonance. This is the only letter that requires Iqlab. The word Iqlab literally means 'to flip' or 'convert'.",
     examples: [
       {
-        arabic: "مِنْ بَعْدِ",
+        arabic: "مِنْ بَعْدِ - Surah Al-Baqarah 2:27",
         transliteration: "mim ba'di",
         highlight: "نْ ب",
-        explanation: "Iqlab - Change Noon to Meem sound before Ba, hold nasal for 2 counts"
+        explanation: "Iqlab - Change the written Noon sakinah to Meem sound before Ba. Close lips completely (like م) and hold nasal ghunna for 2 counts. From 'Those who break the covenant of Allah after contracting it.' Don't say 'min ba'di' - say 'mim ba'di'."
       },
       {
-        arabic: "سَمِيعٌ بَصِيرٌ",
+        arabic: "سَمِيعٌ بَصِيرٌ - Surah Al-Baqarah 2:181",
         transliteration: "samee'um baseer",
         highlight: "عٌ ب",
-        explanation: "Iqlab with Tanween - Convert tanween to Meem before Ba"
+        explanation: "Iqlab with Tanween Damm - Convert the tanween 'un' to Meem sound. From 'Indeed, Allah is Hearing and Seeing.' Lips close as if Meem is written, nasal sound flows for 2 counts before opening for 'b'."
       },
       {
-        arabic: "أَنْ بُورِكَ",
+        arabic: "أَنْ بُورِكَ - Surah Al-Qasas 28:30",
         transliteration: "am boorika",
         highlight: "نْ ب",
-        explanation: "Iqlab - Noon becomes Meem sound, lips close as if saying Meem"
+        explanation: "Iqlab - From the story of Musa and the blessed spot. Transform noon completely into Meem with ghunna. Both lips must touch completely. Common mistake: don't let tongue touch roof of mouth (that's noon) - only lips close (meem)."
+      },
+      {
+        arabic: "لَنَسْفَعًا بِالنَّاصِيَةِ - Surah Al-Alaq 96:15",
+        transliteration: "lanasfa'am bin-naasiyah",
+        highlight: "عًا ب",
+        explanation: "Iqlab with Tanween Fath - 'We will surely drag him by the forelock.' The tanween 'an' transforms to Meem sound before 'bin'. Nasal ghunna resonates while lips prepare for 'b'."
+      },
+      {
+        arabic: "شَيْءٍ بَصِيرٌ - Surah Fatir 35:45",
+        transliteration: "shay'im baseer",
+        highlight: "ءٍ ب",
+        explanation: "Iqlab with Tanween Kasr - From 'Indeed, Allah, of all things, is Seeing.' Tanween 'in' becomes Meem sound. The lips close for ghunna while the nasal cavity resonates for 2 full counts."
+      },
+      {
+        arabic: "عَلِيمٌ بِذَاتِ الصُّدُورِ - Surah Ali 'Imran 3:119",
+        transliteration: "aleemum bidhatis-sudoor",
+        highlight: "مٌ ب",
+        explanation: "Iqlab after Meem - Even though the word ends in Meem with tanween, you still apply Iqlab rule when Ba follows. From 'And Allah is Knowing of that within the breasts.' Double the Meem sound with ghunna."
+      },
+      {
+        arabic: "غَفُورٌ رَحِيمٌ - Surah Al-Baqarah 2:173",
+        transliteration: "ghafoorur raheem",
+        highlight: "رٌ ر",
+        explanation: "Note: This is NOT Iqlab - This example shows Idgham (merging) with Ra, not Iqlab. Iqlab ONLY happens with Ba (ب). This is to clarify the difference. With Ra, the tanween merges, with Ba it converts to Meem."
       }
     ]
   },
   {
     id: "noon-sakinah-idhar",
     title: "Noon Sakinah - Idhar (Clear Pronunciation)",
-    description: "When Noon Sakinah or Tanween is followed by throat letters (ء ه ع ح غ خ), pronounce the noon clearly without ghunna.",
+    description: "When Noon Sakinah (نْ) or Tanween is followed by one of the six throat letters (ء ه ع ح غ خ), pronounce the noon clearly and distinctly without any ghunna (nasal sound). These throat letters prevent merging or concealment. The word Idhar means 'to clarify' or 'make clear'. This is also called Idhar Halqi (throat clarity).",
     examples: [
       {
-        arabic: "مِنْ ءَامَنَ",
+        arabic: "مِنْ آمَنَ - Surah Al-Baqarah 2:62",
         transliteration: "min aamana",
-        highlight: "نْ ء",
-        explanation: "Idhar - Clear noon before Hamza (ء), no nasal sound"
+        highlight: "نْ آ",
+        explanation: "Idhar before Hamza (ء) - From 'Indeed, those who believed...' Pronounce the noon sakinah clearly from the tip of tongue touching upper gum, no nasal sound. Complete stop of noon, then start hamza fresh from deep throat."
       },
       {
-        arabic: "مِنْ هَادٍ",
+        arabic: "مِنْ هَادٍ - Surah Ar-Ra'd 13:7",
         transliteration: "min haadin",
         highlight: "نْ ه",
-        explanation: "Idhar - Pronounce noon clearly before Ha (ه)"
+        explanation: "Idhar before Ha (ه) - From 'And for every people is a guide.' Clear, crisp noon with tongue touching roof, no ghunna whatsoever. The Ha comes from the throat, making noon stand separately."
       },
       {
-        arabic: "مَنْ عَمِلَ",
+        arabic: "مَنْ عَمِلَ - Surah Al-Kahf 18:30",
         transliteration: "man 'amila",
         highlight: "نْ ع",
-        explanation: "Idhar - Clear pronunciation before Ayn (ع)"
+        explanation: "Idhar before Ayn (ع) - From 'Indeed, those who have believed and done righteous deeds.' Say 'n' sound completely and clearly before the deep throat sound of Ayn. No nasal extension at all."
       },
       {
-        arabic: "إِنْ حَسِبْتُمْ",
+        arabic: "إِنْ حَسِبْتُمْ - Surah Ibrahim 14:34",
         transliteration: "in hasibtum",
         highlight: "نْ ح",
-        explanation: "Idhar - Pronounce noon clearly before Ha (ح)"
+        explanation: "Idhar before Ha (ح) - From 'And if you should count the favors of Allah, you could not enumerate them.' Pronounce noon distinctly, cut it off, then pronounce Ha from middle of throat. Common combination in Quran."
+      },
+      {
+        arabic: "مَنْ غَفُورٌ - Surah Fatir 35:41",
+        transliteration: "man ghafoor",
+        highlight: "نْ غ",
+        explanation: "Idhar before Ghayn (غ) - From verse about Allah maintaining heavens and earth. Clear noon pronunciation, no merging with the throat letter Ghayn. The tongue tip presses firmly for 'n' then releases for the gargling 'gh' sound."
+      },
+      {
+        arabic: "مِنْ خَيْرٍ - Surah Al-Baqarah 2:215",
+        transliteration: "min khayrin",
+        highlight: "نْ خ",
+        explanation: "Idhar before Kha (خ) - From 'Whatever you spend of good...' Articulate noon clearly with no nasal continuation before the throaty Kha. Very common phrase in Quran regarding spending in good."
+      },
+      {
+        arabic: "يَوْمَئِذٍ خَاشِعَةٌ - Surah Al-Ghashiyah 88:2",
+        transliteration: "yawma'idhin khaashi'ah",
+        highlight: "ذٍ خ",
+        explanation: "Idhar with Tanween Kasr - From Surah Al-Ghashiyah describing the Day of Judgment. The tanween is pronounced clearly before throat letter Kha. No nasal sound extends into the following letter."
+      },
+      {
+        arabic: "جَنَّاتٍ عَدْنٍ - Surah At-Tawbah 9:72",
+        transliteration: "jannaatin 'adnin",
+        highlight: "تٍ ع",
+        explanation: "Idhar with Tanween - 'Gardens of perpetual residence.' Tanween pronounced clearly before Ayn. The 'n' sound stops completely before the deep throat Ayn begins. This clarity prevents confusion in meaning."
       }
     ]
   },
   {
     id: "meem-sakinah",
     title: "Meem Sakinah Rules",
-    description: "Three rules apply when Meem has Sukoon (مْ): Idgham (merging with another Meem), Ikhfa (hiding before Ba), and Idhar (clear pronunciation before other letters).",
+    description: "Meem with sukoon (مْ) has three rules: 1) Idgham Shafawi - merge with another Meem (م) with ghunna. 2) Ikhfa Shafawi - hide before Ba (ب) with ghunna. 3) Idhar Shafawi - pronounce clearly before all other 26 letters. Shafawi means 'labial' because these sounds come from the lips.",
     examples: [
       {
-        arabic: "لَهُمْ مَا",
+        arabic: "لَهُمْ مَا - Surah Al-Baqarah 2:7",
         transliteration: "lahum-ma",
         highlight: "مْ م",
-        explanation: "Idgham Mithlayn - Meem merges with Meem, hold ghunna for 2 counts"
+        explanation: "Idgham Mithlayn Sagheer (Small Similar Merging) - First Meem sakinah merges completely into second Meem, creating one emphasized Meem with ghunna held for 2 counts. From 'For them is a disease in their hearts.' Close lips completely, nasal resonance."
       },
       {
-        arabic: "تَرْمِيهِمْ بِحِجَارَةٍ",
+        arabic: "تَرْمِيهِمْ بِحِجَارَةٍ - Surah Al-Fil 105:4",
         transliteration: "tarmeehim bihijarah",
         highlight: "مْ ب",
-        explanation: "Ikhfa Shafawi - Hide Meem before Ba (ب) with slight nasal sound"
+        explanation: "Ikhfa Shafawi (Labial Concealment) - Conceal the Meem sakinah before Ba with light nasal ghunna for 2 counts. From Surah Al-Fil about birds striking them with stones. Don't open lips fully between Meem and Ba - slight nasal hum while transitioning."
       },
       {
-        arabic: "عَلَيْهِمْ تَتْلُو",
+        arabic: "عَلَيْهِمْ تَتْلُو - Surah Al-Baqarah 2:102",
         transliteration: "alayhim tatloo",
         highlight: "مْ ت",
-        explanation: "Idhar Shafawi - Pronounce Meem clearly before all letters except م and ب"
+        explanation: "Idhar Shafawi (Clear Labial) - Pronounce Meem clearly before Ta without ghunna. From the story of magic in Babylon. Press lips together for clear 'm' sound, release completely, no nasal extension, then fresh 't' sound from tongue."
       },
       {
-        arabic: "أَمْ كُنتُمْ",
+        arabic: "أَمْ كُنتُمْ - Surah Al-Baqarah 2:133",
         transliteration: "am kuntum",
         highlight: "مْ ك",
-        explanation: "Idhar - Clear Meem pronunciation before Kaf"
+        explanation: "Idhar Shafawi - Clear Meem before Kaf. From Ya'qub questioning his sons. Lips close firmly for Meem, open cleanly, no ghunna, then back of tongue rises for 'k'. Complete separation between letters."
+      },
+      {
+        arabic: "هُمْ فِيهَا - Surah Al-Baqarah 2:39",
+        transliteration: "hum feeha",
+        highlight: "مْ ف",
+        explanation: "Idhar Shafawi - Meem sakinah clear before Fa. From 'They will abide therein eternally.' Even though both Meem and Fa use lips, pronounce Meem distinctly with no merging or concealment."
+      },
+      {
+        arabic: "لَكُمْ وَلِأَبْنَائِكُمْ - Surah An-Nisa 4:11",
+        transliteration: "lakum wali'abna'ikum",
+        highlight: "مْ و",
+        explanation: "Idhar Shafawi - Clear Meem before Waw. From inheritance laws. Lips close for 'm', open completely with no nasal, then round for 'w'. Common pattern in Quran."
+      },
+      {
+        arabic: "عَلَيْهِمْ مِنَ - Surah Al-Baqarah 2:90",
+        transliteration: "alayhim mina",
+        highlight: "مْ م",
+        explanation: "Idgham Shafawi - Two Meems merge with ghunna. From 'So they returned with anger from Allah.' The first Meem completely disappears into the second. Hold the merged Meem with nasal sound for 2 counts while lips stay closed."
+      },
+      {
+        arabic: "يَعْتَصِمْ بِاللَّهِ - Surah Ali 'Imran 3:101",
+        transliteration: "ya'tasim billaah",
+        highlight: "مْ ب",
+        explanation: "Ikhfa Shafawi - Conceal Meem before Ba. From 'And whoever holds firmly to Allah.' Transition from Meem to Ba with continuous lip closure and light ghunna. The lips barely open between the two letters, creating a hidden transition."
       }
     ]
   },
   {
     id: "qalqalah",
-    title: "Qalqalah (Echoing Sound)",
-    description: "When letters ق ط ب ج د (QUTB JAD) have sukoon, create a strong echoing/bouncing sound. Stronger at the end of words.",
+    title: "Qalqalah (Echoing/Bouncing Sound)",
+    description: "When the five Qalqalah letters ق ط ب ج د (remembered as 'QUTB JAD') have sukoon, produce a strong echoing/bouncing sound by releasing a small burst of air. Qalqalah is stronger (Kubra) when at the end of words/verses, and lighter (Sughra) when in the middle of words. Never drag the sound - it should be crisp and short.",
     examples: [
       {
-        arabic: "أَحَدْ",
+        arabic: "أَحَدْ - Surah Al-Ikhlas 112:1",
         transliteration: "ahad",
         highlight: "دْ",
-        explanation: "Strong Qalqalah - Dal (د) at word end creates strong echo"
+        explanation: "Qalqalah Kubra (Major) - Dal (د) at the end of Surah Al-Ikhlas creates strong echoing bounce. From 'Allah is One.' Let a burst of air escape when releasing the 'd' - like a mini explosion. End of verse = strongest Qalqalah."
       },
       {
-        arabic: "الْفَلَقْ",
+        arabic: "الْفَلَقْ - Surah Al-Falaq 113:1",
         transliteration: "al-falaq",
         highlight: "قْ",
-        explanation: "Strong Qalqalah - Qaf (ق) at word end bounces"
+        explanation: "Qalqalah Kubra - Qaf (ق) at word/surah end creates powerful echo. From 'Say: I seek refuge in the Lord of daybreak.' The 'q' sound bounces from deep in throat with burst of air. One of most recognizable Qalqalah sounds."
       },
       {
-        arabic: "يَكْتُبُ",
+        arabic: "يَكْتُبُ - Surah Al-Baqarah 2:282",
         transliteration: "yak-tubu",
         highlight: "كْ",
-        explanation: "Minor Qalqalah - Ta (ت) in middle has subtle echo"
+        explanation: "Qalqalah Sughra (Minor) - This shows what Qalqalah is NOT. Kaf (ك) is not a Qalqalah letter, so even with sukoon, no bouncing. From verse about writing down debts. Only the 5 letters QUTB JAD get Qalqalah."
       },
       {
-        arabic: "رِجْسٌ",
+        arabic: "اقْرَأْ - Surah Al-Alaq 96:1",
+        transliteration: "iqra'",
+        highlight: "قْ",
+        explanation: "Qalqalah Sughra - Qaf with sukoon in middle of word has lighter echo. First word revealed to Prophet ﷺ: 'Read!' Still bounce the 'q' but less forcefully than at word end. Air pressure builds behind tongue, releases quickly."
+      },
+      {
+        arabic: "أَطَعْنَا - Surah Al-Ahzab 33:66",
+        transliteration: "ata'na",
+        highlight: "طْ",
+        explanation: "Qalqalah Sughra - Ta (ط) with sukoon mid-word echoes lightly. From 'They will say: Our Lord, indeed we obeyed...' The emphatic 'ṭ' bounces slightly when released. Less intense than end position."
+      },
+      {
+        arabic: "رِجْسٌ - Surah Al-An'am 6:145",
         transliteration: "rijs",
         highlight: "جْ",
-        explanation: "Minor Qalqalah - Jeem (ج) with sukoon echoes"
+        explanation: "Qalqalah Sughra - Jeem (ج) with sukoon creates subtle echo mid-word. From 'Indeed, it is impure.' The 'j' sound has slight bounce when tongue releases from roof of mouth. Build pressure, then quick release."
       },
       {
-        arabic: "رَبِّ",
-        transliteration: "rabbi",
-        highlight: "بِّ",
-        explanation: "Qalqalah with Shadda - Ba (ب) creates bouncing sound even with vowel due to shadda"
+        arabic: "يَحْسَبُ - Surah Al-Humaza 104:3",
+        transliteration: "yahsabu",
+        highlight: "بُ",
+        explanation: "Qalqalah with Vowel - Ba (ب) here has vowel (damma), so technically no Qalqalah since it's not sakin. But with practice, you'll notice slight natural bounce in Qalqalah letters even with vowels. From 'He thinks his wealth will make him immortal.'"
+      },
+      {
+        arabic: "لَمْ يَلِدْ - Surah Al-Ikhlas 112:3",
+        transliteration: "lam yalid",
+        highlight: "دْ",
+        explanation: "Qalqalah Kubra - Dal at verse end in Surah Al-Ikhlas bounces strongly. 'He neither begets...' Common mistake: don't drag it like 'yalidda' - it's a sharp, quick bounce 'yalid' with air burst. Crisp and clean."
+      },
+      {
+        arabic: "فَتَبَيَّنُوا - Surah Al-Hujurat 49:6",
+        transliteration: "fatabayyanoo",
+        highlight: "بَ",
+        explanation: "No Qalqalah - Ba has fatha (vowel), not sukoon. From 'Verify first' verse. This clarifies that Qalqalah ONLY occurs when the five letters have sukoon. Voweled letters don't echo."
       }
     ]
   },
   {
     id: "madd-types",
     title: "Madd - Types of Elongation",
-    description: "Madd means elongation of vowel sounds. Different types have different lengths measured in counts (harakaat).",
+    description: "Madd means prolonging/stretching vowel sounds beyond their natural length. Madd letters are: Alif (with fatha before), Waw (with damma before), and Ya (with kasra before). Different types: Madd Tabee'i (2 counts), Madd Munfasil (4-5 counts), Madd Muttasil (4-6 counts), Madd Laazim (6 counts). One count (haraka) = roughly the time to close/open a finger.",
     examples: [
       {
-        arabic: "قَالَ",
+        arabic: "قَالَ - Surah Al-Baqarah 2:30",
         transliteration: "qaa-la",
         highlight: "ا",
-        explanation: "Madd Tabee'i (Natural) - Elongate 'a' with Alif for 2 counts"
+        explanation: "Madd Tabee'i (Natural Madd) - Fatha (َ) before Alif creates natural 'aa' elongation for 2 counts. From 'And when your Lord said to the angels...' Most basic and common madd. Don't shorten or over-elongate - exactly 2 beats."
       },
       {
-        arabic: "يَقُولُ",
+        arabic: "يَقُولُ - Surah Al-Baqarah 2:8",
         transliteration: "ya-qoo-lu",
         highlight: "و",
-        explanation: "Madd Tabee'i - Elongate 'oo' with Waw for 2 counts"
+        explanation: "Madd Tabee'i - Damma (ُ) before Waw creates 'oo' sound for 2 counts. From 'And of the people are some who say...' Natural elongation - hold for time of 2 finger movements, no more, no less."
       },
       {
-        arabic: "قِيلَ",
+        arabic: "قِيلَ - Surah Al-Baqarah 2:11",
         transliteration: "qee-la",
         highlight: "ي",
-        explanation: "Madd Tabee'i - Elongate 'ee' with Ya for 2 counts"
+        explanation: "Madd Tabee'i - Kasra (ِ) before Ya creates 'ee' sound for 2 counts. From 'And when it is said to them...' Standard natural madd. Ya here is a madd letter, not consonant 'y'."
       },
       {
-        arabic: "جَاءَ",
-        transliteration: "jaa'a",
+        arabic: "جَاءَ أُمَّةً - Surah Al-Baqarah 2:213",
+        transliteration: "jaa'a ummatan",
         highlight: "ا ء",
-        explanation: "Madd Munfasil - Hamza after madd letter, elongate 4-5 counts"
+        explanation: "Madd Munfasil (Separated Madd) - Madd letter at end of word, Hamza at start of next word. Elongate for 4-5 counts. From 'And came to a nation...' Also called Madd Al-Jaiz (permissible) because count can vary 4-5."
       },
       {
-        arabic: "السَّمَاءِ",
+        arabic: "السَّمَاءِ - Surah Al-Baqarah 2:19",
         transliteration: "as-samaa'i",
         highlight: "ا ء",
-        explanation: "Madd Muttasil - Hamza in same word after madd, elongate 4-5 counts (obligatory)"
+        explanation: "Madd Muttasil (Connected Madd) - Madd letter followed by Hamza in SAME word. Elongate 4-5 counts (some scholars say must be 6). From 'from the sky' in lightning verse. Called Madd Waajib (obligatory). Longer than natural madd."
       },
       {
-        arabic: "آمَنَ",
-        transliteration: "aa-ma-na",
+        arabic: "آمَنَّا - Surah Al-Baqarah 2:14",
+        transliteration: "aa-man-na",
         highlight: "آ",
-        explanation: "Madd Laazim - Mandatory elongation for 6 counts with Madd Alif"
+        explanation: "Madd Laazim (Necessary Madd) - The combined Alif-Hamza-Alif (آ) always gets 6 counts elongation. From 'We have believed' when hypocrites speak. Longest natural madd. The double Alif creates emphasized elongation."
+      },
+      {
+        arabic: "دَابَّةٍ - Surah Al-Baqarah 2:164",
+        transliteration: "daaabbatin",
+        highlight: "ابّ",
+        explanation: "Madd Laazim Harfi Muthaqqal - Alif followed by Ba with shadda creates 6-count madd. From 'creature' in signs of Allah verse. The shadda (doubled letter) after madd letter mandates 6 counts. Rare but important."
+      },
+      {
+        arabic: "الضَّالِّينَ - Surah Al-Fatihah 1:7",
+        transliteration: "adh-dhaaaalleen",
+        highlight: "الّ",
+        explanation: "Madd Laazim - 'Those who have gone astray' - final word of Al-Fatihah. Alif followed by shadda on Lam requires 6 full counts. One of most recited madds in Islam. Hold the 'aa' for 6 beats clearly."
+      },
+      {
+        arabic: "وَلَا تَمُدَّنَّ - Surah Al-Hijr 15:88",
+        transliteration: "wa laa tamud-dan-na",
+        highlight: "ا ت",
+        explanation: "Madd Tabee'i only - Even though verse is about 'extending' (madd), the Alif before Ta is just natural 2-count madd. No Hamza or shadda follows. Shows that madd rules depend on what follows the madd letter."
       }
     ]
   },
   {
     id: "lam-rules",
-    title: "Lam Rules (Al-Shamsiyyah & Al-Qamariyyah)",
-    description: "The definite article 'AL' (ال) has two pronunciations: Sun Letters (assimilate Lam) and Moon Letters (pronounce Lam clearly).",
+    title: "Lam Al-Ta'rif Rules (AL - Sun & Moon Letters)",
+    description: "The definite article AL (ال) changes pronunciation based on following letter. 14 Sun Letters (Shamsiyyah ت ث د ذ ر ز س ش ص ض ط ظ ل ن): Lam is silent, following letter gets shadda. 14 Moon Letters (Qamariyyah - all others): Pronounce Lam clearly. Sun letters assimilate the L sound; Moon letters keep it.",
     examples: [
       {
-        arabic: "الشَّمْس",
+        arabic: "الشَّمْس - Surah Ash-Shams 91:1",
         transliteration: "ash-shams",
         highlight: "لش",
-        explanation: "Lam Shamsiyyah - Lam (ل) silent, Sheen (ش) has shadda, say 'ash-shams' not 'al-shams'"
+        explanation: "Lam Shamsiyyah - Sheen (ش) is a sun letter. Don't say 'al-shams' - say 'ash-shams'. Lam completely silent, Sheen gets shadda (emphasis). From 'By the sun and its brightness.' The name of this surah demonstrates the rule!"
       },
       {
-        arabic: "النَّار",
+        arabic: "النَّار - Surah Al-Baqarah 2:24",
         transliteration: "an-naar",
         highlight: "لن",
-        explanation: "Lam Shamsiyyah - Lam silent before Noon (ن), say 'an-naar'"
+        explanation: "Lam Shamsiyyah - Noon (ن) is sun letter. Say 'an-naar' not 'al-naar'. From 'whose fuel is men and stones' speaking of Hellfire. Very common word in Quran - Lam assimilates into Noon."
       },
       {
-        arabic: "الرَّحْمَن",
+        arabic: "الرَّحْمَٰن - Surah Al-Fatihah 1:3",
         transliteration: "ar-rahmaan",
         highlight: "لر",
-        explanation: "Lam Shamsiyyah - Lam assimilates into Ra (ر)"
+        explanation: "Lam Shamsiyyah - Ra (ر) is sun letter. Say 'ar-Rahmaan' with emphasized 'rr'. From Al-Fatihah, most recited verse. The Lam disappears into Ra. Second most common Name of Allah after 'Allah'."
       },
       {
-        arabic: "الْقَمَر",
+        arabic: "الْقَمَر - Surah Al-Qamar 54:1",
         transliteration: "al-qamar",
         highlight: "لق",
-        explanation: "Lam Qamariyyah - Pronounce Lam clearly before Qaf (ق)"
+        explanation: "Lam Qamariyyah - Qaf (ق) is a moon letter. Pronounce Lam clearly: 'al-qamar'. From 'The Hour has come near, and the moon has split.' The surah name itself demonstrates moon letter rule - how fitting!"
       },
       {
-        arabic: "الْكِتَاب",
+        arabic: "الْكِتَاب - Surah Al-Baqarah 2:2",
         transliteration: "al-kitaab",
         highlight: "لك",
-        explanation: "Lam Qamariyyah - Clear Lam pronunciation before Kaf (ك)"
+        explanation: "Lam Qamariyyah - Kaf (ك) is moon letter. Clear Lam: 'al-kitaab'. From 'This is the Book about which there is no doubt.' One of most frequent words in Quran. Lam stays audible with moon letters."
       },
       {
-        arabic: "الْبَيْت",
+        arabic: "الْبَيْت - Surah Al-Baqarah 2:125",
         transliteration: "al-bayt",
         highlight: "لب",
-        explanation: "Lam Qamariyyah - Pronounce Lam before Ba (ب)"
+        explanation: "Lam Qamariyyah - Ba (ب) is moon letter. Say 'al-bayt' clearly. From verse about Ka'bah: 'And take the standing place of Abraham as a place of prayer.' Referring to the sacred house."
+      },
+      {
+        arabic: "التَّوْرَاة - Surah Al-Baqarah 2:41",
+        transliteration: "at-tawraah",
+        highlight: "لت",
+        explanation: "Lam Shamsiyyah - Ta (ت) is sun letter. Say 'at-Tawraah' not 'al-Tawraah'. From 'the Torah' in verse about Bani Israel. Lam merges completely into Ta. Notice the shadda on Ta."
+      },
+      {
+        arabic: "الصَّلَاة - Surah Al-Baqarah 2:43",
+        transliteration: "as-salaah",
+        highlight: "لص",
+        explanation: "Lam Shamsiyyah - Sad (ص) is sun letter. Pronounce 'as-Salaah' with emphasis. From 'establish prayer' - most important act of worship. Lam silent, heavy Sad gets shadda."
+      },
+      {
+        arabic: "الذِّكْر - Surah Al-Hijr 15:9",
+        transliteration: "adh-dhikr",
+        highlight: "الذ",
+        explanation: "Lam Shamsiyyah - Dhal (ذ) is sun letter. Say 'adh-dhikr' not 'al-dhikr'. From 'Indeed, it is We who sent down the Reminder (Quran).' Lam assimilated into Dhal."
+      },
+      {
+        arabic: "الْمُتَّقِينَ - Surah Al-Baqarah 2:2",
+        transliteration: "al-muttaqeen",
+        highlight: "لم",
+        explanation: "Lam Qamariyyah - Meem (م) is moon letter. Pronounce 'al-muttaqeen' clearly. From 'guidance for the righteous.' Lam remains fully pronounced before Meem. Very common word in Quran describing the pious."
       }
     ]
   },
   {
     id: "sun-moon-letters",
-    title: "Sun and Moon Letters Guide",
-    description: "14 Sun Letters (assimilate AL): ت ث د ذ ر ز س ش ص ض ط ظ ل ن. 14 Moon Letters (keep AL clear): ء ب ج ح خ ع غ ف ق ك م ه و ي",
+    title: "Complete Sun and Moon Letters Guide",
+    description: "14 Sun Letters (Huroof Shamsiyyah): ت ث د ذ ر ز س ش ص ض ط ظ ل ن - these assimilate the Lam of AL. Mnemonic: 'Taa tha daal dhal, raa zaay seen sheen, saad daad taa' dhaa', lam noon' OR remember they're mostly tongue-tip letters. 14 Moon Letters (Huroof Qamariyyah): ء ب ج ح خ ع غ ف ق ك م ه و ي - keep Lam clear. Remember: what remains are moon letters.",
     examples: [
       {
-        arabic: "الذِّكْر",
+        arabic: "الذِّكْر - Surah Ar-Rahman 55:1-2",
         transliteration: "adh-dhikr",
         highlight: "الذ",
-        explanation: "Sun Letter - Dhal (ذ) is a sun letter, Lam becomes silent"
+        explanation: "Sun Letter - Dhal (ذ) assimilates Lam. From 'The Most Merciful, Taught the Quran.' Lam becomes silent, Dhal gets emphasis. Tongue-tip letter."
       },
       {
-        arabic: "التَّوْبَة",
+        arabic: "التَّوْبَة - Surah At-Tawbah 9:104",
         transliteration: "at-tawbah",
         highlight: "الت",
-        explanation: "Sun Letter - Ta (ت) assimilates the Lam"
+        explanation: "Sun Letter - Ta (ت) takes the Lam sound. From 'Indeed, Allah is the Accepting of repentance.' Say 'at-tawbah' with emphasized T. Common word meaning repentance."
       },
       {
-        arabic: "الصَّلَاة",
+        arabic: "الصَّلَاة - Surah Al-Baqarah 2:238",
         transliteration: "as-salaah",
         highlight: "الص",
-        explanation: "Sun Letter - Sad (ص) takes the Lam sound"
+        explanation: "Sun Letter - Sad (ص) absorbs Lam. From 'Maintain the prayers.' Heavy emphatic S. Prayer is pillar of Islam mentioned hundreds of times with this sun letter rule."
       },
       {
-        arabic: "الْمَلَك",
-        transliteration: "al-malak",
+        arabic: "الزَّكَاة - Surah Al-Baqarah 2:43",
+        transliteration: "az-zakaah",
+        highlight: "الز",
+        explanation: "Sun Letter - Zay (ز) assimilates Lam. From 'give zakah' - obligatory charity. Say 'az-zakaah' clearly. Zay is sun letter from tongue tip."
+      },
+      {
+        arabic: "الدُّنْيَا - Surah Al-Baqarah 2:85",
+        transliteration: "ad-dunya",
+        highlight: "الد",
+        explanation: "Sun Letter - Dal (د) takes Lam sound. From 'the worldly life' - extremely common phrase in Quran. Lam silent, Dal emphasized: 'ad-dunya'."
+      },
+      {
+        arabic: "الظَّالِمِينَ - Surah Al-Baqarah 2:35",
+        transliteration: "adh-dhaalimeen",
+        highlight: "الظ",
+        explanation: "Sun Letter - Dhaa (ظ) assimilates Lam. From 'and you will be among the wrongdoers.' Heavy emphatic 'dh'. Say 'adh-dhaalimeen' with emphasis."
+      },
+      {
+        arabic: "الطَّيِّبَات - Surah Al-Baqarah 2:57",
+        transliteration: "at-tayyibaat",
+        highlight: "الط",
+        explanation: "Sun Letter - Heavy Ta (ط) assimilates Lam. From 'the good things' We provided. Emphatic 't' sound, Lam disappears: 'at-tayyibaat'."
+      },
+      {
+        arabic: "الضَّرَّاء - Surah Al-Baqarah 2:177",
+        transliteration: "adh-dharraa'",
+        highlight: "الض",
+        explanation: "Sun Letter - Heavy Daad (ض) unique to Arabic. From 'hardship and adversity'. Lam silent, emphatic 'dh': 'adh-dharraa'. Daad is the rarest letter in Quran."
+      },
+      {
+        arabic: "الثَّمَرَات - Surah Al-Baqarah 2:22",
+        transliteration: "ath-thamaraat",
+        highlight: "الث",
+        explanation: "Sun Letter - Tha (ث) assimilates Lam. From 'fruits as provision' in creation verse. Say 'ath-thamaraat' not 'al-thamaraat'. Tongue between teeth for 'th'."
+      },
+      {
+        arabic: "اللَّيْل - Surah Al-Layl 92:1",
+        transliteration: "al-layl",
+        highlight: "الل",
+        explanation: "Sun Letter - Lam (ل) after AL creates double Lam with shadda. From 'By the night when it covers.' Say 'al-layl' with strong double L. Surah Al-Layl demonstrates this rule."
+      },
+      {
+        arabic: "النَّاس - Surah An-Nas 114:1",
+        transliteration: "an-naas",
+        highlight: "الن",
+        explanation: "Sun Letter - Noon (ن) assimilates Lam. From 'Say: I seek refuge in the Lord of mankind.' Last surah demonstrates sun letter. Very common word: 'mankind/people'."
+      },
+      {
+        arabic: "السَّمَاء - Surah Al-Baqarah 2:19",
+        transliteration: "as-samaa'",
+        highlight: "الس",
+        explanation: "Sun Letter - Seen (س) takes Lam. From 'the sky' in lightning verse. Say 'as-samaa'' not 'al-samaa''. Light 's' but Lam still disappears."
+      },
+      {
+        arabic: "الرَّحِيم - Surah Al-Fatihah 1:1",
+        transliteration: "ar-raheem",
+        highlight: "الر",
+        explanation: "Sun Letter - Ra (ر) assimilates Lam. From Bismillah - most recited phrase. Say 'ar-Raheem' with rolling R. Name of Allah meaning 'Most Merciful'."
+      },
+      {
+        arabic: "الْمَلَائِكَة - Surah Al-Baqarah 2:30",
+        transliteration: "al-malaa'ikah",
         highlight: "الم",
-        explanation: "Moon Letter - Meem (م) keeps Lam pronunciation clear"
+        explanation: "Moon Letter - Meem (م) keeps Lam clear. From 'the angels' when Allah informed them about Adam. Say 'al-malaa'ikah' with clear L sound."
       },
       {
-        arabic: "الْحَقّ",
+        arabic: "الْحَقّ - Surah Al-Baqarah 2:42",
         transliteration: "al-haqq",
         highlight: "الح",
-        explanation: "Moon Letter - Ha (ح) is a moon letter, say 'al' clearly"
+        explanation: "Moon Letter - Ha (ح) is moon letter. Pronounce Lam clearly: 'al-haqq'. From 'the truth' - Name of Allah. Ha is throat letter, so Lam stays audible."
+      },
+      {
+        arabic: "الْغَيْب - Surah Al-Baqarah 2:3",
+        transliteration: "al-ghayb",
+        highlight: "الغ",
+        explanation: "Moon Letter - Ghayn (غ) keeps AL clear. From 'the unseen' in qualities of believers. Throat letter, so say 'al-ghayb' with full Lam."
+      },
+      {
+        arabic: "الْفُرْقَان - Surah Al-Baqarah 2:53",
+        transliteration: "al-furqaan",
+        highlight: "الف",
+        explanation: "Moon Letter - Fa (ف) is moon letter. Say 'al-furqaan' clearly. From giving Musa the criterion (Torah). Lip letter Fa doesn't affect Lam."
+      },
+      {
+        arabic: "الْعَالَمِين - Surah Al-Fatihah 1:2",
+        transliteration: "al-'aalameen",
+        highlight: "الع",
+        explanation: "Moon Letter - Ayn (ع) is moon letter. Pronounce 'al-'aalameen' with clear L. From 'Lord of all worlds' in Al-Fatihah. Deep throat Ayn doesn't assimilate Lam."
+      },
+      {
+        arabic: "الْخَالِق - Surah Al-Hashr 59:24",
+        transliteration: "al-khaaliq",
+        highlight: "الخ",
+        explanation: "Moon Letter - Kha (خ) keeps Lam. From Names of Allah: 'The Creator'. Throat letter, say 'al-Khaaliq' with clear L before guttural 'kh'."
+      },
+      {
+        arabic: "الْهُدَىٰ - Surah Al-Baqarah 2:120",
+        transliteration: "al-huda",
+        highlight: "الهـ",
+        explanation: "Moon Letter - Ha (ه) is moon letter. Say 'al-huda' clearly. From 'the guidance of Allah is the true guidance.' Breathy H doesn't affect Lam pronunciation."
+      },
+      {
+        arabic: "الْوَاحِد - Surah Al-Baqarah 2:163",
+        transliteration: "al-waahid",
+        highlight: "الو",
+        explanation: "Moon Letter - Waw (و) keeps Lam audible. From 'One God' in Tawheed verse. Pronounce 'al-Waahid' with clear L. Lip-rounding Waw doesn't assimilate."
+      },
+      {
+        arabic: "الْيَوْم - Surah Al-Baqarah 2:8",
+        transliteration: "al-yawm",
+        highlight: "الي",
+        explanation: "Moon Letter - Ya (ي) is moon letter. Say 'al-yawm' clearly. From 'the Day' (of Judgment). Ya doesn't affect Lam - remains fully pronounced."
+      },
+      {
+        arabic: "الْجَنَّة - Surah Al-Baqarah 2:35",
+        transliteration: "al-jannah",
+        highlight: "الج",
+        explanation: "Moon Letter - Jeem (ج) keeps AL clear. From 'Paradise' in Adam's story. Say 'al-jannah' with pronounced L. Most beautiful word in Quran!"
+      },
+      {
+        arabic: "الْأَرْض - Surah Al-Baqarah 2:11",
+        transliteration: "al-ard",
+        highlight: "الأ",
+        explanation: "Moon Letter - Hamza (ء) is moon letter. Pronounce 'al-ard' clearly. From 'the earth' mentioned with 'heavens'. Glottal stop Hamza doesn't assimilate Lam."
       }
     ]
   },
   {
     id: "tafkheem-tarqeeq",
-    title: "Tafkheem (Heavy) vs Tarqeeq (Light)",
-    description: "Some letters are always heavy (thick sound), some are always light (thin sound). Heavy letters: خ ص ض غ ط ق ظ (KHUṢṢ DHAQATH QATH). Ra (ر) changes based on vowels.",
+    title: "Tafkheem (Heavy Letters) vs Tarqeeq (Light Letters)",
+    description: "Tafkheem = thick, full-mouth sound with tongue raised. 7 letters ALWAYS heavy: خ ص ض غ ط ق ظ (remember: KHUṢṢ DHAQATH QAṬ or 'heavy letters of Arabic'). Ra (ر) and Lam (in Allah) can be heavy or light based on context. All other letters are light (Tarqeeq). Heavy letters give Quran its unique resonance.",
     examples: [
       {
-        arabic: "صَلَاة",
+        arabic: "صَلَاة - Surah Al-Baqarah 2:3",
         transliteration: "salaah (heavy S)",
         highlight: "ص",
-        explanation: "Tafkheem - Sad (ص) is always heavy, tongue raised to roof of mouth"
+        explanation: "Tafkheem - Sad (ص) is ALWAYS heavy. From 'establish prayer' - most common Islamic term. Tongue raised to roof, back of tongue elevated, mouth cavity hollow. Compare light 's' in 'seen' - totally different sound."
       },
       {
-        arabic: "طَعَام",
+        arabic: "طَعَام - Surah Al-Baqarah 2:184",
         transliteration: "ta'aam (heavy T)",
         highlight: "ط",
-        explanation: "Tafkheem - Ta (ط) is heavy, creates thick sound"
+        explanation: "Tafkheem - Heavy Ta (ط) always thick. From 'feeding a poor person' in fasting rules. Emphatic 't' - tongue presses hard, throat opens. Different from light ت."
       },
       {
-        arabic: "قُرْآن",
+        arabic: "قُرْآن - Surah Al-Baqarah 2:185",
         transliteration: "qur'aan (heavy Q)",
         highlight: "ق",
-        explanation: "Tafkheem - Qaf (ق) always pronounced with heaviness"
+        explanation: "Tafkheem - Qaf (ق) always heavy, from deep in throat. From 'the month in which Quran was revealed.' Back of tongue to back of roof. Creates powerful, resonant sound unique to Arabic."
       },
       {
-        arabic: "سَلَام",
+        arabic: "ضَلَالَة - Surah Al-Baqarah 2:16",
+        transliteration: "dalaalah (heavy D)",
+        highlight: "ض",
+        explanation: "Tafkheem - Heavy Daad (ض) is unique to Arabic, always emphatic. From 'misguidance' verse. Side of tongue presses molars, creates thick 'd' sound. No equivalent in English - uniquely Arabic."
+      },
+      {
+        arabic: "ظُلُمَات - Surah Al-Baqarah 2:17",
+        transliteration: "dhulumaat (heavy DH)",
+        highlight: "ظ",
+        explanation: "Tafkheem - Heavy Dha (ظ) always emphatic. From 'darkness' in lightning parable. Tongue between teeth but with throat expanded, creates thick 'dh' unlike light ذ."
+      },
+      {
+        arabic: "غَفُور - Surah Al-Baqarah 2:173",
+        transliteration: "ghafoor (heavy GH)",
+        highlight: "غ",
+        explanation: "Tafkheem - Ghayn (غ) always heavy from throat. From 'Most Forgiving' - Name of Allah. Gargling sound from throat, back of tongue raised. Creates resonance in throat cavity."
+      },
+      {
+        arabic: "خَلَقَ - Surah Al-Alaq 96:1",
+        transliteration: "khalaqa (heavy KH)",
+        highlight: "خ",
+        explanation: "Tafkheem - Kha (خ) always heavy, throaty. From first revelation: 'Created'. Deep throat fricative with mouth cavity open. Back of tongue near uvula."
+      },
+      {
+        arabic: "سَلَام - Surah Al-Waqi'ah 56:26",
         transliteration: "salaam (light s)",
         highlight: "س",
-        explanation: "Tarqeeq - Seen (س) is light, tongue low"
+        explanation: "Tarqeeq - Seen (س) is ALWAYS light, thin. From 'Peace, peace' in Paradise description. Tongue low and forward, creates crisp 's'. Contrast with heavy ص."
       },
       {
-        arabic: "تِين",
+        arabic: "تِين - Surah At-Tin 95:1",
         transliteration: "teen (light t)",
         highlight: "ت",
-        explanation: "Tarqeeq - Ta (ت) is light and thin in sound"
+        explanation: "Tarqeeq - Light Ta (ت) is thin, delicate. From 'By the fig' - surah opening. Tongue tip to ridge, mouth relaxed. Compare to heavy ط - completely different mouth position."
+      },
+      {
+        arabic: "دِين - Surah Al-Fatihah 1:4",
+        transliteration: "deen (light d)",
+        highlight: "د",
+        explanation: "Tarqeeq - Dal (د) is light. From 'Day of Judgment' in Al-Fatihah. Thin, crisp 'd' with tongue forward. Compare to heavy ض - shows importance of Tafkheem/Tarqeeq distinction."
+      },
+      {
+        arabic: "ذِكْر - Surah Al-Hijr 15:9",
+        transliteration: "dhikr (light dh)",
+        highlight: "ذ",
+        explanation: "Tarqeeq - Light Dhal (ذ) is thin. From 'the Reminder' (Quran). Tongue between teeth, soft 'th' as in 'this'. Compare to heavy ظ - night and day difference."
+      },
+      {
+        arabic: "اللَّهُ - After fatha/damma",
+        transliteration: "Allaah (heavy L)",
+        highlight: "لل",
+        explanation: "Special Tafkheem - Lam (ل) in 'Allah' is heavy when preceded by fatha or damma. From Name of Allah. Only time Lam gets heavy. Tongue raised, full resonance. Majestic pronunciation."
+      },
+      {
+        arabic: "بِسْمِ اللَّهِ - After kasra",
+        transliteration: "bismillaah (light L)",
+        highlight: "لل",
+        explanation: "Special Tarqeeq - Lam in 'Allah' becomes light after kasra. From Bismillah. Preceding kasra makes Lam thin and clear. Shows how preceding vowel affects pronunciation."
       }
     ]
   },
   {
     id: "ra-rules",
-    title: "Rules of Ra (ر) - Heavy or Light",
-    description: "Ra (ر) can be heavy (tafkheem) or light (tarqeeq) depending on its vowel, the previous letter's vowel, and whether it has sukoon.",
+    title: "Rules of Ra (ر) - Tafkheem or Tarqeeq",
+    description: "Ra (ر) is unique - can be heavy (Tafkheem) or light (Tarqeeq) based on: 1) Its own vowel: Fatha/Damma = heavy, Kasra = light. 2) Previous vowel if Ra has sukoon: after Fatha/Damma = heavy, after Kasra = light. 3) Exceptions exist with heavy letters nearby. Ra rules are complex but create beautiful variations in recitation. Master these for proper Quran reading.",
     examples: [
       {
-        arabic: "رَبِّ",
+        arabic: "رَبِّ - Surah Al-Fatihah 1:2",
         transliteration: "rabbi (heavy R)",
         highlight: "رَ",
-        explanation: "Heavy Ra - Ra with Fatha is always heavy"
+        explanation: "Heavy Ra Rule 1 - Ra with Fatha (َ) is ALWAYS heavy. From 'Lord of all worlds.' Tongue rolls back, throat opens, creates thick 'r'. Most common Ra type in Quran. Fatha = automatic Tafkheem."
       },
       {
-        arabic: "رُوح",
+        arabic: "رُوح - Surah Al-Isra 17:85",
         transliteration: "rooh (heavy R)",
         highlight: "رُ",
-        explanation: "Heavy Ra - Ra with Damma is always heavy"
+        explanation: "Heavy Ra Rule 2 - Ra with Damma (ُ) is ALWAYS heavy. From 'the soul' verse. Thick rolling R with back of tongue raised. Damma makes Ra full-bodied and resonant."
       },
       {
-        arabic: "رِزْق",
+        arabic: "رِزْق - Surah Al-Baqarah 2:22",
         transliteration: "rizq (light R)",
         highlight: "رِ",
-        explanation: "Light Ra - Ra with Kasra is light"
+        explanation: "Light Ra Rule 3 - Ra with Kasra (ِ) is ALWAYS light. From 'provision' in creation verse. Thin, forward R, tongue doesn't pull back. Kasra makes Ra delicate and clear."
       },
       {
-        arabic: "مِرْيَة",
-        transliteration: "miryah (light R)",
-        highlight: "ِرْ",
-        explanation: "Light Ra with Sukoon - Ra with sukoon after kasra is light"
-      },
-      {
-        arabic: "فِرْعَوْن",
-        transliteration: "fir'awn (light R)",
-        highlight: "ِرْ",
-        explanation: "Light Ra - Preceded by kasra, followed by light letter"
-      },
-      {
-        arabic: "قُرْآن",
+        arabic: "قُرْآن - Surah Al-Baqarah 2:185",
         transliteration: "qur'aan (heavy R)",
         highlight: "ُرْ",
-        explanation: "Heavy Ra with Sukoon - After damma remains heavy"
+        explanation: "Heavy Ra with Sukoon Rule 4 - Ra sukoon preceded by Damma stays heavy. From 'Quran' - most important word! Previous damma carries heaviness through to Ra. Rolling, thick R sound."
+      },
+      {
+        arabic: "مِرْيَة - Surah Hud 11:17",
+        transliteration: "miryah (light R)",
+        highlight: "ِرْ",
+        explanation: "Light Ra with Sukoon Rule 5 - Ra sukoon after Kasra becomes light. From 'doubt' in verse. Previous kasra makes Ra light even with sukoon. Thin, crisp R with tongue forward."
+      },
+      {
+        arabic: "فِرْعَوْن - Surah Al-Baqarah 2:49",
+        transliteration: "fir'awn (light R)",
+        highlight: "ِرْ",
+        explanation: "Light Ra Exception Rule 6 - Ra sukoon after kasra before light letter stays light. From 'Pharaoh' - mentioned 74 times in Quran. The 'Ayn after is light letter, so Ra remains light despite sukoon."
+      },
+      {
+        arabic: "يُشْرِكُونَ - Surah Yunus 10:18",
+        transliteration: "yushrikoon (light R)",
+        highlight: "رِ",
+        explanation: "Light Ra - Ra with kasra is light. From 'they associate partners' in shirk verse. Clear demonstration: even surrounded by heavier letters, kasra on Ra makes it light."
+      },
+      {
+        arabic: "الْقَرْيَة - Surah Al-Baqarah 2:259",
+        transliteration: "al-qaryah (heavy R)",
+        highlight: "َرْ",
+        explanation: "Heavy Ra with Sukoon Rule 7 - Ra sukoon after Fatha is heavy. From 'the town' in resurrection story. Preceding fatha gives Ra heaviness even with sukoon. Thick rolling R."
+      },
+      {
+        arabic: "خَيْر - Surah Al-Baqarah 2:103",
+        transliteration: "khayr (heavy R)",
+        highlight: "يْر",
+        explanation: "Heavy Ra at Word End Rule 8 - Ra at end of word with preceding sukoon and fatha before that = heavy. From 'better' - common word. The madd before doesn't change that original fatha made Ra heavy."
+      },
+      {
+        arabic: "النَّار - Surah Al-Baqarah 2:24",
+        transliteration: "an-naar (heavy R)",
+        highlight: "ار",
+        explanation: "Heavy Ra - Final Ra with Alif-madd before it (which needs fatha before Alif) makes Ra heavy. From 'the Hellfire'. Long 'aa' from fatha keeps Ra thick and rolling at end."
+      },
+      {
+        arabic: "نُذُر - Surah Al-Qamar 54:5",
+        transliteration: "nudhur (heavy R)",
+        highlight: "ُر",
+        explanation: "Heavy Ra with Damma - From 'warnings' in Surah Al-Qamar. Damma on final Ra makes it heavy. Creates strong, resonant ending to word."
+      },
+      {
+        arabic: "مَا صَبَرُوا - Waqf on 'صَبَرُوا'",
+        transliteration: "maa sabaroo",
+        highlight: "رُو",
+        explanation: "Waqf Rule - When stopping on final Ra with preceding damma/fatha, Ra stays heavy. From 'they were not patient'. At pause, the heaviness remains even without continuing."
       }
     ]
   },
   {
     id: "ghunna",
     title: "Ghunna (Nasal Sound)",
-    description: "Ghunna is a nasal sound produced from the nose, lasting 2 counts. Occurs with Noon and Meem in certain situations (Idgham, Ikhfa, Iqlab, and when they have Shadda).",
+    description: "Ghunna is a nasal sound produced from the nasal cavity (nose), lasting exactly 2 counts. Occurs in: 1) Noon or Meem with Shadda (most common). 2) Idgham with ghunna (نْ before يومن). 3) Ikhfa (concealment). 4) Iqlab (conversion). Ghunna is beautiful, melodious aspect of Tajweed. Must come from nose, not mouth. Hold for exact 2 harakaat.",
     examples: [
       {
-        arabic: "إِنَّ",
+        arabic: "إِنَّ - Surah Al-Baqarah 2:6",
         transliteration: "inna",
         highlight: "نَّ",
-        explanation: "Ghunna with Shadda on Noon - Hold nasal sound for 2 counts"
+        explanation: "Ghunna with Shadda on Noon - From 'Indeed, those who disbelieve...' Most common ghunna type. Noon with shadda creates strong nasal resonance for 2 full counts. Sound vibrates in nasal cavity. Block nose - can't say it properly!"
       },
       {
-        arabic: "ثُمَّ",
+        arabic: "ثُمَّ - Surah Al-Baqarah 2:28",
         transliteration: "thumma",
         highlight: "مَّ",
-        explanation: "Ghunna with Shadda on Meem - Nasal sound for 2 counts"
+        explanation: "Ghunna with Shadda on Meem - From 'Then' connecting creation stages. Meem with shadda requires 2-count nasal hum. Lips close completely, sound comes purely from nose. Very common connecting word."
       },
       {
-        arabic: "مِنْ وَلِيٍّ",
+        arabic: "مِنْ وَلِيٍّ - Surah An-Nisa 4:45",
         transliteration: "min waliyy (with nasal)",
         highlight: "نْ و",
-        explanation: "Ghunna with Idgham - Noon merges with Waw, hold nasal"
+        explanation: "Ghunna with Idgham - Noon sakinah before Waw merges with ghunna. From 'any protector' verse. Noon disappears into Waw while nasal sound holds 2 counts. One of six YARMALOON letters."
       },
       {
-        arabic: "عَلِيمٌ حَكِيمٌ",
-        transliteration: "aleemun hakeemun (with nasal)",
+        arabic: "مِنْ صَلْصَالٍ - Surah Ar-Rahman 55:14",
+        transliteration: "min salsaalin (with nasal)",
+        highlight: "نْ ص",
+        explanation: "Ghunna with Ikhfa - Noon sakinah before Sad (ص) concealed with ghunna. From 'clay like pottery' in creation verse. Light nasal hum for 2 counts while transitioning to Sad. Demonstrates Ikhfa ghunna."
+      },
+      {
+        arabic: "مِنْ بَعْدِ - Surah Al-Baqarah 2:27",
+        transliteration: "mim ba'di",
+        highlight: "نْ ب",
+        explanation: "Ghunna with Iqlab - Noon converts to Meem sound before Ba, with ghunna 2 counts. From 'after' in covenant verse. Lips close like Meem, nasal resonance flows, then open for Ba."
+      },
+      {
+        arabic: "الْجَنَّة - Surah Al-Baqarah 2:25",
+        transliteration: "al-jannah",
+        highlight: "نَّ",
+        explanation: "Ghunna in 'Jannah' - From 'Paradise' promise to believers. Noon with shadda in middle of most beautiful word. Hold nasal 2 counts - creates melodious, prolonged 'nn' sound that beautifies recitation."
+      },
+      {
+        arabic: "عَلِيمٌ حَكِيمٌ - Surah Al-Baqarah 2:32",
+        transliteration: "aleemun hakeemun",
         highlight: "مٌ ح",
-        explanation: "No Ghunna - Tanween before throat letter is clear, no nasal"
+        explanation: "NO Ghunna - Tanween before throat letter Ha (ح) has NO ghunna. This demonstrates what ghunna is NOT. Pronounce tanween clearly without nasal extension. From 'Knowing and Wise' - Names of Allah. Idhar rule, not ghunna."
+      },
+      {
+        arabic: "مَنْ يَعْمَلْ - Surah An-Nisa 4:123",
+        transliteration: "may-ya'mal",
+        highlight: "نْ ي",
+        explanation: "Ghunna with Idgham - Noon before Ya merges with 2-count ghunna. From 'whoever does' in deeds verse. YARMALOON rule. Nasal sound resonates while noon merges into Ya."
+      },
+      {
+        arabic: "رَبَّنَا - Surah Al-Baqarah 2:127",
+        transliteration: "rabbanaa",
+        highlight: "بَّ",
+        explanation: "Note: Ba with Shadda - While Ba has shadda, there's NO ghunna because Ba is not Noon or Meem. From 'Our Lord' in Ibrahim's dua. Only Noon and Meem get ghunna with shadda, not other letters."
+      },
+      {
+        arabic: "مِنْ مَالٍ - Surah Al-Baqarah 2:254",
+        transliteration: "mim maalin",
+        highlight: "نْ م",
+        explanation: "Ghunna with Idgham - Noon before Meem merges with full 2-count ghunna. From Day of Judgment warning 'no wealth'. Both nasal letters create strong nasal resonance. Idgham with ghunna - beautiful transition."
       }
     ]
   },
   {
     id: "waqf-rules",
-    title: "Waqf (Stopping) Rules",
-    description: "Rules for pausing or stopping at the end of words during recitation. Common symbols include: ۘ (must stop), ج (permissible to stop), لا (better not to stop), م (must continue).",
+    title: "Waqf (Stopping/Pausing) Rules",
+    description: "Waqf means stopping at end of words during recitation. Rules: 1) Drop tanween (ًٌٍ) when stopping. 2) Short vowels (fatha, kasra, damma) become silent. 3) Sukoon remains. 4) Some words change form. Symbols: ۝ (must stop - ayah end), ۘ (recommended stop), ج (permissible), لا (better not to stop), م (must continue), قلى (better to stop), صلى (better to connect). Understanding waqf is crucial for proper recitation.",
     examples: [
       {
-        arabic: "الرَّحْمَٰنِ الرَّحِيمِ",
+        arabic: "الرَّحْمَٰنِ الرَّحِيمِ - Surah Al-Fatihah 1:3",
         transliteration: "ar-rahmaanir-raheem",
         highlight: "نِ",
-        explanation: "Waqf on ending - When stopping, tanween and kasra become silent"
+        explanation: "Waqf on Kasra - When stopping on 'Ar-Rahmaan', the final kasra becomes silent: say 'ar-Rahmaan' not 'ar-Rahmaani'. From Al-Fatihah. Kasra drops at pause. When continuing, connect with 'Ar-Raheem'."
       },
       {
-        arabic: "يَوْمَ الدِّينِ ۝",
-        transliteration: "yawmid-deen",
-        highlight: "نِ",
-        explanation: "Stop here completely - The circle symbol indicates end of ayah, must stop briefly"
+        arabic: "مَالِكِ يَوْمِ الدِّينِ ۝ - Surah Al-Fatihah 1:4",
+        transliteration: "maaliki yawmid-deen",
+        highlight: "نِ ۝",
+        explanation: "Waqf at Ayah End - The ۝ symbol marks verse end. Must pause here briefly. Drop final kasra: say 'deen' not 'deeni'. From Al-Fatihah 'Master of Day of Judgment'. Required pause in prayer."
       },
       {
-        arabic: "مَالِكِ يَوْمِ",
-        transliteration: "maaliki yawmi",
-        highlight: "كِ",
-        explanation: "When stopping on Kasra, pronounce it softly or drop it"
-      },
-      {
-        arabic: "نَسْتَعِينُ",
+        arabic: "نَسْتَعِينُ ۝ - Surah Al-Fatihah 1:5",
         transliteration: "nasta'een",
         highlight: "نُ",
-        explanation: "Waqf on Damma - Final damma becomes silent when stopping"
+        explanation: "Waqf on Damma - Final damma becomes silent when stopping. Say 'nasta'een' not 'nasta'eenu'. From 'We seek help' in Al-Fatihah. At verse end, all short vowels drop. Creates clean stop."
+      },
+      {
+        arabic: "الْمُسْتَقِيمَ ۝ - Surah Al-Fatihah 1:6",
+        transliteration: "al-mustaqeem",
+        highlight: "مَ",
+        explanation: "Waqf on Fatha - When stopping, final fatha disappears. From 'the straight path'. Say 'mustaqeem' without ending vowel. Ayah ending requires pause. In continuous reading, fatha connects to next word."
+      },
+      {
+        arabic: "سَمِيعٌ بَصِيرٌ - Surah Al-Baqarah 2:181",
+        transliteration: "samee'un baseer",
+        highlight: "عٌ",
+        explanation: "Waqf on Tanween - When pausing on 'samee'', drop the tanween completely. Don't say 'samee'un' at pause. From 'Hearing and Seeing' - Names of Allah. Tanween only pronounced when continuing to next word."
+      },
+      {
+        arabic: "عَلِيمٌ حَكِيمٌ ۝ - Surah Al-Baqarah 2:32",
+        transliteration: "aleemun hakeemun",
+        highlight: "مٌ ۝",
+        explanation: "Waqf on Final Word - At verse end, both tanween drop. Say 'aleem hakeem' not 'aleemun hakeemun'. From 'Knowing, Wise'. Most verses end with Allah's Names - always drop tanween at pause."
+      },
+      {
+        arabic: "هُدًى لِلْمُتَّقِينَ ۝ - Surah Al-Baqarah 2:2",
+        transliteration: "hudan lil-muttaqeen",
+        highlight: "نَ",
+        explanation: "Waqf Changes - When stopping on 'hudan', drop tanween: becomes 'huda'. From 'guidance for the righteous'. Continuous reading needs tanween for proper flow, but pause requires dropping it."
+      },
+      {
+        arabic: "لَا رَيْبَ ۘ فِيهِ - Surah Al-Baqarah 2:2",
+        transliteration: "laa rayba feehi",
+        highlight: "بَ ۘ",
+        explanation: "Small Meem (ۘ) Symbol - Recommended to pause here briefly. From 'no doubt in it' about Quran. Can connect but pause is better. Helps emphasize meaning: 'No doubt' then 'in it'. Tajweed symbol for better recitation."
+      },
+      {
+        arabic: "صِرَاطَ الَّذِينَ - Surah Al-Fatihah 1:7",
+        transliteration: "siraatal-ladheena",
+        highlight: "طَ",
+        explanation: "La (لا) Symbol - Better NOT to stop here. From Al-Fatihah: 'Path of those' must connect to 'You have favored'. Stopping breaks meaning. Continue without pause for proper understanding."
+      },
+      {
+        arabic: "وَإِذْ قَالَ رَبُّكَ لِلْمَلَائِكَةِ - Surah Al-Baqarah 2:30",
+        transliteration: "wa idh qaala rabbuka lil-malaa'ikah",
+        highlight: "كَةِ",
+        explanation: "Normal Waqf - No special symbol, but can pause if needed. From 'And when your Lord said to angels'. Drop final kasra if stopping. Most words allow optional pausing unless specifically marked."
       }
     ]
   },
   {
     id: "lam-al-tarif",
-    title: "Lam Al-Ta'rif (AL definite article)",
-    description: "Special rules for the Lam in 'AL' (the) - distinguishes between pronunciation with different types of following letters.",
+    title: "Lam Al-Ta'rif Special Rules (AL in Allah's Name)",
+    description: "Special focus on Lam (ل) in 'Allah' (اللَّه): 1) Heavy Lam (Tafkheem) - when preceded by Fatha or Damma: 'Allaah'. 2) Light Lam (Tarqeeq) - when preceded by Kasra: 'billaah'. This is called 'Lam of Majesty' (Lam al-Jalaalah). Most majestic Name gets most beautiful pronunciation rule. Affects entire tone of recitation.",
     examples: [
       {
-        arabic: "اللَّهُ",
-        transliteration: "Allaah",
+        arabic: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+        transliteration: "bismillaahir-rahmaanir-raheem",
         highlight: "لل",
-        explanation: "Lam of Majesty - Lam of Allah is always heavy when preceded by fatha or damma"
+        explanation: "Light Lam in Allah - Preceded by kasra in 'bismi', the Lam in Allah becomes light/thin. From Bismillah - most recited phrase in Islam. Say 'billaah' with thin L. Kasra before makes it delicate, clear."
       },
       {
-        arabic: "بِسْمِ اللَّهِ",
-        transliteration: "bismillaah",
+        arabic: "قُلْ هُوَ اللَّهُ أَحَدٌ - Surah Al-Ikhlas 112:1",
+        transliteration: "qul huwallaahu ahad",
         highlight: "لل",
-        explanation: "Light Lam - When preceded by kasra, Lam of Allah is light"
+        explanation: "Heavy Lam in Allah - Preceded by fatha in 'huwa', Lam becomes heavy/thick. From Surah Al-Ikhlas. Say 'Allaahu' with full, resonant L. Fatha makes Lam majestic and powerful. Most beautiful pronunciation of Allah's Name."
       },
       {
-        arabic: "الْمُسْلِمِينَ",
-        transliteration: "al-muslimeen",
-        highlight: "لم",
-        explanation: "Moon Letter - Clear Lam before Meem"
+        arabic: "وَاللَّهُ عَلِيمٌ حَكِيمٌ - Surah An-Nisa 4:26",
+        transliteration: "wallaahu aleemun hakeem",
+        highlight: "لل",
+        explanation: "Heavy Lam - After 'wa' with fatha, Lam is heavy. From 'And Allah is Knowing, Wise'. Say 'wallaahu' with thick L. Opening fatha creates majesty in pronunciation of Supreme Name."
       },
       {
-        arabic: "الصِّرَاطَ",
-        transliteration: "as-siraata",
-        highlight: "لص",
-        explanation: "Sun Letter - Lam merges with Sad"
+        arabic: "قُلِ اللَّهُمَّ مَالِكَ - Surah Ali 'Imran 3:26",
+        transliteration: "qulil-laahumma maalika",
+        highlight: "لل",
+        explanation: "Light Lam - After kasra in 'quli', Lam is light. From 'Say: O Allah, Owner of Sovereignty'. Preceding kasra makes Lam thin and delicate. Used in supplication."
+      },
+      {
+        arabic: "إِلَّا اللَّهَ - Surah Muhammad 47:19",
+        transliteration: "illallaaha",
+        highlight: "لل",
+        explanation: "Light Lam - After kasra in 'illa', Lam is light. From Tawheed statement 'except Allah'. Say 'illallaah' with thin L. Kasra creates humble, submissive tone when declaring Only Allah."
+      },
+      {
+        arabic: "حَسْبُنَا اللَّهُ - Surah Ali 'Imran 3:173",
+        transliteration: "hasbunal-laahu",
+        highlight: "لل",
+        explanation: "Heavy Lam - After fatha in 'hasbuna', Lam is heavy. From 'Allah is Sufficient for us' - powerful statement of trust. Heavy Lam shows strength and confidence in Allah. Fatha gives power."
+      },
+      {
+        arabic: "مِنَ اللَّهِ - Common phrase",
+        transliteration: "minallaahi",
+        highlight: "لل",
+        explanation: "Light Lam - After kasra in 'mina', Lam becomes light. From 'from Allah' - common phrase. Thin, delicate L shows reception from Allah. Kasra creates tone of receiving."
+      },
+      {
+        arabic: "اللَّهُمَّ - In Du'a",
+        transliteration: "Allaahumma",
+        highlight: "لل",
+        explanation: "Heavy Lam - Beginning of sentence, takes fatha by default, Lam is heavy. Means 'O Allah' in supplication. Majestic, full-throated call to Allah. No preceding kasra, so naturally heavy."
+      },
+      {
+        arabic: "عَبْدُ اللَّهِ - Name 'Abdullah'",
+        transliteration: "abdullah",
+        highlight: "لل",
+        explanation: "Heavy Lam - After damma in 'abdu', Lam is heavy. 'Servant of Allah' - most common Islamic name. Say with thick, resonant L. Damma makes Lam full and proud."
+      },
+      {
+        arabic: "فِي اللَّهِ - Common phrase",
+        transliteration: "fillaahi",
+        highlight: "لل",
+        explanation: "Light Lam - After kasra in 'fi', Lam is light. From 'in Allah' or 'for sake of Allah'. Thin L creates intimate tone. Used in phrases about doing things for Allah's sake."
       }
     ]
   },
   {
     id: "mad-lazim",
-    title: "Madd Laazim (Necessary Elongation)",
-    description: "The longest type of Madd, held for 6 counts. Occurs when a madd letter is followed by a letter with shadda (doubled letter) or specific patterns.",
+    title: "Madd Laazim (Necessary/Obligatory Elongation)",
+    description: "The longest type of Madd - must hold for 6 counts (3x longer than natural madd). Occurs when: 1) Madd letter followed by letter with shadda (doubled). 2) Madd letter followed by sukoon in same word. Called 'Laazim' (necessary) because 6 counts is obligatory, not optional. Creates powerful, resonant recitation. Types: Kalimi (in words), Harfi (in individual letters at surah starts).",
     examples: [
       {
-        arabic: "الْحَاقَّةُ",
-        transliteration: "al-haaqqah",
+        arabic: "الْحَاقَّةُ - Surah Al-Haqqah 69:1",
+        transliteration: "al-haaaaaqqah",
         highlight: "اقّ",
-        explanation: "Madd Laazim Kalimi - Alif followed by doubled Qaf, hold for 6 counts"
+        explanation: "Madd Laazim Kalimi Muthaqqal - Alif followed by Qaf with shadda. From Surah Al-Haqqah 'The Inevitable Hour'. Hold 'aa' for FULL 6 counts before doubled Qaf. Creates dramatic, powerful effect. Surah name demonstrates this rule!"
       },
       {
-        arabic: "الصَّاخَّةُ",
-        transliteration: "as-saakhkhah",
+        arabic: "الصَّاخَّةُ - Surah As-Sakhkhah 80:33",
+        transliteration: "as-saaaaaakhkhah",
         highlight: "اخّ",
-        explanation: "Madd Laazim - Hold elongation for full 6 counts before shadda"
+        explanation: "Madd Laazim - Alif before Kha with shadda. From 'The Deafening Blast' of Day of Judgment. Elongate for 6 full counts. The length mirrors the intensity of the meaning. Longest hold in Tajweed."
       },
       {
-        arabic: "وَالضَّالِّينَ",
-        transliteration: "wadh-dhaaleen",
+        arabic: "وَالضَّالِّينَ - Surah Al-Fatihah 1:7",
+        transliteration: "wadh-dhaaaaaaalleen",
         highlight: "الّ",
-        explanation: "Madd Laazim - Elongate before doubled Lam for 6 counts"
+        explanation: "Madd Laazim - Final word of Al-Fatihah. Alif followed by Lam with shadda = 6 counts. From 'nor of those who have gone astray'. Most recited Madd Laazim in Islam - said 17 times daily minimum in salah!"
+      },
+      {
+        arabic: "دَابَّةٍ - Surah Al-Baqarah 2:164",
+        transliteration: "daaaaaabbah",
+        highlight: "ابّ",
+        explanation: "Madd Laazim Kalimi - Alif before Ba with shadda. From 'creature' in signs of Allah. Hold madd 6 counts before doubled Ba. Shows rule applies in middle of verses too, not just famous words."
+      },
+      {
+        arabic: "آلْآنَ - Surah Yunus 10:51",
+        transliteration: "aa'aaaaaaal'aana",
+        highlight: "آ",
+        explanation: "Madd Laazim with Hamza - From 'Now?' in disbelievers' question. The آ at start has inherent 6-count madd. Also Madd Munfasil after. Complex combination showing multiple madd rules together."
+      },
+      {
+        arabic: "ولا الضَّالِّينَ - Al-Fatihah waqf",
+        transliteration: "wa ladh-dhaaaalleen",
+        highlight: "الّ",
+        explanation: "Madd Laazim at Pause - When stopping on last word of Fatihah, still hold 6 full counts. The rule doesn't change at waqf. Creates beautiful, sustained ending to most important surah."
+      },
+      {
+        arabic: "طسم - Surah Ash-Shu'ara 26:1 letters",
+        transliteration: "taa seen meem",
+        highlight: "Disconnected letters",
+        explanation: "Madd Laazim Harfi - At surah opening, disconnected letters. 'Seen' (ﺱ spelled سين) has Madd Laazim of 6 counts. From mysterious letters at surah starts. Special elongation for proper pronunciation of letter names."
+      },
+      {
+        arabic: "الطَّامَّةُ - Surah An-Nazi'at 79:34",
+        transliteration: "at-taaaaaammah",
+        highlight: "امّ",
+        explanation: "Madd Laazim - From 'The Overwhelming Calamity' on Day of Judgment. Alif before Meem with shadda = 6 counts. The dramatic length emphasizes the severity of the event described."
+      },
+      {
+        arabic: "الْقَارِعَةُ - Surah Al-Qari'ah 101:1",
+        transliteration: "al-qaari'ah",
+        highlight: "ار",
+        explanation: "NOT Madd Laazim - This is only Madd Tabee'i (2 counts). From 'The Striking Hour'. Even though powerful surah, Alif before Ra without shadda = just natural madd. Shows importance of shadda for Madd Laazim."
       }
     ]
   },
   {
     id: "advanced-idgham",
-    title: "Advanced Idgham Types",
-    description: "Deeper understanding of merging rules: Idgham Kamil (complete merging) vs Idgham Naqis (incomplete merging with ghunna).",
+    title: "Advanced Idgham Types - Complete & Incomplete",
+    description: "Deeper understanding of Idgham (merging): Two types - 1) Idgham Kamil (Complete Merging): Noon sakinah/tanween completely disappears into ر ل (Ra and Lam) with NO ghunna. Tongue moves directly to second letter. 2) Idgham Naqis (Incomplete Merging): Noon merges with ي و م ن (Ya, Waw, Meem, Noon) WITH ghunna for 2 counts - the nasal quality remains. Understanding this distinction perfects recitation.",
     examples: [
       {
-        arabic: "مِنْ رَبِّكُمْ",
+        arabic: "مِنْ رَبِّكُمْ - Surah Al-Baqarah 2:21",
         transliteration: "mir-rabbikum",
         highlight: "نْ ر",
-        explanation: "Idgham Kamil (Complete) - Noon completely merges with Ra, no ghunna, no trace of noon"
+        explanation: "Idgham Kamil (Complete Merging) - Noon sakinah completely absorbed into Ra with ZERO ghunna. From 'from your Lord' in worship command. Tongue doesn't touch roof for 'n' - goes straight to rolling 'r'. No trace of noon, no nasal sound. Pure Ra."
       },
       {
-        arabic: "مِنْ لَدُنْهُ",
+        arabic: "مِنْ لَدُنْهُ - Surah Al-Kahf 18:2",
         transliteration: "mil-ladunhu",
         highlight: "نْ ل",
-        explanation: "Idgham Kamil - Complete merging with Lam, no nasal sound"
+        explanation: "Idgham Kamil - Complete merging with Lam, absolutely NO ghunna. From 'from His presence'. Noon vanishes entirely into Lam. Tongue position shifts directly from noon position to 'l' without stopping. Clean, complete merge."
       },
       {
-        arabic: "مِنْ نِعْمَةٍ",
+        arabic: "مِنْ نِعْمَةٍ - Surah An-Nahl 16:53",
         transliteration: "min-ni'matin",
         highlight: "نْ ن",
-        explanation: "Idgham Naqis (Incomplete) - Merges with ghunna for 2 counts, nasal remains"
+        explanation: "Idgham Naqis (Incomplete) - First Noon merges with second WITH ghunna for 2 counts. From 'any favor' in blessings verse. Called Mutamathlain (two identicals). Nasal quality remains - creates prolonged 'nn' sound from nose. Most intense ghunna."
       },
       {
-        arabic: "مَنْ يَعْمَلْ",
+        arabic: "مَنْ يَعْمَلْ - Surah An-Nisa 4:123",
         transliteration: "may-ya'mal",
         highlight: "نْ ي",
-        explanation: "Idgham Naqis - Noon merges with Ya while retaining nasal quality"
+        explanation: "Idgham Naqis - Noon merges with Ya while retaining ghunna nasal quality. From 'whoever does' in deeds verse. Not complete disappearance - nasal resonance continues for 2 counts during 'y' sound. Creates melodious transition."
       },
       {
-        arabic: "حَمْدًا مُّبَارَكًا",
+        arabic: "مَنْ وَلِيًّا - Surah Al-Kahf 18:17",
+        transliteration: "maw-waliyyan",
+        highlight: "نْ و",
+        explanation: "Idgham Naqis - Noon merges with Waw with ghunna. From 'any protector' in guidance verse. The noon sound partially remains as nasal hum for 2 counts while lips round for 'w'. Beautiful blending with nasal."
+      },
+      {
+        arabic: "مِنْ مَاءٍ - Surah Al-Anbiya 21:30",
+        transliteration: "mim-ma'in",
+        highlight: "نْ م",
+        explanation: "Idgham Naqis - Noon merges with Meem WITH ghunna. From 'from water' in creation verse. Both nasal letters create strong resonance. Noon transforms into Meem sound, nasal quality held 2 counts. Lips close completely."
+      },
+      {
+        arabic: "حَمْدًا مُّبَارَكًا - Surah Maryam 19:11",
         transliteration: "hamdam-mubaarakan",
         highlight: "دًا م",
-        explanation: "Idgham of Tanween - Tanween merges with Meem with ghunna"
+        explanation: "Idgham of Tanween - Tanween Fath merges with Meem with ghunna. From 'praise, blessed'. Not noon sakinah but tanween - same Idgham Naqis rule applies. Nasal 'n' of tanween becomes 'm' sound with 2-count ghunna."
+      },
+      {
+        arabic: "غَفُورٌ رَحِيمٌ - Surah Al-Baqarah 2:173",
+        transliteration: "ghafoorur-raheem",
+        highlight: "رٌ ر",
+        explanation: "Idgham Kamil with Tanween - Tanween merges completely with Ra, NO ghunna. From 'Forgiving, Merciful' - Names of Allah. First Ra (from tanween 'un') completely disappears into second Ra. Clean merge, no nasal."
+      },
+      {
+        arabic: "عَذَابٌ أَلِيمٌ ۝ وَلَا - Between verses",
+        transliteration: "adhaabun aleemun wa laa",
+        highlight: "مٌ و",
+        explanation: "No Idgham across verse boundaries - When waqf (stop) occurs, no Idgham even if next word starts with Idgham letter. From 'painful punishment. And not...' Must pause at verse end, so 'aleemun' said fully."
+      },
+      {
+        arabic: "صَافَّاتٍ يَسْبَحْنَ - Surah An-Nur 24:41",
+        transliteration: "saaffaatin yasbahna",
+        highlight: "تٍ ي",
+        explanation: "Idgham Naqis with Tanween - Tanween Kasr merges with Ya with ghunna. From 'lined up, glorifying' about birds. The 'in' sound transforms to nasal 'y' with 2-count ghunna. Demonstrates tanween follows same Idgham rules as noon sakinah."
       }
     ]
   }
