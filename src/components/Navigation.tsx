@@ -19,6 +19,7 @@ const Navigation = () => {
     { path: "/prayer-times", label: "Prayer" },
     { path: "/dhikr", label: "Dhikr" },
     { path: "/learning", label: "Learn" },
+    { path: "/yasarna", label: "Arabic" },
     { path: "/calendar", label: "Calendar" },
     { path: "/guides", label: "Guides" },
   ];
