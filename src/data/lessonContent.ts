@@ -1,3 +1,10 @@
+export interface QuizQuestion {
+  question: string;
+  options: string[];
+  correctAnswer: number;
+  explanation: string;
+}
+
 export interface LessonContent {
   id: string;
   title: string;
@@ -14,6 +21,7 @@ export interface LessonContent {
     conclusion: string;
     keyTakeaways: string[];
   };
+  quiz: QuizQuestion[];
 }
 
 export const lessons: LessonContent[] = [
@@ -85,7 +93,39 @@ export const lessons: LessonContent[] = [
         "Each pillar has specific rules and conditions",
         "Together they create a comprehensive way of life"
       ]
-    }
+    },
+    quiz: [
+      {
+        question: "What is the first pillar of Islam?",
+        options: ["Salah (Prayer)", "Shahada (Declaration of Faith)", "Zakat (Charity)", "Hajj (Pilgrimage)"],
+        correctAnswer: 1,
+        explanation: "The Shahada, the declaration of faith, is the first and most fundamental pillar of Islam. It is the testimony that there is no god but Allah and Muhammad is His messenger."
+      },
+      {
+        question: "How many times do Muslims pray each day?",
+        options: ["Three times", "Four times", "Five times", "Seven times"],
+        correctAnswer: 2,
+        explanation: "Muslims perform Salah five times daily: Fajr (dawn), Dhuhr (noon), Asr (afternoon), Maghrib (sunset), and Isha (night)."
+      },
+      {
+        question: "What percentage of savings is typically given as Zakat annually?",
+        options: ["1.5%", "2.5%", "5%", "10%"],
+        correctAnswer: 1,
+        explanation: "Zakat is typically 2.5% of one's savings annually, calculated on wealth that has been held for one lunar year."
+      },
+      {
+        question: "During which month do Muslims fast from dawn to sunset?",
+        options: ["Dhul-Hijjah", "Ramadan", "Shawwal", "Muharram"],
+        correctAnswer: 1,
+        explanation: "Muslims fast during the entire month of Ramadan, the ninth month of the Islamic calendar."
+      },
+      {
+        question: "Hajj is required for those who are:",
+        options: ["All Muslims without exception", "Only men", "Physically and financially able", "Only those over 60"],
+        correctAnswer: 2,
+        explanation: "Hajj is obligatory only for Muslims who are physically and financially able to undertake the journey. There are exemptions for those who cannot afford it or are physically unable."
+      }
+    ]
   },
   {
     id: "understanding-tawhid",
@@ -143,7 +183,39 @@ export const lessons: LessonContent[] = [
         "Shirk (associating partners with Allah) contradicts Tawhid",
         "True Tawhid brings inner peace and purpose"
       ]
-    }
+    },
+    quiz: [
+      {
+        question: "What does Tawhid mean?",
+        options: ["Five daily prayers", "The oneness of Allah", "Fasting in Ramadan", "Pilgrimage to Mecca"],
+        correctAnswer: 1,
+        explanation: "Tawhid means the absolute oneness and uniqueness of Allah. It is the core principle of Islamic monotheism."
+      },
+      {
+        question: "How many types of Tawhid do scholars identify?",
+        options: ["Two", "Three", "Four", "Five"],
+        correctAnswer: 1,
+        explanation: "Scholars categorize Tawhid into three types: Tawhid ar-Rububiyyah (Lordship), Tawhid al-Uluhiyyah (Worship), and Tawhid al-Asma was-Sifat (Names and Attributes)."
+      },
+      {
+        question: "What is Shirk?",
+        options: ["A type of prayer", "Associating partners with Allah", "A pillar of Islam", "Islamic charity"],
+        correctAnswer: 1,
+        explanation: "Shirk means associating partners with Allah. It is the opposite of Tawhid and the only unforgivable sin if one dies without repenting from it."
+      },
+      {
+        question: "Tawhid ar-Rububiyyah refers to:",
+        options: ["Oneness of worship", "Oneness of Lordship", "Oneness of names", "Oneness of prayer"],
+        correctAnswer: 1,
+        explanation: "Tawhid ar-Rububiyyah is the belief that Allah alone is the Creator, Sustainer, and Controller of all things."
+      },
+      {
+        question: "What should Tawhid affect in a Muslim's life?",
+        options: ["Only prayer times", "Only charity giving", "Every aspect of life", "Only during Ramadan"],
+        correctAnswer: 2,
+        explanation: "Tawhid should manifest in every aspect of a Muslim's life, guiding all decisions, actions, and thoughts."
+      }
+    ]
   },
   {
     id: "prophet-life",
@@ -225,7 +297,39 @@ export const lessons: LessonContent[] = [
         "His teachings and example (Sunnah) are the second source of Islamic law",
         "Following his example brings success in this life and the Hereafter"
       ]
-    }
+    },
+    quiz: [
+      {
+        question: "In what year was Prophet Muhammad ﷺ born?",
+        options: ["570 CE", "610 CE", "622 CE", "632 CE"],
+        correctAnswer: 0,
+        explanation: "Prophet Muhammad ﷺ was born in 570 CE in Mecca, in the Year of the Elephant."
+      },
+      {
+        question: "At what age did the Prophet ﷺ receive the first revelation?",
+        options: ["25", "30", "40", "50"],
+        correctAnswer: 2,
+        explanation: "The Prophet ﷺ was 40 years old when he received the first revelation from Angel Jibreel in Cave Hira."
+      },
+      {
+        question: "What was the Prophet ﷺ known as before receiving revelation?",
+        options: ["Al-Amin and As-Sadiq", "Al-Malik", "Al-Hakim", "Al-Qadi"],
+        correctAnswer: 0,
+        explanation: "Before prophethood, Muhammad ﷺ was known as 'Al-Amin' (the trustworthy) and 'As-Sadiq' (the truthful) due to his exceptional character."
+      },
+      {
+        question: "What event marks the beginning of the Islamic calendar?",
+        options: ["Birth of the Prophet", "First revelation", "Migration to Medina (Hijrah)", "Conquest of Mecca"],
+        correctAnswer: 2,
+        explanation: "The Hijrah (migration to Medina) in 622 CE marks the beginning of the Islamic calendar, as it was a pivotal moment in Islamic history."
+      },
+      {
+        question: "In what year did the conquest of Mecca occur?",
+        options: ["622 CE", "624 CE", "630 CE", "632 CE"],
+        correctAnswer: 2,
+        explanation: "The conquest of Mecca occurred in 630 CE, marking a peaceful return of the Prophet ﷺ to his birthplace."
+      }
+    ]
   },
   {
     id: "islamic-manners",
@@ -310,7 +414,39 @@ export const lessons: LessonContent[] = [
         "Proper etiquette in worship spaces is essential",
         "Social harmony requires respect and kindness"
       ]
-    }
+    },
+    quiz: [
+      {
+        question: "According to the Prophet ﷺ, what was he sent to perfect?",
+        options: ["Prayer rituals", "Good character", "Fasting rules", "Pilgrimage rites"],
+        correctAnswer: 1,
+        explanation: "The Prophet ﷺ said: 'I was sent to perfect good character.' This emphasizes that excellent manners are central to Islam."
+      },
+      {
+        question: "What is considered charity (Sadaqah) in Islam?",
+        options: ["Only giving money", "Only feeding the poor", "Smiling at others", "Only building mosques"],
+        correctAnswer: 2,
+        explanation: "The Prophet ﷺ taught that even smiling at your brother is charity, showing that good manners themselves are acts of worship."
+      },
+      {
+        question: "How should one eat according to Islamic etiquette?",
+        options: ["With the left hand", "With the right hand", "With both hands", "It doesn't matter"],
+        correctAnswer: 1,
+        explanation: "Islamic etiquette teaches us to eat with the right hand, as this was the practice of the Prophet ﷺ."
+      },
+      {
+        question: "What should you avoid saying to your parents, even slightly?",
+        options: ["Alhamdulillah", "Uff", "Bismillah", "Salam"],
+        correctAnswer: 1,
+        explanation: "The Quran specifically forbids saying 'uff' (even a slight word of disrespect) to parents, emphasizing the importance of respectful speech."
+      },
+      {
+        question: "What is the recommended way to fill your stomach when eating?",
+        options: ["Completely full", "1/3 food, 1/3 water, 1/3 air", "Only water", "Mostly food"],
+        correctAnswer: 1,
+        explanation: "The Prophet ﷺ taught moderation: fill one-third with food, one-third with water, and leave one-third empty for air."
+      }
+    ]
   },
   {
     id: "fiqh-prayer",
@@ -405,7 +541,39 @@ export const lessons: LessonContent[] = [
         "Different types of prayers have different rulings",
         "Learning proper fiqh enhances our worship"
       ]
-    }
+    },
+    quiz: [
+      {
+        question: "What is a condition (Shart) of prayer?",
+        options: ["Reciting Al-Fatihah", "Being in a state of purity", "Prostrating twice", "Saying Salam"],
+        correctAnswer: 1,
+        explanation: "Being in a state of purity (having Wudu or Ghusl) is a condition that must be met before prayer begins. Without it, the prayer is not valid."
+      },
+      {
+        question: "Which Surah must be recited in every unit (Rakah) of prayer?",
+        options: ["Al-Ikhlas", "Al-Fatihah", "Al-Nas", "Al-Falaq"],
+        correctAnswer: 1,
+        explanation: "Reciting Surah Al-Fatihah is a pillar of prayer and must be recited in every Rakah for the prayer to be valid."
+      },
+      {
+        question: "What happens if you forget an obligation (Wajib) in prayer?",
+        options: ["Prayer is invalid", "Perform Sujud as-Sahw", "Nothing needs to be done", "Must make up the prayer"],
+        correctAnswer: 1,
+        explanation: "If you forget an obligation, you can compensate by performing Sujud as-Sahw (prostration of forgetfulness) before or after Salam."
+      },
+      {
+        question: "How many times do you prostrate in each unit (Rakah) of prayer?",
+        options: ["Once", "Twice", "Three times", "Four times"],
+        correctAnswer: 1,
+        explanation: "Prostrating (Sujud) twice in each Rakah is a pillar of prayer that must be performed."
+      },
+      {
+        question: "What is Fard prayer?",
+        options: ["Voluntary prayer", "The five daily obligatory prayers", "Night prayer", "Friday prayer only"],
+        correctAnswer: 1,
+        explanation: "Fard prayers are the five daily obligatory prayers that every Muslim must perform: Fajr, Dhuhr, Asr, Maghrib, and Isha."
+      }
+    ]
   },
   {
     id: "day-of-judgment",
@@ -521,6 +689,38 @@ export const lessons: LessonContent[] = [
         "Jesus will return as a Muslim leader",
         "Focus on preparation, not just prediction"
       ]
-    }
+    },
+    quiz: [
+      {
+        question: "How many major signs of the Day of Judgment are there?",
+        options: ["Five", "Seven", "Ten", "Twelve"],
+        correctAnswer: 2,
+        explanation: "There are ten major signs of the Day of Judgment mentioned in authentic hadith, which will occur close to the end of time."
+      },
+      {
+        question: "What is written between the eyes of the Dajjal?",
+        options: ["Believer", "Kafir (disbeliever)", "Prophet", "Leader"],
+        correctAnswer: 1,
+        explanation: "The word 'Kafir' (disbeliever) will be written between the Dajjal's eyes, visible to all believers."
+      },
+      {
+        question: "Which Surah provides protection from the trial of the Dajjal?",
+        options: ["First ten verses of Surah Al-Kahf", "Surah Al-Fatihah", "Surah Yaseen", "Ayat al-Kursi"],
+        correctAnswer: 0,
+        explanation: "The Prophet ﷺ taught that memorizing the first ten verses of Surah Al-Kahf protects from the trial of the Dajjal."
+      },
+      {
+        question: "Who will kill the Dajjal?",
+        options: ["The Mahdi", "Prophet Isa (Jesus)", "An army of believers", "He will die naturally"],
+        correctAnswer: 1,
+        explanation: "Jesus (Isa) will descend and kill the Dajjal at the gate of Ludd, ending his trial."
+      },
+      {
+        question: "What is one of the minor signs already occurring?",
+        options: ["The sun rising from the west", "The appearance of the Beast", "People competing in building tall structures", "The descent of Jesus"],
+        correctAnswer: 2,
+        explanation: "The Prophet ﷺ mentioned that barefoot shepherds competing in constructing lofty buildings is a minor sign, which we see occurring today."
+      }
+    ]
   }
 ];

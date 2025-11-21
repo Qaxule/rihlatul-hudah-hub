@@ -1,15 +1,17 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, CheckCircle, BookOpen, Clock } from "lucide-react";
+import { ArrowLeft, CheckCircle, BookOpen, Clock, GraduationCap } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { lessons } from "@/data/lessonContent";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import LessonQuiz from "@/components/LessonQuiz";
 
 const LessonDetail = () => {
   const { lessonId } = useParams();
@@ -17,6 +19,8 @@ const LessonDetail = () => {
   const { user } = useAuth();
   const [isCompleted, setIsCompleted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [quizScore, setQuizScore] = useState<number | null>(null);
+  const [showQuiz, setShowQuiz] = useState(false);
 
   const lesson = lessons.find((l) => l.id === lessonId);
 
@@ -31,13 +35,45 @@ const LessonDetail = () => {
     
     const { data } = await supabase
       .from("learning_progress")
-      .select("completed")
+      .select("completed, quiz_score")
       .eq("user_id", user.id)
       .eq("lesson_id", lessonId)
-      .single();
+      .maybeSingle();
 
     if (data) {
       setIsCompleted(data.completed || false);
+      setQuizScore(data.quiz_score);
+    }
+  };
+
+  const handleQuizComplete = async (score: number) => {
+    if (!user) return;
+
+    setIsLoading(true);
+    try {
+      const { error } = await supabase
+        .from("learning_progress")
+        .upsert({
+          user_id: user.id,
+          lesson_id: lessonId!,
+          quiz_score: score,
+          completed: score >= 60,
+          completed_at: score >= 60 ? new Date().toISOString() : null,
+        });
+
+      if (error) throw error;
+
+      setQuizScore(score);
+      setIsCompleted(score >= 60);
+      toast.success(
+        score >= 60
+          ? `Great job! You scored ${score}%`
+          : `You scored ${score}%. Try again to pass (60% required)`
+      );
+    } catch (error) {
+      toast.error("Failed to save quiz score");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -104,26 +140,47 @@ const LessonDetail = () => {
             </Button>
 
             <div className="flex items-start justify-between gap-4 flex-wrap">
-              <div>
+              <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
                   <Badge variant="secondary">{lesson.category}</Badge>
                   <div className="flex items-center text-sm text-muted-foreground">
                     <Clock className="h-4 w-4 mr-1" />
                     {lesson.duration}
                   </div>
+                  {quizScore !== null && (
+                    <Badge
+                      variant={quizScore >= 80 ? "default" : "secondary"}
+                      className="gap-1"
+                    >
+                      <GraduationCap className="h-3 w-3" />
+                      Quiz: {quizScore}%
+                    </Badge>
+                  )}
                 </div>
                 <h1 className="text-3xl font-bold mb-2">{lesson.title}</h1>
                 <p className="text-muted-foreground">{lesson.description}</p>
               </div>
-              <Button
-                onClick={handleMarkComplete}
-                disabled={isLoading}
-                variant={isCompleted ? "outline" : "default"}
-                className="gap-2"
-              >
-                <CheckCircle className="h-4 w-4" />
-                {isCompleted ? "Completed" : "Mark Complete"}
-              </Button>
+              <div className="flex flex-col gap-2">
+                <Button
+                  onClick={handleMarkComplete}
+                  disabled={isLoading}
+                  variant={isCompleted ? "outline" : "default"}
+                  className="gap-2"
+                >
+                  <CheckCircle className="h-4 w-4" />
+                  {isCompleted ? "Completed" : "Mark Complete"}
+                </Button>
+                {!showQuiz && (
+                  <Button
+                    onClick={() => setShowQuiz(true)}
+                    variant="secondary"
+                    className="gap-2"
+                  >
+                    <GraduationCap className="h-4 w-4" />
+                    {quizScore !== null ? "Retake Quiz" : "Take Quiz"}
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
 
@@ -193,19 +250,47 @@ const LessonDetail = () => {
             </CardContent>
           </Card>
 
-          {/* Bottom Action */}
-          <div className="mt-6 flex justify-center">
-            <Button
-              onClick={handleMarkComplete}
-              disabled={isLoading}
-              size="lg"
-              variant={isCompleted ? "outline" : "default"}
-              className="gap-2"
-            >
-              <CheckCircle className="h-5 w-5" />
-              {isCompleted ? "Mark as Incomplete" : "Mark as Complete"}
-            </Button>
-          </div>
+          {/* Quiz Section */}
+          {showQuiz ? (
+            <div className="mt-6">
+              <Separator className="mb-6" />
+              <div className="mb-4">
+                <Button
+                  onClick={() => setShowQuiz(false)}
+                  variant="ghost"
+                  size="sm"
+                >
+                  ← Back to Lesson
+                </Button>
+              </div>
+              <LessonQuiz
+                questions={lesson.quiz}
+                onComplete={handleQuizComplete}
+              />
+            </div>
+          ) : (
+            <div className="mt-6 flex flex-col items-center gap-4">
+              <Button
+                onClick={() => setShowQuiz(true)}
+                size="lg"
+                variant="default"
+                className="gap-2"
+              >
+                <GraduationCap className="h-5 w-5" />
+                {quizScore !== null ? "Retake Quiz" : "Take Knowledge Quiz"}
+              </Button>
+              <Button
+                onClick={handleMarkComplete}
+                disabled={isLoading}
+                size="lg"
+                variant="outline"
+                className="gap-2"
+              >
+                <CheckCircle className="h-5 w-5" />
+                {isCompleted ? "Mark as Incomplete" : "Mark as Complete"}
+              </Button>
+            </div>
+          )}
         </div>
       </main>
       <Footer />
