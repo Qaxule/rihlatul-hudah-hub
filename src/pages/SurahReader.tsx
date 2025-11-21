@@ -436,31 +436,31 @@ const SurahReader = () => {
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-3">
               <Link to="/quran" className="inline-flex items-center text-primary hover:underline">
                 <BookOpen className="h-4 w-4 mr-2" />
                 Back to Quran
               </Link>
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-muted">
-                  <Switch
-                    id="arabic-only"
-                    checked={arabicOnlyMode}
-                    onCheckedChange={setArabicOnlyMode}
-                  />
-                  <Label htmlFor="arabic-only" className="text-xs font-medium cursor-pointer whitespace-nowrap">
-                    Arabic Only
-                  </Label>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setNavigatorOpen(true)}
-                  className="gap-2"
-                >
-                  <Menu className="h-4 w-4" />
-                  Navigate
-                </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setNavigatorOpen(true)}
+                className="gap-2"
+              >
+                <Menu className="h-4 w-4" />
+                Navigate
+              </Button>
+            </div>
+            <div className="flex justify-start mb-4">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-muted">
+                <Switch
+                  id="arabic-only"
+                  checked={arabicOnlyMode}
+                  onCheckedChange={setArabicOnlyMode}
+                />
+                <Label htmlFor="arabic-only" className="text-xs font-medium cursor-pointer whitespace-nowrap">
+                  Arabic Only
+                </Label>
               </div>
             </div>
             <h1 className="text-4xl font-bold mb-2" dir="rtl">
