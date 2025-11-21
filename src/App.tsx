@@ -17,6 +17,7 @@ import Learning from "./pages/Learning";
 import LessonDetail from "./pages/LessonDetail";
 import Calendar from "./pages/Calendar";
 import Guides from "./pages/Guides";
+import GuideDetail from "./pages/GuideDetail";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Bookmarks from "./pages/Bookmarks";
@@ -49,6 +50,7 @@ const App = () => (
             <Route path="/learning/:lessonId" element={<LessonDetail />} />
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/guides" element={<Guides />} />
+            <Route path="/guides/:guideId" element={<GuideDetail />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/bookmarks" element={<Bookmarks />} />
