@@ -47,6 +47,36 @@ export type Database = {
         }
         Relationships: []
       }
+      guide_progress: {
+        Row: {
+          completed: boolean | null
+          completed_steps: number[] | null
+          created_at: string | null
+          guide_id: string
+          id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean | null
+          completed_steps?: number[] | null
+          created_at?: string | null
+          guide_id: string
+          id?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          completed?: boolean | null
+          completed_steps?: number[] | null
+          created_at?: string | null
+          guide_id?: string
+          id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       hadith_bookmarks: {
         Row: {
           collection_id: string
