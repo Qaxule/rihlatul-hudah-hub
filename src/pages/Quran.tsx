@@ -117,7 +117,7 @@ const Quran = () => {
               </button>
             </div>
 
-            <TabsContent value="surah" className="space-y-8 md:space-y-10 mt-0">
+            <TabsContent value="surah" className="space-y-12 md:space-y-16 mt-0">
               {surahData.map((surah) => (
                 <Link key={surah.number} to={`/surah/${surah.number}`}>
                   <Card className="shadow-soft hover:shadow-elevated transition-all duration-300 cursor-pointer group border-border/50">
@@ -156,7 +156,7 @@ const Quran = () => {
               )}
             </TabsContent>
 
-            <TabsContent value="juz" className="space-y-8 md:space-y-10 mt-0">
+            <TabsContent value="juz" className="space-y-12 md:space-y-16 mt-0">
               {juzData.map((juz) => (
                 <Card key={juz.number} className="shadow-soft border-border/50">
                   <CardContent className="p-6 md:p-8">
@@ -192,7 +192,7 @@ const Quran = () => {
               ))}
             </TabsContent>
 
-            <TabsContent value="revelation" className="space-y-8 md:space-y-10 mt-0">
+            <TabsContent value="revelation" className="space-y-12 md:space-y-16 mt-0">
               {surahData.map((surah) => (
                 <Link key={surah.number} to={`/surah/${surah.number}`}>
                   <Card className="shadow-soft hover:shadow-elevated transition-all duration-300 cursor-pointer group border-border/50">
