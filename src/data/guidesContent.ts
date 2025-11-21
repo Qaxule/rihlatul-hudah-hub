@@ -3,6 +3,7 @@ export interface GuideStep {
   description: string;
   arabicText?: string;
   transliteration?: string;
+  image?: string;
 }
 
 export interface Guide {
@@ -36,35 +37,43 @@ export const guides: Guide[] = [
       },
       {
         title: "Wash Your Hands",
-        description: "Wash both hands up to the wrists three times, making sure water reaches between your fingers and under rings."
+        description: "Wash both hands up to the wrists three times, making sure water reaches between your fingers and under rings.",
+        image: "wudhu-hands"
       },
       {
         title: "Rinse Your Mouth",
-        description: "Take water in your right hand, rinse your mouth thoroughly three times, swishing the water around."
+        description: "Take water in your right hand, rinse your mouth thoroughly three times, swishing the water around.",
+        image: "wudhu-mouth"
       },
       {
         title: "Clean Your Nose",
-        description: "Sniff water into your nostrils three times and blow it out using your left hand to clean the nose."
+        description: "Sniff water into your nostrils three times and blow it out using your left hand to clean the nose.",
+        image: "wudhu-nose"
       },
       {
         title: "Wash Your Face",
-        description: "Wash your entire face from forehead to chin and from ear to ear three times. Make sure water reaches all parts."
+        description: "Wash your entire face from forehead to chin and from ear to ear three times. Make sure water reaches all parts.",
+        image: "wudhu-face"
       },
       {
         title: "Wash Your Arms",
-        description: "Wash your right arm from fingertips to elbow three times, then repeat with the left arm. Ensure the entire arm is washed."
+        description: "Wash your right arm from fingertips to elbow three times, then repeat with the left arm. Ensure the entire arm is washed.",
+        image: "wudhu-arms"
       },
       {
         title: "Wipe Your Head",
-        description: "Wet your hands and wipe over your head once, from front to back and back to front."
+        description: "Wet your hands and wipe over your head once, from front to back and back to front.",
+        image: "wudhu-head"
       },
       {
         title: "Wipe Your Ears",
-        description: "Use your index fingers to wipe inside your ears and your thumbs to wipe behind your ears."
+        description: "Use your index fingers to wipe inside your ears and your thumbs to wipe behind your ears.",
+        image: "wudhu-ears"
       },
       {
         title: "Wash Your Feet",
-        description: "Wash your right foot up to the ankle three times, making sure water reaches between the toes, then repeat with the left foot."
+        description: "Wash your right foot up to the ankle three times, making sure water reaches between the toes, then repeat with the left foot.",
+        image: "wudhu-feet"
       },
       {
         title: "Recite the Dua",
@@ -98,13 +107,10 @@ export const guides: Guide[] = [
       },
       {
         title: "Raise Hands and Say Takbir",
-        description: "Raise your hands to ear level with palms facing forward and say 'Allahu Akbar' (Allah is the Greatest).",
+        description: "Raise your hands to ear level with palms facing forward and say 'Allahu Akbar' (Allah is the Greatest). Then place your right hand over your left on your chest.",
         arabicText: "اللَّهُ أَكْبَرُ",
-        transliteration: "Allahu Akbar"
-      },
-      {
-        title: "Place Hands on Chest",
-        description: "Place your right hand over your left on your chest. Look at the place where you will prostrate."
+        transliteration: "Allahu Akbar",
+        image: "salah-standing"
       },
       {
         title: "Recite Opening Supplication",
@@ -130,7 +136,8 @@ export const guides: Guide[] = [
         title: "Perform Ruku (Bowing)",
         description: "Say 'Allahu Akbar' and bow, placing your hands on your knees. Keep your back straight and head in line with your back. Say 'Subhana Rabbiyal Adheem' three times.",
         arabicText: "سُبْحَانَ رَبِّيَ الْعَظِيمِ",
-        transliteration: "Subhana Rabbiyal Adheem"
+        transliteration: "Subhana Rabbiyal Adheem",
+        image: "salah-ruku"
       },
       {
         title: "Rise from Ruku",
@@ -142,13 +149,15 @@ export const guides: Guide[] = [
         title: "First Sujud (Prostration)",
         description: "Say 'Allahu Akbar' and prostrate with your forehead, nose, both hands, both knees, and toes touching the ground. Say 'Subhana Rabbiyal A'la' three times.",
         arabicText: "سُبْحَانَ رَبِّيَ الْأَعْلَى",
-        transliteration: "Subhana Rabbiyal A'la"
+        transliteration: "Subhana Rabbiyal A'la",
+        image: "salah-sujud"
       },
       {
         title: "Sit Between Prostrations",
         description: "Say 'Allahu Akbar' and sit up briefly. Say 'Rabbi ghfir li' (My Lord, forgive me). Stay seated for a moment in a calm manner.",
         arabicText: "رَبِّ اغْفِرْ لِي",
-        transliteration: "Rabbi ghfir li"
+        transliteration: "Rabbi ghfir li",
+        image: "salah-sitting"
       },
       {
         title: "Second Sujud",
