@@ -46,6 +46,7 @@ const SurahReader = () => {
   const [isAbridged, setIsAbridged] = useState<boolean>(true);
   const [navigatorOpen, setNavigatorOpen] = useState(false);
   const [currentVisibleAyah, setCurrentVisibleAyah] = useState<number>(1);
+  const [arabicOnlyMode, setArabicOnlyMode] = useState<boolean>(false);
   const ayahRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const { user } = useAuth();
 
@@ -440,7 +441,17 @@ const SurahReader = () => {
                 <BookOpen className="h-4 w-4 mr-2" />
                 Back to Quran
               </Link>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-muted">
+                  <Switch
+                    id="arabic-only"
+                    checked={arabicOnlyMode}
+                    onCheckedChange={setArabicOnlyMode}
+                  />
+                  <Label htmlFor="arabic-only" className="text-xs font-medium cursor-pointer whitespace-nowrap">
+                    Arabic Only
+                  </Label>
+                </div>
                 <Button
                   variant="outline"
                   size="sm"
@@ -523,25 +534,26 @@ const SurahReader = () => {
                   </p>
 
                   {/* Transliteration */}
-                  {transliterationData?.ayahs[index] && (
+                  {!arabicOnlyMode && transliterationData?.ayahs[index] && (
                     <p className="text-lg text-muted-foreground italic border-t pt-4">
                       {transliterationData.ayahs[index].text}
                     </p>
                   )}
 
                   {/* Translation */}
-                  {translationData?.ayahs[index] && (
+                  {!arabicOnlyMode && translationData?.ayahs[index] && (
                     <p className="text-base text-foreground border-t pt-4">
                       {translationData.ayahs[index].text}
                     </p>
                   )}
 
                   {/* Tafsir */}
-                  <Collapsible
-                    open={openTafsirs.has(ayah.numberInSurah)}
-                    onOpenChange={(isOpen) => handleTafsirToggle(ayah.numberInSurah, isOpen)}
-                    className="border-t pt-4"
-                  >
+                  {!arabicOnlyMode && (
+                    <Collapsible
+                      open={openTafsirs.has(ayah.numberInSurah)}
+                      onOpenChange={(isOpen) => handleTafsirToggle(ayah.numberInSurah, isOpen)}
+                      className="border-t pt-4"
+                    >
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-2">
                       <CollapsibleTrigger asChild>
                         <Button variant="ghost" className="justify-start p-0 h-auto hover:bg-transparent w-fit">
@@ -603,6 +615,7 @@ const SurahReader = () => {
                       )}
                     </CollapsibleContent>
                   </Collapsible>
+                  )}
                 </CardContent>
               </Card>
             ))}
