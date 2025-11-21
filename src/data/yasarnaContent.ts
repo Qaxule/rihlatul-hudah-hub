@@ -594,65 +594,564 @@ export const quizQuestions: QuizQuestion[] = [
 
 export const tajwidRules: TajwidRule[] = [
   {
-    id: "noon-sakinah",
-    title: "Noon Sakinah Rules",
-    description: "Rules for Noon with Sukoon (نْ) or Tanween",
+    id: "noon-sakinah-idgham",
+    title: "Noon Sakinah - Idgham (Merging)",
+    description: "When Noon Sakinah or Tanween is followed by ي ر م ل و ن, it merges with the following letter. Letters: يرملون (YARMALOON)",
+    examples: [
+      {
+        arabic: "مَنْ يَقُولُ",
+        transliteration: "may-yaqoolu",
+        highlight: "نْ ي",
+        explanation: "Idgham with Ghunna - Noon merges with Ya (ي), nasal sound held for 2 counts"
+      },
+      {
+        arabic: "مِنْ رَبِّهِمْ",
+        transliteration: "mir-rabbihim",
+        highlight: "نْ ر",
+        explanation: "Idgham without Ghunna - Noon merges with Ra (ر), no nasal sound"
+      },
+      {
+        arabic: "مِنْ مَاءٍ",
+        transliteration: "mim-ma'in",
+        highlight: "نْ م",
+        explanation: "Idgham with Ghunna - Noon merges with Meem (م), nasal sound for 2 counts"
+      },
+      {
+        arabic: "مِنْ لَدُنْهُ",
+        transliteration: "mil-ladunhu",
+        highlight: "نْ ل",
+        explanation: "Idgham without Ghunna - Noon merges with Lam (ل), no nasal sound"
+      },
+      {
+        arabic: "مَنْ وَلِيًّا",
+        transliteration: "maw-waliyyan",
+        highlight: "نْ و",
+        explanation: "Idgham with Ghunna - Noon merges with Waw (و), nasal sound for 2 counts"
+      },
+      {
+        arabic: "مِنْ نِعْمَةٍ",
+        transliteration: "min-ni'matin",
+        highlight: "نْ ن",
+        explanation: "Idgham with Ghunna - Noon merges with Noon (ن), strong nasal sound for 2 counts"
+      }
+    ]
+  },
+  {
+    id: "noon-sakinah-ikhfa",
+    title: "Noon Sakinah - Ikhfa (Concealment)",
+    description: "When Noon Sakinah or Tanween is followed by 15 specific letters (ص ذ ث ك ج ش ق س د ط ز ف ت ض ظ), pronounce it with a nasal sound between clear pronunciation and merging.",
+    examples: [
+      {
+        arabic: "مَنْ صَدَّ",
+        transliteration: "man sadda (with nasal)",
+        highlight: "نْ ص",
+        explanation: "Ikhfa before Sad (ص) - Conceal the noon with ghunna for 2 counts"
+      },
+      {
+        arabic: "مِنْ ذَكَرٍ",
+        transliteration: "min dhakarin (with nasal)",
+        highlight: "نْ ذ",
+        explanation: "Ikhfa before Dhal (ذ) - Partially hide the noon with nasal sound"
+      },
+      {
+        arabic: "مِنْ ثَمَرَةٍ",
+        transliteration: "min thamaratin (with nasal)",
+        highlight: "نْ ث",
+        explanation: "Ikhfa before Tha (ث) - Conceal with ghunna"
+      },
+      {
+        arabic: "أَنْ كَانَ",
+        transliteration: "an kaana (with nasal)",
+        highlight: "نْ ك",
+        explanation: "Ikhfa before Kaf (ك) - Hide noon with nasal resonance"
+      },
+      {
+        arabic: "مَنْ جَاءَ",
+        transliteration: "man ja'a (with nasal)",
+        highlight: "نْ ج",
+        explanation: "Ikhfa before Jeem (ج) - Conceal the noon sound"
+      }
+    ]
+  },
+  {
+    id: "noon-sakinah-iqlab",
+    title: "Noon Sakinah - Iqlab (Conversion)",
+    description: "When Noon Sakinah or Tanween is followed by Ba (ب), convert the noon sound to Meem (م) with ghunna for 2 counts.",
     examples: [
       {
         arabic: "مِنْ بَعْدِ",
         transliteration: "mim ba'di",
         highlight: "نْ ب",
-        explanation: "Iqlab - The noon changes to meem sound before ب"
+        explanation: "Iqlab - Change Noon to Meem sound before Ba, hold nasal for 2 counts"
       },
       {
-        arabic: "مَنْ يَعْمَلْ",
-        transliteration: "may-ya'mal",
-        highlight: "نْ ي",
-        explanation: "Idgham - The noon merges with the following letter"
+        arabic: "سَمِيعٌ بَصِيرٌ",
+        transliteration: "samee'um baseer",
+        highlight: "عٌ ب",
+        explanation: "Iqlab with Tanween - Convert tanween to Meem before Ba"
+      },
+      {
+        arabic: "أَنْ بُورِكَ",
+        transliteration: "am boorika",
+        highlight: "نْ ب",
+        explanation: "Iqlab - Noon becomes Meem sound, lips close as if saying Meem"
+      }
+    ]
+  },
+  {
+    id: "noon-sakinah-idhar",
+    title: "Noon Sakinah - Idhar (Clear Pronunciation)",
+    description: "When Noon Sakinah or Tanween is followed by throat letters (ء ه ع ح غ خ), pronounce the noon clearly without ghunna.",
+    examples: [
+      {
+        arabic: "مِنْ ءَامَنَ",
+        transliteration: "min aamana",
+        highlight: "نْ ء",
+        explanation: "Idhar - Clear noon before Hamza (ء), no nasal sound"
+      },
+      {
+        arabic: "مِنْ هَادٍ",
+        transliteration: "min haadin",
+        highlight: "نْ ه",
+        explanation: "Idhar - Pronounce noon clearly before Ha (ه)"
+      },
+      {
+        arabic: "مَنْ عَمِلَ",
+        transliteration: "man 'amila",
+        highlight: "نْ ع",
+        explanation: "Idhar - Clear pronunciation before Ayn (ع)"
+      },
+      {
+        arabic: "إِنْ حَسِبْتُمْ",
+        transliteration: "in hasibtum",
+        highlight: "نْ ح",
+        explanation: "Idhar - Pronounce noon clearly before Ha (ح)"
       }
     ]
   },
   {
     id: "meem-sakinah",
     title: "Meem Sakinah Rules",
-    description: "Rules for Meem with Sukoon (مْ)",
+    description: "Three rules apply when Meem has Sukoon (مْ): Idgham (merging with another Meem), Ikhfa (hiding before Ba), and Idhar (clear pronunciation before other letters).",
     examples: [
       {
-        arabic: "هُمْ مُؤْمِنُونَ",
-        transliteration: "hum-mu'minoon",
+        arabic: "لَهُمْ مَا",
+        transliteration: "lahum-ma",
         highlight: "مْ م",
-        explanation: "Idgham - Meem merges with another Meem (with ghunna)"
+        explanation: "Idgham Mithlayn - Meem merges with Meem, hold ghunna for 2 counts"
       },
       {
-        arabic: "أَلَمْ تَرَ",
-        transliteration: "alam tara",
+        arabic: "تَرْمِيهِمْ بِحِجَارَةٍ",
+        transliteration: "tarmeehim bihijarah",
+        highlight: "مْ ب",
+        explanation: "Ikhfa Shafawi - Hide Meem before Ba (ب) with slight nasal sound"
+      },
+      {
+        arabic: "عَلَيْهِمْ تَتْلُو",
+        transliteration: "alayhim tatloo",
         highlight: "مْ ت",
-        explanation: "Ikhfa - Clear pronunciation without ghunna"
+        explanation: "Idhar Shafawi - Pronounce Meem clearly before all letters except م and ب"
+      },
+      {
+        arabic: "أَمْ كُنتُمْ",
+        transliteration: "am kuntum",
+        highlight: "مْ ك",
+        explanation: "Idhar - Clear Meem pronunciation before Kaf"
       }
     ]
   },
   {
-    id: "madd",
-    title: "Madd (Elongation)",
-    description: "Basic rules for elongating vowels",
+    id: "qalqalah",
+    title: "Qalqalah (Echoing Sound)",
+    description: "When letters ق ط ب ج د (QUTB JAD) have sukoon, create a strong echoing/bouncing sound. Stronger at the end of words.",
+    examples: [
+      {
+        arabic: "أَحَدْ",
+        transliteration: "ahad",
+        highlight: "دْ",
+        explanation: "Strong Qalqalah - Dal (د) at word end creates strong echo"
+      },
+      {
+        arabic: "الْفَلَقْ",
+        transliteration: "al-falaq",
+        highlight: "قْ",
+        explanation: "Strong Qalqalah - Qaf (ق) at word end bounces"
+      },
+      {
+        arabic: "يَكْتُبُ",
+        transliteration: "yak-tubu",
+        highlight: "كْ",
+        explanation: "Minor Qalqalah - Ta (ت) in middle has subtle echo"
+      },
+      {
+        arabic: "رِجْسٌ",
+        transliteration: "rijs",
+        highlight: "جْ",
+        explanation: "Minor Qalqalah - Jeem (ج) with sukoon echoes"
+      },
+      {
+        arabic: "رَبِّ",
+        transliteration: "rabbi",
+        highlight: "بِّ",
+        explanation: "Qalqalah with Shadda - Ba (ب) creates bouncing sound even with vowel due to shadda"
+      }
+    ]
+  },
+  {
+    id: "madd-types",
+    title: "Madd - Types of Elongation",
+    description: "Madd means elongation of vowel sounds. Different types have different lengths measured in counts (harakaat).",
     examples: [
       {
         arabic: "قَالَ",
-        transliteration: "qa-la",
+        transliteration: "qaa-la",
         highlight: "ا",
-        explanation: "Madd with Alif - elongate the 'a' sound for 2 counts"
+        explanation: "Madd Tabee'i (Natural) - Elongate 'a' with Alif for 2 counts"
       },
       {
         arabic: "يَقُولُ",
         transliteration: "ya-qoo-lu",
         highlight: "و",
-        explanation: "Madd with Waw - elongate the 'oo' sound for 2 counts"
+        explanation: "Madd Tabee'i - Elongate 'oo' with Waw for 2 counts"
       },
       {
         arabic: "قِيلَ",
         transliteration: "qee-la",
         highlight: "ي",
-        explanation: "Madd with Ya - elongate the 'ee' sound for 2 counts"
+        explanation: "Madd Tabee'i - Elongate 'ee' with Ya for 2 counts"
+      },
+      {
+        arabic: "جَاءَ",
+        transliteration: "jaa'a",
+        highlight: "ا ء",
+        explanation: "Madd Munfasil - Hamza after madd letter, elongate 4-5 counts"
+      },
+      {
+        arabic: "السَّمَاءِ",
+        transliteration: "as-samaa'i",
+        highlight: "ا ء",
+        explanation: "Madd Muttasil - Hamza in same word after madd, elongate 4-5 counts (obligatory)"
+      },
+      {
+        arabic: "آمَنَ",
+        transliteration: "aa-ma-na",
+        highlight: "آ",
+        explanation: "Madd Laazim - Mandatory elongation for 6 counts with Madd Alif"
+      }
+    ]
+  },
+  {
+    id: "lam-rules",
+    title: "Lam Rules (Al-Shamsiyyah & Al-Qamariyyah)",
+    description: "The definite article 'AL' (ال) has two pronunciations: Sun Letters (assimilate Lam) and Moon Letters (pronounce Lam clearly).",
+    examples: [
+      {
+        arabic: "الشَّمْس",
+        transliteration: "ash-shams",
+        highlight: "لش",
+        explanation: "Lam Shamsiyyah - Lam (ل) silent, Sheen (ش) has shadda, say 'ash-shams' not 'al-shams'"
+      },
+      {
+        arabic: "النَّار",
+        transliteration: "an-naar",
+        highlight: "لن",
+        explanation: "Lam Shamsiyyah - Lam silent before Noon (ن), say 'an-naar'"
+      },
+      {
+        arabic: "الرَّحْمَن",
+        transliteration: "ar-rahmaan",
+        highlight: "لر",
+        explanation: "Lam Shamsiyyah - Lam assimilates into Ra (ر)"
+      },
+      {
+        arabic: "الْقَمَر",
+        transliteration: "al-qamar",
+        highlight: "لق",
+        explanation: "Lam Qamariyyah - Pronounce Lam clearly before Qaf (ق)"
+      },
+      {
+        arabic: "الْكِتَاب",
+        transliteration: "al-kitaab",
+        highlight: "لك",
+        explanation: "Lam Qamariyyah - Clear Lam pronunciation before Kaf (ك)"
+      },
+      {
+        arabic: "الْبَيْت",
+        transliteration: "al-bayt",
+        highlight: "لب",
+        explanation: "Lam Qamariyyah - Pronounce Lam before Ba (ب)"
+      }
+    ]
+  },
+  {
+    id: "sun-moon-letters",
+    title: "Sun and Moon Letters Guide",
+    description: "14 Sun Letters (assimilate AL): ت ث د ذ ر ز س ش ص ض ط ظ ل ن. 14 Moon Letters (keep AL clear): ء ب ج ح خ ع غ ف ق ك م ه و ي",
+    examples: [
+      {
+        arabic: "الذِّكْر",
+        transliteration: "adh-dhikr",
+        highlight: "الذ",
+        explanation: "Sun Letter - Dhal (ذ) is a sun letter, Lam becomes silent"
+      },
+      {
+        arabic: "التَّوْبَة",
+        transliteration: "at-tawbah",
+        highlight: "الت",
+        explanation: "Sun Letter - Ta (ت) assimilates the Lam"
+      },
+      {
+        arabic: "الصَّلَاة",
+        transliteration: "as-salaah",
+        highlight: "الص",
+        explanation: "Sun Letter - Sad (ص) takes the Lam sound"
+      },
+      {
+        arabic: "الْمَلَك",
+        transliteration: "al-malak",
+        highlight: "الم",
+        explanation: "Moon Letter - Meem (م) keeps Lam pronunciation clear"
+      },
+      {
+        arabic: "الْحَقّ",
+        transliteration: "al-haqq",
+        highlight: "الح",
+        explanation: "Moon Letter - Ha (ح) is a moon letter, say 'al' clearly"
+      }
+    ]
+  },
+  {
+    id: "tafkheem-tarqeeq",
+    title: "Tafkheem (Heavy) vs Tarqeeq (Light)",
+    description: "Some letters are always heavy (thick sound), some are always light (thin sound). Heavy letters: خ ص ض غ ط ق ظ (KHUṢṢ DHAQATH QATH). Ra (ر) changes based on vowels.",
+    examples: [
+      {
+        arabic: "صَلَاة",
+        transliteration: "salaah (heavy S)",
+        highlight: "ص",
+        explanation: "Tafkheem - Sad (ص) is always heavy, tongue raised to roof of mouth"
+      },
+      {
+        arabic: "طَعَام",
+        transliteration: "ta'aam (heavy T)",
+        highlight: "ط",
+        explanation: "Tafkheem - Ta (ط) is heavy, creates thick sound"
+      },
+      {
+        arabic: "قُرْآن",
+        transliteration: "qur'aan (heavy Q)",
+        highlight: "ق",
+        explanation: "Tafkheem - Qaf (ق) always pronounced with heaviness"
+      },
+      {
+        arabic: "سَلَام",
+        transliteration: "salaam (light s)",
+        highlight: "س",
+        explanation: "Tarqeeq - Seen (س) is light, tongue low"
+      },
+      {
+        arabic: "تِين",
+        transliteration: "teen (light t)",
+        highlight: "ت",
+        explanation: "Tarqeeq - Ta (ت) is light and thin in sound"
+      }
+    ]
+  },
+  {
+    id: "ra-rules",
+    title: "Rules of Ra (ر) - Heavy or Light",
+    description: "Ra (ر) can be heavy (tafkheem) or light (tarqeeq) depending on its vowel, the previous letter's vowel, and whether it has sukoon.",
+    examples: [
+      {
+        arabic: "رَبِّ",
+        transliteration: "rabbi (heavy R)",
+        highlight: "رَ",
+        explanation: "Heavy Ra - Ra with Fatha is always heavy"
+      },
+      {
+        arabic: "رُوح",
+        transliteration: "rooh (heavy R)",
+        highlight: "رُ",
+        explanation: "Heavy Ra - Ra with Damma is always heavy"
+      },
+      {
+        arabic: "رِزْق",
+        transliteration: "rizq (light R)",
+        highlight: "رِ",
+        explanation: "Light Ra - Ra with Kasra is light"
+      },
+      {
+        arabic: "مِرْيَة",
+        transliteration: "miryah (light R)",
+        highlight: "ِرْ",
+        explanation: "Light Ra with Sukoon - Ra with sukoon after kasra is light"
+      },
+      {
+        arabic: "فِرْعَوْن",
+        transliteration: "fir'awn (light R)",
+        highlight: "ِرْ",
+        explanation: "Light Ra - Preceded by kasra, followed by light letter"
+      },
+      {
+        arabic: "قُرْآن",
+        transliteration: "qur'aan (heavy R)",
+        highlight: "ُرْ",
+        explanation: "Heavy Ra with Sukoon - After damma remains heavy"
+      }
+    ]
+  },
+  {
+    id: "ghunna",
+    title: "Ghunna (Nasal Sound)",
+    description: "Ghunna is a nasal sound produced from the nose, lasting 2 counts. Occurs with Noon and Meem in certain situations (Idgham, Ikhfa, Iqlab, and when they have Shadda).",
+    examples: [
+      {
+        arabic: "إِنَّ",
+        transliteration: "inna",
+        highlight: "نَّ",
+        explanation: "Ghunna with Shadda on Noon - Hold nasal sound for 2 counts"
+      },
+      {
+        arabic: "ثُمَّ",
+        transliteration: "thumma",
+        highlight: "مَّ",
+        explanation: "Ghunna with Shadda on Meem - Nasal sound for 2 counts"
+      },
+      {
+        arabic: "مِنْ وَلِيٍّ",
+        transliteration: "min waliyy (with nasal)",
+        highlight: "نْ و",
+        explanation: "Ghunna with Idgham - Noon merges with Waw, hold nasal"
+      },
+      {
+        arabic: "عَلِيمٌ حَكِيمٌ",
+        transliteration: "aleemun hakeemun (with nasal)",
+        highlight: "مٌ ح",
+        explanation: "No Ghunna - Tanween before throat letter is clear, no nasal"
+      }
+    ]
+  },
+  {
+    id: "waqf-rules",
+    title: "Waqf (Stopping) Rules",
+    description: "Rules for pausing or stopping at the end of words during recitation. Common symbols include: ۘ (must stop), ج (permissible to stop), لا (better not to stop), م (must continue).",
+    examples: [
+      {
+        arabic: "الرَّحْمَٰنِ الرَّحِيمِ",
+        transliteration: "ar-rahmaanir-raheem",
+        highlight: "نِ",
+        explanation: "Waqf on ending - When stopping, tanween and kasra become silent"
+      },
+      {
+        arabic: "يَوْمَ الدِّينِ ۝",
+        transliteration: "yawmid-deen",
+        highlight: "نِ",
+        explanation: "Stop here completely - The circle symbol indicates end of ayah, must stop briefly"
+      },
+      {
+        arabic: "مَالِكِ يَوْمِ",
+        transliteration: "maaliki yawmi",
+        highlight: "كِ",
+        explanation: "When stopping on Kasra, pronounce it softly or drop it"
+      },
+      {
+        arabic: "نَسْتَعِينُ",
+        transliteration: "nasta'een",
+        highlight: "نُ",
+        explanation: "Waqf on Damma - Final damma becomes silent when stopping"
+      }
+    ]
+  },
+  {
+    id: "lam-al-tarif",
+    title: "Lam Al-Ta'rif (AL definite article)",
+    description: "Special rules for the Lam in 'AL' (the) - distinguishes between pronunciation with different types of following letters.",
+    examples: [
+      {
+        arabic: "اللَّهُ",
+        transliteration: "Allaah",
+        highlight: "لل",
+        explanation: "Lam of Majesty - Lam of Allah is always heavy when preceded by fatha or damma"
+      },
+      {
+        arabic: "بِسْمِ اللَّهِ",
+        transliteration: "bismillaah",
+        highlight: "لل",
+        explanation: "Light Lam - When preceded by kasra, Lam of Allah is light"
+      },
+      {
+        arabic: "الْمُسْلِمِينَ",
+        transliteration: "al-muslimeen",
+        highlight: "لم",
+        explanation: "Moon Letter - Clear Lam before Meem"
+      },
+      {
+        arabic: "الصِّرَاطَ",
+        transliteration: "as-siraata",
+        highlight: "لص",
+        explanation: "Sun Letter - Lam merges with Sad"
+      }
+    ]
+  },
+  {
+    id: "mad-lazim",
+    title: "Madd Laazim (Necessary Elongation)",
+    description: "The longest type of Madd, held for 6 counts. Occurs when a madd letter is followed by a letter with shadda (doubled letter) or specific patterns.",
+    examples: [
+      {
+        arabic: "الْحَاقَّةُ",
+        transliteration: "al-haaqqah",
+        highlight: "اقّ",
+        explanation: "Madd Laazim Kalimi - Alif followed by doubled Qaf, hold for 6 counts"
+      },
+      {
+        arabic: "الصَّاخَّةُ",
+        transliteration: "as-saakhkhah",
+        highlight: "اخّ",
+        explanation: "Madd Laazim - Hold elongation for full 6 counts before shadda"
+      },
+      {
+        arabic: "وَالضَّالِّينَ",
+        transliteration: "wadh-dhaaleen",
+        highlight: "الّ",
+        explanation: "Madd Laazim - Elongate before doubled Lam for 6 counts"
+      }
+    ]
+  },
+  {
+    id: "advanced-idgham",
+    title: "Advanced Idgham Types",
+    description: "Deeper understanding of merging rules: Idgham Kamil (complete merging) vs Idgham Naqis (incomplete merging with ghunna).",
+    examples: [
+      {
+        arabic: "مِنْ رَبِّكُمْ",
+        transliteration: "mir-rabbikum",
+        highlight: "نْ ر",
+        explanation: "Idgham Kamil (Complete) - Noon completely merges with Ra, no ghunna, no trace of noon"
+      },
+      {
+        arabic: "مِنْ لَدُنْهُ",
+        transliteration: "mil-ladunhu",
+        highlight: "نْ ل",
+        explanation: "Idgham Kamil - Complete merging with Lam, no nasal sound"
+      },
+      {
+        arabic: "مِنْ نِعْمَةٍ",
+        transliteration: "min-ni'matin",
+        highlight: "نْ ن",
+        explanation: "Idgham Naqis (Incomplete) - Merges with ghunna for 2 counts, nasal remains"
+      },
+      {
+        arabic: "مَنْ يَعْمَلْ",
+        transliteration: "may-ya'mal",
+        highlight: "نْ ي",
+        explanation: "Idgham Naqis - Noon merges with Ya while retaining nasal quality"
+      },
+      {
+        arabic: "حَمْدًا مُّبَارَكًا",
+        transliteration: "hamdam-mubaarakan",
+        highlight: "دًا م",
+        explanation: "Idgham of Tanween - Tanween merges with Meem with ghunna"
       }
     ]
   }
