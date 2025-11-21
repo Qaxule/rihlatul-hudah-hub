@@ -3,7 +3,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Book, Heart, Calendar, Sparkles, ArrowRight, Compass, BookOpen, Gem } from "lucide-react";
+import { Book, Heart, Calendar, Sparkles, ArrowRight, Compass, BookOpen, Gem, Type } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -115,6 +115,53 @@ const Index = () => {
             </Button>
           </div>
         </div>
+      </section>
+
+      {/* Yasarna Promotion Banner */}
+      <section className="container mx-auto px-4 py-8">
+        <Card className="max-w-4xl mx-auto bg-gradient-emerald shadow-elevated border-none overflow-hidden">
+          <CardContent className="p-8 md:p-12 text-center space-y-6">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm mb-4">
+              <Type className="w-8 h-8 text-white" />
+            </div>
+            <div className="space-y-4">
+              <div className="inline-block">
+                <span className="px-3 py-1 bg-white/20 backdrop-blur-sm text-white text-sm font-semibold rounded-full">
+                  NEW FEATURE
+                </span>
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-white">
+                Yasarna Arabic Learning Module
+              </h2>
+              <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto">
+                Learn to read Arabic with ease! Master the alphabet, vowels, and Quranic reading 
+                through clear transliteration, step-by-step lessons, and interactive quizzes.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+              <Button 
+                asChild 
+                size="lg" 
+                className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold"
+              >
+                <Link to="/yasarna">
+                  Start Learning Arabic
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+              <Button 
+                asChild 
+                variant="outline" 
+                size="lg"
+                className="border-white/30 text-white hover:bg-white/10 hover:text-white"
+              >
+                <Link to="/yasarna">
+                  Learn More
+                </Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </section>
 
       {/* Daily Wisdom */}
