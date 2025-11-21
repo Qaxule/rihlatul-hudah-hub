@@ -85,34 +85,32 @@ const Yasarna = () => {
           </div>
 
           <Tabs defaultValue="alphabet" className="w-full">
-            <div className="w-full overflow-x-auto mb-8 mt-6">
-              <TabsList className="inline-flex h-auto w-auto min-w-full lg:w-full flex-nowrap lg:grid lg:grid-cols-6 p-1 gap-1">
-                <TabsTrigger value="alphabet" className="flex items-center gap-2 whitespace-nowrap px-4 py-2.5">
-                  <Type className="h-4 w-4 flex-shrink-0" />
-                  <span>Alphabet</span>
-                </TabsTrigger>
-                <TabsTrigger value="vowels" className="flex items-center gap-2 whitespace-nowrap px-4 py-2.5">
-                  <BookOpen className="h-4 w-4 flex-shrink-0" />
-                  <span>Vowels</span>
-                </TabsTrigger>
-                <TabsTrigger value="joining" className="flex items-center gap-2 whitespace-nowrap px-4 py-2.5">
-                  <Link2 className="h-4 w-4 flex-shrink-0" />
-                  <span>Joining</span>
-                </TabsTrigger>
-                <TabsTrigger value="practice" className="flex items-center gap-2 whitespace-nowrap px-4 py-2.5">
-                  <GraduationCap className="h-4 w-4 flex-shrink-0" />
-                  <span>Practice</span>
-                </TabsTrigger>
-                <TabsTrigger value="quizzes" className="flex items-center gap-2 whitespace-nowrap px-4 py-2.5">
-                  <Brain className="h-4 w-4 flex-shrink-0" />
-                  <span>Quizzes</span>
-                </TabsTrigger>
-                <TabsTrigger value="tajwid" className="flex items-center gap-2 whitespace-nowrap px-4 py-2.5">
-                  <Volume2 className="h-4 w-4 flex-shrink-0" />
-                  <span>Tajwid</span>
-                </TabsTrigger>
-              </TabsList>
-            </div>
+            <TabsList className="w-full h-auto flex flex-col lg:grid lg:grid-cols-6 gap-2 p-2 mb-8 mt-6">
+              <TabsTrigger value="alphabet" className="w-full justify-start gap-2 px-4 py-3">
+                <Type className="h-4 w-4" />
+                <span>Alphabet</span>
+              </TabsTrigger>
+              <TabsTrigger value="vowels" className="w-full justify-start gap-2 px-4 py-3">
+                <BookOpen className="h-4 w-4" />
+                <span>Vowels</span>
+              </TabsTrigger>
+              <TabsTrigger value="joining" className="w-full justify-start gap-2 px-4 py-3">
+                <Link2 className="h-4 w-4" />
+                <span>Joining</span>
+              </TabsTrigger>
+              <TabsTrigger value="practice" className="w-full justify-start gap-2 px-4 py-3">
+                <GraduationCap className="h-4 w-4" />
+                <span>Practice</span>
+              </TabsTrigger>
+              <TabsTrigger value="quizzes" className="w-full justify-start gap-2 px-4 py-3">
+                <Brain className="h-4 w-4" />
+                <span>Quizzes</span>
+              </TabsTrigger>
+              <TabsTrigger value="tajwid" className="w-full justify-start gap-2 px-4 py-3">
+                <Volume2 className="h-4 w-4" />
+                <span>Tajwid</span>
+              </TabsTrigger>
+            </TabsList>
 
             {/* Alphabet Section */}
             <TabsContent value="alphabet">
