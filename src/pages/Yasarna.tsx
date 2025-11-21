@@ -245,11 +245,11 @@ const Yasarna = () => {
                 {vowels.map((vowel) => (
                   <Card key={vowel.name}>
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-4">
-                        <span className="text-5xl font-arabic">{vowel.symbol}</span>
+                      <CardTitle className="flex items-center justify-between">
                         <div>
                           <div className="font-semibold">{vowel.name}</div>
                         </div>
+                        <span className="text-5xl font-arabic">{vowel.symbol}</span>
                       </CardTitle>
                       <CardDescription>{vowel.description}</CardDescription>
                     </CardHeader>
