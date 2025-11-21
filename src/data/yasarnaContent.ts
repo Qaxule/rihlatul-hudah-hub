@@ -728,62 +728,333 @@ export const joiningExamples: JoiningExample[] = [
 
 export const readingLessons: ReadingLesson[] = [
   {
-    id: "syllables",
+    id: "syllables-fatha",
     level: "syllable",
-    title: "Basic Syllables",
+    title: "Basic Syllables with Fatha (َ)",
     examples: [
       { arabic: "بَ", transliteration: "ba" },
       { arabic: "تَ", transliteration: "ta" },
-      { arabic: "مَ", transliteration: "ma" },
-      { arabic: "نَ", transliteration: "na" },
-      { arabic: "لَ", transliteration: "la" },
-      { arabic: "كَ", transliteration: "ka" }
+      { arabic: "ثَ", transliteration: "tha" },
+      { arabic: "جَ", transliteration: "ja" },
+      { arabic: "حَ", transliteration: "ha" },
+      { arabic: "خَ", transliteration: "kha" },
+      { arabic: "دَ", transliteration: "da" },
+      { arabic: "ذَ", transliteration: "dha" },
+      { arabic: "رَ", transliteration: "ra" },
+      { arabic: "زَ", transliteration: "za" },
+      { arabic: "سَ", transliteration: "sa" },
+      { arabic: "شَ", transliteration: "sha" }
     ]
   },
   {
-    id: "simple-words",
+    id: "syllables-kasra",
+    level: "syllable",
+    title: "Syllables with Kasra (ِ)",
+    examples: [
+      { arabic: "بِ", transliteration: "bi" },
+      { arabic: "تِ", transliteration: "ti" },
+      { arabic: "جِ", transliteration: "ji" },
+      { arabic: "حِ", transliteration: "hi" },
+      { arabic: "دِ", transliteration: "di" },
+      { arabic: "رِ", transliteration: "ri" },
+      { arabic: "سِ", transliteration: "si" },
+      { arabic: "عِ", transliteration: "'i" },
+      { arabic: "فِ", transliteration: "fi" },
+      { arabic: "قِ", transliteration: "qi" },
+      { arabic: "كِ", transliteration: "ki" },
+      { arabic: "لِ", transliteration: "li" }
+    ]
+  },
+  {
+    id: "syllables-damma",
+    level: "syllable",
+    title: "Syllables with Damma (ُ)",
+    examples: [
+      { arabic: "بُ", transliteration: "bu" },
+      { arabic: "تُ", transliteration: "tu" },
+      { arabic: "جُ", transliteration: "ju" },
+      { arabic: "حُ", transliteration: "hu" },
+      { arabic: "دُ", transliteration: "du" },
+      { arabic: "رُ", transliteration: "ru" },
+      { arabic: "سُ", transliteration: "su" },
+      { arabic: "عُ", transliteration: "'u" },
+      { arabic: "فُ", transliteration: "fu" },
+      { arabic: "قُ", transliteration: "qu" },
+      { arabic: "كُ", transliteration: "ku" },
+      { arabic: "نُ", transliteration: "nu" }
+    ]
+  },
+  {
+    id: "syllables-sukoon",
+    level: "syllable",
+    title: "Syllables with Sukoon (ْ)",
+    examples: [
+      { arabic: "بْ", transliteration: "b" },
+      { arabic: "تْ", transliteration: "t" },
+      { arabic: "جْ", transliteration: "j" },
+      { arabic: "حْ", transliteration: "h" },
+      { arabic: "دْ", transliteration: "d" },
+      { arabic: "رْ", transliteration: "r" },
+      { arabic: "سْ", transliteration: "s" },
+      { arabic: "فْ", transliteration: "f" },
+      { arabic: "كْ", transliteration: "k" },
+      { arabic: "لْ", transliteration: "l" },
+      { arabic: "مْ", transliteration: "m" },
+      { arabic: "نْ", transliteration: "n" }
+    ]
+  },
+  {
+    id: "simple-two-letter",
     level: "word",
     title: "Simple Two-Letter Words",
     examples: [
       { arabic: "مَا", transliteration: "ma", meaning: "what" },
       { arabic: "مَن", transliteration: "man", meaning: "who" },
       { arabic: "لَا", transliteration: "la", meaning: "no" },
-      { arabic: "نَا", transliteration: "na", meaning: "us" }
+      { arabic: "نَا", transliteration: "na", meaning: "us" },
+      { arabic: "فِي", transliteration: "fi", meaning: "in" },
+      { arabic: "لَنْ", transliteration: "lan", meaning: "will not" },
+      { arabic: "قَدْ", transliteration: "qad", meaning: "indeed" },
+      { arabic: "هُوَ", transliteration: "huwa", meaning: "he" },
+      { arabic: "هِيَ", transliteration: "hiya", meaning: "she" }
     ]
   },
   {
-    id: "three-letter",
+    id: "three-letter-basic",
     level: "word",
-    title: "Three-Letter Words",
+    title: "Three-Letter Words - Basic",
     examples: [
       { arabic: "رَبِّ", transliteration: "rabbi", meaning: "my Lord" },
       { arabic: "نُورٌ", transliteration: "noor", meaning: "light" },
       { arabic: "حَقٌّ", transliteration: "haqq", meaning: "truth" },
-      { arabic: "كُلّ", transliteration: "kull", meaning: "all" }
+      { arabic: "كُلّ", transliteration: "kull", meaning: "all" },
+      { arabic: "يَوْم", transliteration: "yawm", meaning: "day" },
+      { arabic: "بَيْت", transliteration: "bayt", meaning: "house" },
+      { arabic: "حَمْد", transliteration: "hamd", meaning: "praise" },
+      { arabic: "عِلْم", transliteration: "'ilm", meaning: "knowledge" },
+      { arabic: "قَلْب", transliteration: "qalb", meaning: "heart" }
     ]
   },
   {
-    id: "common-words",
+    id: "three-letter-shadda",
+    level: "word",
+    title: "Words with Shadda (ّ)",
+    examples: [
+      { arabic: "رَبّ", transliteration: "rabb", meaning: "Lord" },
+      { arabic: "حَجّ", transliteration: "hajj", meaning: "pilgrimage" },
+      { arabic: "صَفّ", transliteration: "saff", meaning: "row" },
+      { arabic: "ضَلّ", transliteration: "dall", meaning: "went astray" },
+      { arabic: "مَدّ", transliteration: "madd", meaning: "to extend" },
+      { arabic: "شَرّ", transliteration: "sharr", meaning: "evil" },
+      { arabic: "خَيْرٌ", transliteration: "khayr", meaning: "good" },
+      { arabic: "بِرّ", transliteration: "birr", meaning: "righteousness" }
+    ]
+  },
+  {
+    id: "words-tanween",
+    level: "word",
+    title: "Words with Tanween (ٌ ٍ ً)",
+    examples: [
+      { arabic: "كِتَابٌ", transliteration: "kitabun", meaning: "a book" },
+      { arabic: "رَجُلٌ", transliteration: "rajulun", meaning: "a man" },
+      { arabic: "شُكْرًا", transliteration: "shukran", meaning: "thank you" },
+      { arabic: "جَمِيلٌ", transliteration: "jameelun", meaning: "beautiful" },
+      { arabic: "كَرِيمٌ", transliteration: "kareemun", meaning: "generous" },
+      { arabic: "عَظِيمٌ", transliteration: "adheemun", meaning: "magnificent" },
+      { arabic: "أَحَدًا", transliteration: "ahadan", meaning: "anyone" },
+      { arabic: "قَلِيلًا", transliteration: "qaleelan", meaning: "little" }
+    ]
+  },
+  {
+    id: "body-parts",
+    level: "word",
+    title: "Body Parts",
+    examples: [
+      { arabic: "يَدٌ", transliteration: "yad", meaning: "hand" },
+      { arabic: "رَأْسٌ", transliteration: "ra's", meaning: "head" },
+      { arabic: "عَيْنٌ", transliteration: "'ayn", meaning: "eye" },
+      { arabic: "أُذُنٌ", transliteration: "udhun", meaning: "ear" },
+      { arabic: "فَمٌ", transliteration: "fam", meaning: "mouth" },
+      { arabic: "قَلْبٌ", transliteration: "qalb", meaning: "heart" },
+      { arabic: "لِسَانٌ", transliteration: "lisan", meaning: "tongue" },
+      { arabic: "رِجْلٌ", transliteration: "rijl", meaning: "foot" }
+    ]
+  },
+  {
+    id: "numbers",
+    level: "word",
+    title: "Numbers 1-10",
+    examples: [
+      { arabic: "وَاحِدٌ", transliteration: "wahid", meaning: "one" },
+      { arabic: "إِثْنَانِ", transliteration: "ithnan", meaning: "two" },
+      { arabic: "ثَلَاثَةٌ", transliteration: "thalatha", meaning: "three" },
+      { arabic: "أَرْبَعَةٌ", transliteration: "arba'a", meaning: "four" },
+      { arabic: "خَمْسَةٌ", transliteration: "khamsa", meaning: "five" },
+      { arabic: "سِتَّةٌ", transliteration: "sitta", meaning: "six" },
+      { arabic: "سَبْعَةٌ", transliteration: "sab'a", meaning: "seven" },
+      { arabic: "ثَمَانِيَةٌ", transliteration: "thamaniya", meaning: "eight" },
+      { arabic: "تِسْعَةٌ", transliteration: "tis'a", meaning: "nine" },
+      { arabic: "عَشَرَةٌ", transliteration: "'ashara", meaning: "ten" }
+    ]
+  },
+  {
+    id: "family-words",
+    level: "word",
+    title: "Family Members",
+    examples: [
+      { arabic: "أَبٌ", transliteration: "ab", meaning: "father" },
+      { arabic: "أُمٌّ", transliteration: "umm", meaning: "mother" },
+      { arabic: "أَخٌ", transliteration: "akh", meaning: "brother" },
+      { arabic: "أُخْتٌ", transliteration: "ukht", meaning: "sister" },
+      { arabic: "اِبْنٌ", transliteration: "ibn", meaning: "son" },
+      { arabic: "بِنْتٌ", transliteration: "bint", meaning: "daughter" },
+      { arabic: "جَدٌّ", transliteration: "jadd", meaning: "grandfather" },
+      { arabic: "جَدَّةٌ", transliteration: "jaddah", meaning: "grandmother" }
+    ]
+  },
+  {
+    id: "islamic-words",
     level: "word",
     title: "Common Islamic Words",
     examples: [
       { arabic: "اللَّه", transliteration: "Allah", meaning: "Allah" },
-      { arabic: "سَلَام", transliteration: "salam", meaning: "peace" },
+      { arabic: "إِسْلَام", transliteration: "islam", meaning: "Islam" },
       { arabic: "إِيمَان", transliteration: "iman", meaning: "faith" },
       { arabic: "قُرْآن", transliteration: "quran", meaning: "Quran" },
-      { arabic: "صَلَاة", transliteration: "salah", meaning: "prayer" }
+      { arabic: "صَلَاة", transliteration: "salah", meaning: "prayer" },
+      { arabic: "زَكَاة", transliteration: "zakah", meaning: "charity" },
+      { arabic: "صَوْم", transliteration: "sawm", meaning: "fasting" },
+      { arabic: "حَجّ", transliteration: "hajj", meaning: "pilgrimage" },
+      { arabic: "مَسْجِد", transliteration: "masjid", meaning: "mosque" },
+      { arabic: "نَبِيّ", transliteration: "nabi", meaning: "prophet" },
+      { arabic: "رَسُول", transliteration: "rasool", meaning: "messenger" },
+      { arabic: "مَلَك", transliteration: "malak", meaning: "angel" }
     ]
   },
   {
-    id: "short-ayahs",
+    id: "nature-words",
+    level: "word",
+    title: "Nature & Elements",
+    examples: [
+      { arabic: "سَمَاء", transliteration: "sama", meaning: "sky" },
+      { arabic: "أَرْض", transliteration: "ard", meaning: "earth" },
+      { arabic: "شَمْس", transliteration: "shams", meaning: "sun" },
+      { arabic: "قَمَر", transliteration: "qamar", meaning: "moon" },
+      { arabic: "نَجْم", transliteration: "najm", meaning: "star" },
+      { arabic: "مَاء", transliteration: "ma'", meaning: "water" },
+      { arabic: "نَار", transliteration: "nar", meaning: "fire" },
+      { arabic: "رِيح", transliteration: "reeh", meaning: "wind" },
+      { arabic: "جَبَل", transliteration: "jabal", meaning: "mountain" },
+      { arabic: "بَحْر", transliteration: "bahr", meaning: "sea" },
+      { arabic: "شَجَرَة", transliteration: "shajara", meaning: "tree" },
+      { arabic: "زَهْرَة", transliteration: "zahra", meaning: "flower" }
+    ]
+  },
+  {
+    id: "verbs-basic",
+    level: "word",
+    title: "Basic Verbs",
+    examples: [
+      { arabic: "قَرَأَ", transliteration: "qara'a", meaning: "he read" },
+      { arabic: "كَتَبَ", transliteration: "kataba", meaning: "he wrote" },
+      { arabic: "ذَهَبَ", transliteration: "dhahaba", meaning: "he went" },
+      { arabic: "جَلَسَ", transliteration: "jalasa", meaning: "he sat" },
+      { arabic: "قَامَ", transliteration: "qama", meaning: "he stood" },
+      { arabic: "أَكَلَ", transliteration: "akala", meaning: "he ate" },
+      { arabic: "شَرِبَ", transliteration: "shariba", meaning: "he drank" },
+      { arabic: "نَامَ", transliteration: "nama", meaning: "he slept" },
+      { arabic: "فَعَلَ", transliteration: "fa'ala", meaning: "he did" }
+    ]
+  },
+  {
+    id: "short-phrases",
     level: "ayah",
-    title: "Short Ayahs and Phrases",
+    title: "Short Phrases & Dhikr",
     examples: [
       { arabic: "بِسْمِ اللَّهِ", transliteration: "bismillah", meaning: "In the name of Allah" },
       { arabic: "الْحَمْدُ لِلَّهِ", transliteration: "alhamdulillah", meaning: "Praise be to Allah" },
       { arabic: "سُبْحَانَ اللَّهِ", transliteration: "subhanallah", meaning: "Glory be to Allah" },
       { arabic: "اللَّهُ أَكْبَرُ", transliteration: "Allahu Akbar", meaning: "Allah is the Greatest" },
-      { arabic: "لَا إِلَٰهَ إِلَّا اللَّهُ", transliteration: "la ilaha illallah", meaning: "There is no god but Allah" }
+      { arabic: "لَا إِلَٰهَ إِلَّا اللَّهُ", transliteration: "la ilaha illallah", meaning: "There is no god but Allah" },
+      { arabic: "أَسْتَغْفِرُ اللَّهَ", transliteration: "astaghfirullah", meaning: "I seek forgiveness from Allah" },
+      { arabic: "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ", transliteration: "la hawla wa la quwwata illa billah", meaning: "There is no power nor strength except with Allah" },
+      { arabic: "إِنْ شَاءَ اللَّهُ", transliteration: "insha'Allah", meaning: "If Allah wills" },
+      { arabic: "مَا شَاءَ اللَّهُ", transliteration: "masha'Allah", meaning: "What Allah has willed" }
+    ]
+  },
+  {
+    id: "ayat-al-kursi-beginning",
+    level: "ayah",
+    title: "Ayat al-Kursi - Beginning",
+    examples: [
+      { arabic: "اللَّهُ", transliteration: "Allahu", meaning: "Allah" },
+      { arabic: "لَا إِلَٰهَ إِلَّا هُوَ", transliteration: "la ilaha illa huwa", meaning: "There is no deity except Him" },
+      { arabic: "الْحَيُّ الْقَيُّومُ", transliteration: "al-hayyu al-qayyoom", meaning: "The Ever-Living, The Sustainer" },
+      { arabic: "لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ", transliteration: "la ta'khudhuhu sinatun wa la nawm", meaning: "Neither drowsiness overtakes Him nor sleep" },
+      { arabic: "لَهُ مَا فِي السَّمَاوَاتِ", transliteration: "lahu ma fis-samawati", meaning: "To Him belongs whatever is in the heavens" },
+      { arabic: "وَمَا فِي الْأَرْضِ", transliteration: "wa ma fil-ard", meaning: "And whatever is on the earth" }
+    ]
+  },
+  {
+    id: "surah-fatiha-parts",
+    level: "ayah",
+    title: "Surah Al-Fatiha - Parts",
+    examples: [
+      { arabic: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", transliteration: "bismillahir-rahmanir-raheem", meaning: "In the name of Allah, the Most Gracious, the Most Merciful" },
+      { arabic: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ", transliteration: "alhamdu lillahi rabbil-'aalameen", meaning: "All praise is due to Allah, Lord of all the worlds" },
+      { arabic: "الرَّحْمَٰنِ الرَّحِيمِ", transliteration: "ar-rahmanir-raheem", meaning: "The Most Gracious, the Most Merciful" },
+      { arabic: "مَالِكِ يَوْمِ الدِّينِ", transliteration: "maliki yawmid-deen", meaning: "Master of the Day of Judgment" },
+      { arabic: "إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ", transliteration: "iyyaka na'budu wa iyyaka nasta'een", meaning: "You alone we worship and You alone we ask for help" },
+      { arabic: "اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ", transliteration: "ihdinassiratal-mustaqeem", meaning: "Guide us to the straight path" }
+    ]
+  },
+  {
+    id: "short-surahs-ikhlas",
+    level: "ayah",
+    title: "Surah Al-Ikhlas (112)",
+    examples: [
+      { arabic: "قُلْ هُوَ اللَّهُ أَحَدٌ", transliteration: "qul huwa Allahu ahad", meaning: "Say: He is Allah, the One" },
+      { arabic: "اللَّهُ الصَّمَدُ", transliteration: "Allahus-samad", meaning: "Allah, the Eternal Refuge" },
+      { arabic: "لَمْ يَلِدْ وَلَمْ يُولَدْ", transliteration: "lam yalid wa lam yoolad", meaning: "He neither begets nor is born" },
+      { arabic: "وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ", transliteration: "wa lam yakul-lahu kufuwan ahad", meaning: "Nor is there to Him any equivalent" }
+    ]
+  },
+  {
+    id: "short-surahs-falaq",
+    level: "ayah",
+    title: "Surah Al-Falaq (113)",
+    examples: [
+      { arabic: "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ", transliteration: "qul a'udhu bi rabbil-falaq", meaning: "Say: I seek refuge in the Lord of daybreak" },
+      { arabic: "مِنْ شَرِّ مَا خَلَقَ", transliteration: "min sharri ma khalaq", meaning: "From the evil of that which He created" },
+      { arabic: "وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ", transliteration: "wa min sharri ghasiqin idha waqab", meaning: "And from the evil of darkness when it settles" },
+      { arabic: "وَمِنْ شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ", transliteration: "wa min sharrin-naffathati fil-'uqad", meaning: "And from the evil of the blowers in knots" },
+      { arabic: "وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ", transliteration: "wa min sharri hasidin idha hasad", meaning: "And from the evil of an envier when he envies" }
+    ]
+  },
+  {
+    id: "short-surahs-nas",
+    level: "ayah",
+    title: "Surah An-Nas (114)",
+    examples: [
+      { arabic: "قُلْ أَعُوذُ بِرَبِّ النَّاسِ", transliteration: "qul a'udhu bi rabbin-nas", meaning: "Say: I seek refuge in the Lord of mankind" },
+      { arabic: "مَلِكِ النَّاسِ", transliteration: "malikin-nas", meaning: "The King of mankind" },
+      { arabic: "إِلَٰهِ النَّاسِ", transliteration: "ilahin-nas", meaning: "The God of mankind" },
+      { arabic: "مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ", transliteration: "min sharril-waswasil-khannas", meaning: "From the evil of the retreating whisperer" },
+      { arabic: "الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ", transliteration: "alladhi yuwaswisu fi sudoorin-nas", meaning: "Who whispers into the breasts of mankind" },
+      { arabic: "مِنَ الْجِنَّةِ وَالنَّاسِ", transliteration: "minal-jinnati wan-nas", meaning: "From among the jinn and mankind" }
+    ]
+  },
+  {
+    id: "common-duas",
+    level: "ayah",
+    title: "Common Daily Duas",
+    examples: [
+      { arabic: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً", transliteration: "rabbana atina fid-dunya hasanah", meaning: "Our Lord, give us good in this world" },
+      { arabic: "وَفِي الْآخِرَةِ حَسَنَةً", transliteration: "wa fil-akhirati hasanah", meaning: "And good in the Hereafter" },
+      { arabic: "رَبِّ اشْرَحْ لِي صَدْرِي", transliteration: "rabbish-rah li sadri", meaning: "My Lord, expand for me my breast" },
+      { arabic: "وَيَسِّرْ لِي أَمْرِي", transliteration: "wa yassir li amri", meaning: "And ease for me my task" },
+      { arabic: "رَبِّ زِدْنِي عِلْمًا", transliteration: "rabbi zidni 'ilma", meaning: "My Lord, increase me in knowledge" },
+      { arabic: "رَبَّنَا لَا تُزِغْ قُلُوبَنَا", transliteration: "rabbana la tuzigh quloobana", meaning: "Our Lord, let not our hearts deviate" }
     ]
   }
 ];
