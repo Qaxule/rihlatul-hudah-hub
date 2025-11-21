@@ -14,6 +14,7 @@ import Names from "./pages/Names";
 import PrayerTimes from "./pages/PrayerTimes";
 import Dhikr from "./pages/Dhikr";
 import Learning from "./pages/Learning";
+import LessonDetail from "./pages/LessonDetail";
 import Calendar from "./pages/Calendar";
 import Guides from "./pages/Guides";
 import Login from "./pages/Login";
@@ -45,6 +46,7 @@ const App = () => (
             <Route path="/prayer-times" element={<PrayerTimes />} />
             <Route path="/dhikr" element={<Dhikr />} />
             <Route path="/learning" element={<Learning />} />
+            <Route path="/learning/:lessonId" element={<LessonDetail />} />
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/guides" element={<Guides />} />
             <Route path="/login" element={<Login />} />
