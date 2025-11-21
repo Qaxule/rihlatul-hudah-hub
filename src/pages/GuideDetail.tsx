@@ -8,35 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import { guides } from "@/data/guidesContent";
 import * as Icons from "lucide-react";
 
-// Import guide images
-import wudhuHands from "@/assets/guides/wudhu-hands.jpg";
-import wudhuMouth from "@/assets/guides/wudhu-mouth.jpg";
-import wudhuNose from "@/assets/guides/wudhu-nose.jpg";
-import wudhuFace from "@/assets/guides/wudhu-face.jpg";
-import wudhuArms from "@/assets/guides/wudhu-arms.jpg";
-import wudhuHead from "@/assets/guides/wudhu-head.jpg";
-import wudhuEars from "@/assets/guides/wudhu-ears.jpg";
-import wudhuFeet from "@/assets/guides/wudhu-feet.jpg";
-import salahStanding from "@/assets/guides/salah-standing.jpg";
-import salahRuku from "@/assets/guides/salah-ruku.jpg";
-import salahSujud from "@/assets/guides/salah-sujud.jpg";
-import salahSitting from "@/assets/guides/salah-sitting.jpg";
-
-const guideImages: Record<string, string> = {
-  "wudhu-hands": wudhuHands,
-  "wudhu-mouth": wudhuMouth,
-  "wudhu-nose": wudhuNose,
-  "wudhu-face": wudhuFace,
-  "wudhu-arms": wudhuArms,
-  "wudhu-head": wudhuHead,
-  "wudhu-ears": wudhuEars,
-  "wudhu-feet": wudhuFeet,
-  "salah-standing": salahStanding,
-  "salah-ruku": salahRuku,
-  "salah-sujud": salahSujud,
-  "salah-sitting": salahSitting,
-};
-
 const GuideDetail = () => {
   const { guideId } = useParams();
   const navigate = useNavigate();
@@ -113,15 +84,6 @@ const GuideDetail = () => {
                       <p className="text-muted-foreground leading-relaxed">
                         {step.description}
                       </p>
-                      {step.image && guideImages[step.image] && (
-                        <div className="my-4">
-                          <img
-                            src={guideImages[step.image]}
-                            alt={step.title}
-                            className="w-full max-w-md mx-auto rounded-lg shadow-md"
-                          />
-                        </div>
-                      )}
                       {step.arabicText && (
                         <div className="bg-card p-3 rounded-md border mt-3">
                           <p className="text-right text-2xl mb-2 font-arabic" dir="rtl">
