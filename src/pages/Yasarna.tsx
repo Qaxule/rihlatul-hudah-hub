@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BookOpen, Type, Link2, GraduationCap, Brain, Volume2 } from "lucide-react";
 import {
   arabicAlphabet,
@@ -22,6 +23,7 @@ const Yasarna = () => {
   const [quizAnswers, setQuizAnswers] = useState<Record<string, string>>({});
   const [showResults, setShowResults] = useState(false);
   const [revealedJoining, setRevealedJoining] = useState<string[]>([]);
+  const [activeTab, setActiveTab] = useState("alphabet");
 
   useEffect(() => {
     const saved = localStorage.getItem("yasarna_progress");
@@ -84,29 +86,77 @@ const Yasarna = () => {
             </div>
           </div>
 
-          <Tabs defaultValue="alphabet" className="w-full">
-            <TabsList className="w-full h-auto flex flex-col lg:grid lg:grid-cols-6 gap-2 p-2 mb-8 mt-6">
-              <TabsTrigger value="alphabet" className="w-full justify-start gap-2 px-4 py-3">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            {/* Mobile Dropdown */}
+            <div className="lg:hidden mb-6 mt-6">
+              <Select value={activeTab} onValueChange={setActiveTab}>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="alphabet">
+                    <div className="flex items-center gap-2">
+                      <Type className="h-4 w-4" />
+                      <span>Alphabet</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="vowels">
+                    <div className="flex items-center gap-2">
+                      <BookOpen className="h-4 w-4" />
+                      <span>Vowels</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="joining">
+                    <div className="flex items-center gap-2">
+                      <Link2 className="h-4 w-4" />
+                      <span>Joining</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="practice">
+                    <div className="flex items-center gap-2">
+                      <GraduationCap className="h-4 w-4" />
+                      <span>Practice</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="quizzes">
+                    <div className="flex items-center gap-2">
+                      <Brain className="h-4 w-4" />
+                      <span>Quizzes</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="tajwid">
+                    <div className="flex items-center gap-2">
+                      <Volume2 className="h-4 w-4" />
+                      <span>Tajwid</span>
+                    </div>
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Desktop Tabs */}
+            <TabsList className="hidden lg:inline-flex w-full grid-cols-6 mb-8 mt-6">
+              <TabsTrigger value="alphabet" className="flex items-center gap-2">
                 <Type className="h-4 w-4" />
                 <span>Alphabet</span>
               </TabsTrigger>
-              <TabsTrigger value="vowels" className="w-full justify-start gap-2 px-4 py-3">
+              <TabsTrigger value="vowels" className="flex items-center gap-2">
                 <BookOpen className="h-4 w-4" />
                 <span>Vowels</span>
               </TabsTrigger>
-              <TabsTrigger value="joining" className="w-full justify-start gap-2 px-4 py-3">
+              <TabsTrigger value="joining" className="flex items-center gap-2">
                 <Link2 className="h-4 w-4" />
                 <span>Joining</span>
               </TabsTrigger>
-              <TabsTrigger value="practice" className="w-full justify-start gap-2 px-4 py-3">
+              <TabsTrigger value="practice" className="flex items-center gap-2">
                 <GraduationCap className="h-4 w-4" />
                 <span>Practice</span>
               </TabsTrigger>
-              <TabsTrigger value="quizzes" className="w-full justify-start gap-2 px-4 py-3">
+              <TabsTrigger value="quizzes" className="flex items-center gap-2">
                 <Brain className="h-4 w-4" />
                 <span>Quizzes</span>
               </TabsTrigger>
-              <TabsTrigger value="tajwid" className="w-full justify-start gap-2 px-4 py-3">
+              <TabsTrigger value="tajwid" className="flex items-center gap-2">
                 <Volume2 className="h-4 w-4" />
                 <span>Tajwid</span>
               </TabsTrigger>
