@@ -1,136 +1,69 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
-import { Book, Search } from "lucide-react";
+import { Book, Search, ArrowUpDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { surahList, juzList, getSurahsByJuz } from "@/data/quranMetadata";
 
-const surahs = [
-  { number: 1, name: "Al-Fatihah", translation: "The Opening", verses: 7, revelation: "Meccan" },
-  { number: 2, name: "Al-Baqarah", translation: "The Cow", verses: 286, revelation: "Medinan" },
-  { number: 3, name: "Ali 'Imran", translation: "Family of Imran", verses: 200, revelation: "Medinan" },
-  { number: 4, name: "An-Nisa", translation: "The Women", verses: 176, revelation: "Medinan" },
-  { number: 5, name: "Al-Ma'idah", translation: "The Table Spread", verses: 120, revelation: "Medinan" },
-  { number: 6, name: "Al-An'am", translation: "The Cattle", verses: 165, revelation: "Meccan" },
-  { number: 7, name: "Al-A'raf", translation: "The Heights", verses: 206, revelation: "Meccan" },
-  { number: 8, name: "Al-Anfal", translation: "The Spoils of War", verses: 75, revelation: "Medinan" },
-  { number: 9, name: "At-Tawbah", translation: "The Repentance", verses: 129, revelation: "Medinan" },
-  { number: 10, name: "Yunus", translation: "Jonah", verses: 109, revelation: "Meccan" },
-  { number: 11, name: "Hud", translation: "Hud", verses: 123, revelation: "Meccan" },
-  { number: 12, name: "Yusuf", translation: "Joseph", verses: 111, revelation: "Meccan" },
-  { number: 13, name: "Ar-Ra'd", translation: "The Thunder", verses: 43, revelation: "Medinan" },
-  { number: 14, name: "Ibrahim", translation: "Abraham", verses: 52, revelation: "Meccan" },
-  { number: 15, name: "Al-Hijr", translation: "The Rocky Tract", verses: 99, revelation: "Meccan" },
-  { number: 16, name: "An-Nahl", translation: "The Bee", verses: 128, revelation: "Meccan" },
-  { number: 17, name: "Al-Isra", translation: "The Night Journey", verses: 111, revelation: "Meccan" },
-  { number: 18, name: "Al-Kahf", translation: "The Cave", verses: 110, revelation: "Meccan" },
-  { number: 19, name: "Maryam", translation: "Mary", verses: 98, revelation: "Meccan" },
-  { number: 20, name: "Ta-Ha", translation: "Ta-Ha", verses: 135, revelation: "Meccan" },
-  { number: 21, name: "Al-Anbiya", translation: "The Prophets", verses: 112, revelation: "Meccan" },
-  { number: 22, name: "Al-Hajj", translation: "The Pilgrimage", verses: 78, revelation: "Medinan" },
-  { number: 23, name: "Al-Mu'minun", translation: "The Believers", verses: 118, revelation: "Meccan" },
-  { number: 24, name: "An-Nur", translation: "The Light", verses: 64, revelation: "Medinan" },
-  { number: 25, name: "Al-Furqan", translation: "The Criterion", verses: 77, revelation: "Meccan" },
-  { number: 26, name: "Ash-Shu'ara", translation: "The Poets", verses: 227, revelation: "Meccan" },
-  { number: 27, name: "An-Naml", translation: "The Ant", verses: 93, revelation: "Meccan" },
-  { number: 28, name: "Al-Qasas", translation: "The Stories", verses: 88, revelation: "Meccan" },
-  { number: 29, name: "Al-Ankabut", translation: "The Spider", verses: 69, revelation: "Meccan" },
-  { number: 30, name: "Ar-Rum", translation: "The Romans", verses: 60, revelation: "Meccan" },
-  { number: 31, name: "Luqman", translation: "Luqman", verses: 34, revelation: "Meccan" },
-  { number: 32, name: "As-Sajdah", translation: "The Prostration", verses: 30, revelation: "Meccan" },
-  { number: 33, name: "Al-Ahzab", translation: "The Combined Forces", verses: 73, revelation: "Medinan" },
-  { number: 34, name: "Saba", translation: "Sheba", verses: 54, revelation: "Meccan" },
-  { number: 35, name: "Fatir", translation: "Originator", verses: 45, revelation: "Meccan" },
-  { number: 36, name: "Ya-Sin", translation: "Ya-Sin", verses: 83, revelation: "Meccan" },
-  { number: 37, name: "As-Saffat", translation: "Those Ranged in Ranks", verses: 182, revelation: "Meccan" },
-  { number: 38, name: "Sad", translation: "The Letter Sad", verses: 88, revelation: "Meccan" },
-  { number: 39, name: "Az-Zumar", translation: "The Troops", verses: 75, revelation: "Meccan" },
-  { number: 40, name: "Ghafir", translation: "The Forgiver", verses: 85, revelation: "Meccan" },
-  { number: 41, name: "Fussilat", translation: "Explained in Detail", verses: 54, revelation: "Meccan" },
-  { number: 42, name: "Ash-Shuraa", translation: "The Consultation", verses: 53, revelation: "Meccan" },
-  { number: 43, name: "Az-Zukhruf", translation: "The Ornaments of Gold", verses: 89, revelation: "Meccan" },
-  { number: 44, name: "Ad-Dukhan", translation: "The Smoke", verses: 59, revelation: "Meccan" },
-  { number: 45, name: "Al-Jathiyah", translation: "The Crouching", verses: 37, revelation: "Meccan" },
-  { number: 46, name: "Al-Ahqaf", translation: "The Wind-Curved Sandhills", verses: 35, revelation: "Meccan" },
-  { number: 47, name: "Muhammad", translation: "Muhammad", verses: 38, revelation: "Medinan" },
-  { number: 48, name: "Al-Fath", translation: "The Victory", verses: 29, revelation: "Medinan" },
-  { number: 49, name: "Al-Hujurat", translation: "The Rooms", verses: 18, revelation: "Medinan" },
-  { number: 50, name: "Qaf", translation: "The Letter Qaf", verses: 45, revelation: "Meccan" },
-  { number: 51, name: "Adh-Dhariyat", translation: "The Winnowing Winds", verses: 60, revelation: "Meccan" },
-  { number: 52, name: "At-Tur", translation: "The Mount", verses: 49, revelation: "Meccan" },
-  { number: 53, name: "An-Najm", translation: "The Star", verses: 62, revelation: "Meccan" },
-  { number: 54, name: "Al-Qamar", translation: "The Moon", verses: 55, revelation: "Meccan" },
-  { number: 55, name: "Ar-Rahman", translation: "The Beneficent", verses: 78, revelation: "Medinan" },
-  { number: 56, name: "Al-Waqi'ah", translation: "The Inevitable", verses: 96, revelation: "Meccan" },
-  { number: 57, name: "Al-Hadid", translation: "The Iron", verses: 29, revelation: "Medinan" },
-  { number: 58, name: "Al-Mujadila", translation: "The Pleading Woman", verses: 22, revelation: "Medinan" },
-  { number: 59, name: "Al-Hashr", translation: "The Exile", verses: 24, revelation: "Medinan" },
-  { number: 60, name: "Al-Mumtahanah", translation: "She That is to be Examined", verses: 13, revelation: "Medinan" },
-  { number: 61, name: "As-Saf", translation: "The Ranks", verses: 14, revelation: "Medinan" },
-  { number: 62, name: "Al-Jumu'ah", translation: "The Congregation", verses: 11, revelation: "Medinan" },
-  { number: 63, name: "Al-Munafiqun", translation: "The Hypocrites", verses: 11, revelation: "Medinan" },
-  { number: 64, name: "At-Taghabun", translation: "The Mutual Disillusion", verses: 18, revelation: "Medinan" },
-  { number: 65, name: "At-Talaq", translation: "The Divorce", verses: 12, revelation: "Medinan" },
-  { number: 66, name: "At-Tahrim", translation: "The Prohibition", verses: 12, revelation: "Medinan" },
-  { number: 67, name: "Al-Mulk", translation: "The Sovereignty", verses: 30, revelation: "Meccan" },
-  { number: 68, name: "Al-Qalam", translation: "The Pen", verses: 52, revelation: "Meccan" },
-  { number: 69, name: "Al-Haqqah", translation: "The Reality", verses: 52, revelation: "Meccan" },
-  { number: 70, name: "Al-Ma'arij", translation: "The Ascending Stairways", verses: 44, revelation: "Meccan" },
-  { number: 71, name: "Nuh", translation: "Noah", verses: 28, revelation: "Meccan" },
-  { number: 72, name: "Al-Jinn", translation: "The Jinn", verses: 28, revelation: "Meccan" },
-  { number: 73, name: "Al-Muzzammil", translation: "The Enshrouded One", verses: 20, revelation: "Meccan" },
-  { number: 74, name: "Al-Muddaththir", translation: "The Cloaked One", verses: 56, revelation: "Meccan" },
-  { number: 75, name: "Al-Qiyamah", translation: "The Resurrection", verses: 40, revelation: "Meccan" },
-  { number: 76, name: "Al-Insan", translation: "The Man", verses: 31, revelation: "Medinan" },
-  { number: 77, name: "Al-Mursalat", translation: "The Emissaries", verses: 50, revelation: "Meccan" },
-  { number: 78, name: "An-Naba", translation: "The Tidings", verses: 40, revelation: "Meccan" },
-  { number: 79, name: "An-Nazi'at", translation: "Those Who Drag Forth", verses: 46, revelation: "Meccan" },
-  { number: 80, name: "Abasa", translation: "He Frowned", verses: 42, revelation: "Meccan" },
-  { number: 81, name: "At-Takwir", translation: "The Overthrowing", verses: 29, revelation: "Meccan" },
-  { number: 82, name: "Al-Infitar", translation: "The Cleaving", verses: 19, revelation: "Meccan" },
-  { number: 83, name: "Al-Mutaffifin", translation: "The Defrauding", verses: 36, revelation: "Meccan" },
-  { number: 84, name: "Al-Inshiqaq", translation: "The Splitting Open", verses: 25, revelation: "Meccan" },
-  { number: 85, name: "Al-Buruj", translation: "The Mansions of the Stars", verses: 22, revelation: "Meccan" },
-  { number: 86, name: "At-Tariq", translation: "The Nightcomer", verses: 17, revelation: "Meccan" },
-  { number: 87, name: "Al-A'la", translation: "The Most High", verses: 19, revelation: "Meccan" },
-  { number: 88, name: "Al-Ghashiyah", translation: "The Overwhelming", verses: 26, revelation: "Meccan" },
-  { number: 89, name: "Al-Fajr", translation: "The Dawn", verses: 30, revelation: "Meccan" },
-  { number: 90, name: "Al-Balad", translation: "The City", verses: 20, revelation: "Meccan" },
-  { number: 91, name: "Ash-Shams", translation: "The Sun", verses: 15, revelation: "Meccan" },
-  { number: 92, name: "Al-Layl", translation: "The Night", verses: 21, revelation: "Meccan" },
-  { number: 93, name: "Ad-Duhaa", translation: "The Morning Hours", verses: 11, revelation: "Meccan" },
-  { number: 94, name: "Ash-Sharh", translation: "The Relief", verses: 8, revelation: "Meccan" },
-  { number: 95, name: "At-Tin", translation: "The Fig", verses: 8, revelation: "Meccan" },
-  { number: 96, name: "Al-Alaq", translation: "The Clot", verses: 19, revelation: "Meccan" },
-  { number: 97, name: "Al-Qadr", translation: "The Power", verses: 5, revelation: "Meccan" },
-  { number: 98, name: "Al-Bayyinah", translation: "The Clear Proof", verses: 8, revelation: "Medinan" },
-  { number: 99, name: "Az-Zalzalah", translation: "The Earthquake", verses: 8, revelation: "Medinan" },
-  { number: 100, name: "Al-Adiyat", translation: "The Courser", verses: 11, revelation: "Meccan" },
-  { number: 101, name: "Al-Qari'ah", translation: "The Calamity", verses: 11, revelation: "Meccan" },
-  { number: 102, name: "At-Takathur", translation: "The Rivalry in World Increase", verses: 8, revelation: "Meccan" },
-  { number: 103, name: "Al-Asr", translation: "The Declining Day", verses: 3, revelation: "Meccan" },
-  { number: 104, name: "Al-Humazah", translation: "The Traducer", verses: 9, revelation: "Meccan" },
-  { number: 105, name: "Al-Fil", translation: "The Elephant", verses: 5, revelation: "Meccan" },
-  { number: 106, name: "Quraysh", translation: "Quraysh", verses: 4, revelation: "Meccan" },
-  { number: 107, name: "Al-Ma'un", translation: "The Small Kindnesses", verses: 7, revelation: "Meccan" },
-  { number: 108, name: "Al-Kawthar", translation: "The Abundance", verses: 3, revelation: "Meccan" },
-  { number: 109, name: "Al-Kafirun", translation: "The Disbelievers", verses: 6, revelation: "Meccan" },
-  { number: 110, name: "An-Nasr", translation: "The Divine Support", verses: 3, revelation: "Medinan" },
-  { number: 111, name: "Al-Masad", translation: "The Palm Fiber", verses: 5, revelation: "Meccan" },
-  { number: 112, name: "Al-Ikhlas", translation: "The Sincerity", verses: 4, revelation: "Meccan" },
-  { number: 113, name: "Al-Falaq", translation: "The Daybreak", verses: 5, revelation: "Meccan" },
-  { number: 114, name: "An-Nas", translation: "Mankind", verses: 6, revelation: "Meccan" },
-];
+// Chronological revelation order mapping
+const revelationOrder: { [key: number]: number } = {
+  96: 1, 68: 2, 73: 3, 74: 4, 1: 5, 111: 6, 81: 7, 87: 8, 92: 9, 89: 10,
+  93: 11, 94: 12, 103: 13, 100: 14, 108: 15, 102: 16, 107: 17, 109: 18, 105: 19, 113: 20,
+  114: 21, 112: 22, 53: 23, 80: 24, 97: 25, 91: 26, 85: 27, 95: 28, 106: 29, 101: 30,
+  75: 31, 104: 32, 77: 33, 50: 34, 90: 35, 86: 36, 54: 37, 38: 38, 7: 39, 72: 40,
+  36: 41, 25: 42, 35: 43, 19: 44, 20: 45, 56: 46, 26: 47, 27: 48, 28: 49, 17: 50,
+  10: 51, 11: 52, 12: 53, 15: 54, 6: 55, 37: 56, 31: 57, 34: 58, 39: 59, 40: 60,
+  41: 61, 42: 62, 43: 63, 44: 64, 45: 65, 46: 66, 51: 67, 88: 68, 18: 69, 16: 70,
+  71: 71, 14: 72, 21: 73, 23: 74, 32: 75, 52: 76, 67: 77, 69: 78, 70: 79, 78: 80,
+  79: 81, 82: 82, 84: 83, 30: 84, 29: 85, 83: 86, 2: 87, 8: 88, 3: 89, 33: 90,
+  60: 91, 4: 92, 99: 93, 57: 94, 47: 95, 13: 96, 55: 97, 76: 98, 65: 99, 98: 100,
+  59: 101, 24: 102, 22: 103, 63: 104, 58: 105, 49: 106, 66: 107, 64: 108, 61: 109, 62: 110,
+  48: 111, 5: 112, 9: 113, 110: 114
+};
+
+const surahs = surahList.map(surah => ({
+  number: surah.number,
+  name: surah.englishName,
+  translation: surah.englishNameTranslation,
+  verses: surah.numberOfAyahs,
+  revelation: surah.revelationType,
+  juz: surah.juz,
+  revelationOrder: revelationOrder[surah.number] || 0
+}));
 
 const Quran = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [viewMode, setViewMode] = useState<"surah" | "juz" | "revelation">("surah");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
-  const filteredSurahs = surahs.filter(
-    (surah) =>
-      surah.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      surah.translation.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredSurahs = useMemo(() => {
+    return surahs.filter(
+      (surah) =>
+        surah.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        surah.translation.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [searchTerm]);
+
+  const sortedData = useMemo(() => {
+    if (viewMode === "juz") {
+      const juzData = juzList.map(juz => ({
+        ...juz,
+        surahs: getSurahsByJuz(juz.number)
+      }));
+      return sortOrder === "asc" ? juzData : [...juzData].reverse();
+    }
+
+    let sorted = [...filteredSurahs];
+    if (viewMode === "revelation") {
+      sorted.sort((a, b) => a.revelationOrder - b.revelationOrder);
+    } else {
+      sorted.sort((a, b) => a.number - b.number);
+    }
+    return sortOrder === "desc" ? sorted.reverse() : sorted;
+  }, [filteredSurahs, viewMode, sortOrder]);
 
   return (
     <div className="min-h-screen bg-gradient-subtle flex flex-col">
@@ -151,7 +84,7 @@ const Quran = () => {
         </div>
 
         {/* Search */}
-        <div className="max-w-2xl mx-auto mb-12">
+        <div className="max-w-2xl mx-auto mb-8">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
             <Input
@@ -164,46 +97,139 @@ const Quran = () => {
           </div>
         </div>
 
-        {/* Surahs List */}
-        <div className="max-w-4xl mx-auto space-y-6 md:space-y-8">
-          {filteredSurahs.map((surah) => (
-            <Link key={surah.number} to={`/surah/${surah.number}`}>
-              <Card className="shadow-soft hover:shadow-elevated transition-all duration-300 cursor-pointer group border-border/50">
-                <CardContent className="p-6 md:p-8">
-                  <div className="flex items-center justify-between gap-6">
-                    <div className="flex items-center gap-6 md:gap-8">
-                      <div className="flex-shrink-0 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                        <span className="text-primary font-bold text-lg md:text-xl">{surah.number}</span>
-                      </div>
-                      <div className="space-y-2">
-                        <h3 className="text-xl md:text-2xl font-semibold text-foreground group-hover:text-primary transition-colors">
-                          {surah.name}
-                        </h3>
-                        <p className="text-sm md:text-base text-muted-foreground">
-                          {surah.translation}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="text-right space-y-2 flex-shrink-0">
-                      <p className="text-sm md:text-base font-medium text-muted-foreground">
-                        {surah.verses} verses
-                      </p>
-                      <p className="text-xs md:text-sm text-muted-foreground">
-                        {surah.revelation}
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
-        </div>
+        {/* Navigation Tabs and Sort Toggle */}
+        <div className="max-w-4xl mx-auto mb-8">
+          <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as any)} className="w-full">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+              <TabsList className="w-full sm:w-auto bg-muted">
+                <TabsTrigger value="surah" className="flex-1 sm:flex-initial">Surah</TabsTrigger>
+                <TabsTrigger value="juz" className="flex-1 sm:flex-initial">Juz</TabsTrigger>
+                <TabsTrigger value="revelation" className="flex-1 sm:flex-initial">Revelation Order</TabsTrigger>
+              </TabsList>
+              
+              <button
+                onClick={() => setSortOrder(prev => prev === "asc" ? "desc" : "asc")}
+                className="flex items-center gap-2 px-4 py-2 rounded-md bg-muted hover:bg-muted/80 transition-colors text-sm font-medium"
+              >
+                <span className="text-muted-foreground">SORT BY:</span>
+                <span className="text-foreground uppercase">{sortOrder === "asc" ? "Ascending" : "Descending"}</span>
+                <ArrowUpDown className="w-4 h-4" />
+              </button>
+            </div>
 
-        {filteredSurahs.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">No surahs found matching your search.</p>
-          </div>
-        )}
+            <TabsContent value="surah" className="space-y-6 md:space-y-8 mt-0">
+              {(sortedData as typeof surahs).map((surah) => (
+                <Link key={surah.number} to={`/surah/${surah.number}`}>
+                  <Card className="shadow-soft hover:shadow-elevated transition-all duration-300 cursor-pointer group border-border/50">
+                    <CardContent className="p-6 md:p-8">
+                      <div className="flex items-center justify-between gap-6">
+                        <div className="flex items-center gap-6 md:gap-8">
+                          <div className="flex-shrink-0 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                            <span className="text-primary font-bold text-lg md:text-xl">{surah.number}</span>
+                          </div>
+                          <div className="space-y-2">
+                            <h3 className="text-xl md:text-2xl font-semibold text-foreground group-hover:text-primary transition-colors">
+                              {surah.name}
+                            </h3>
+                            <p className="text-sm md:text-base text-muted-foreground">
+                              {surah.translation}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-right space-y-2 flex-shrink-0">
+                          <p className="text-sm md:text-base font-medium text-muted-foreground">
+                            {surah.verses} verses
+                          </p>
+                          <p className="text-xs md:text-sm text-muted-foreground">
+                            {surah.revelation}
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+              {filteredSurahs.length === 0 && (
+                <div className="text-center py-12">
+                  <p className="text-muted-foreground">No surahs found matching your search.</p>
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="juz" className="space-y-6 md:space-y-8 mt-0">
+              {(sortedData as Array<{ number: number; name: string; surahs: typeof surahList }>).map((juz) => (
+                <Card key={juz.number} className="shadow-soft border-border/50">
+                  <CardContent className="p-6 md:p-8">
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="flex-shrink-0 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                        <span className="text-primary font-bold text-lg md:text-xl">{juz.number}</span>
+                      </div>
+                      <h3 className="text-xl md:text-2xl font-semibold text-foreground">
+                        {juz.name}
+                      </h3>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 ml-0 md:ml-20">
+                      {juz.surahs.map((surah) => (
+                        <Link key={surah.number} to={`/surah/${surah.number}`}>
+                          <div className="p-3 rounded-md hover:bg-muted/50 transition-colors cursor-pointer group">
+                            <div className="flex items-center gap-3">
+                              <span className="text-primary font-medium">{surah.number}.</span>
+                              <div>
+                                <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
+                                  {surah.englishName}
+                                </p>
+                                <p className="text-xs text-muted-foreground">
+                                  {surah.numberOfAyahs} verses
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </TabsContent>
+
+            <TabsContent value="revelation" className="space-y-6 md:space-y-8 mt-0">
+              {(sortedData as typeof surahs).map((surah) => (
+                <Link key={surah.number} to={`/surah/${surah.number}`}>
+                  <Card className="shadow-soft hover:shadow-elevated transition-all duration-300 cursor-pointer group border-border/50">
+                    <CardContent className="p-6 md:p-8">
+                      <div className="flex items-center justify-between gap-6">
+                        <div className="flex items-center gap-6 md:gap-8">
+                          <div className="flex-shrink-0 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                            <span className="text-primary font-bold text-lg md:text-xl">{surah.revelationOrder}</span>
+                          </div>
+                          <div className="space-y-2">
+                            <h3 className="text-xl md:text-2xl font-semibold text-foreground group-hover:text-primary transition-colors">
+                              {surah.name}
+                            </h3>
+                            <p className="text-sm md:text-base text-muted-foreground">
+                              {surah.translation}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              Surah {surah.number}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-right space-y-2 flex-shrink-0">
+                          <p className="text-sm md:text-base font-medium text-muted-foreground">
+                            {surah.verses} verses
+                          </p>
+                          <p className="text-xs md:text-sm text-muted-foreground">
+                            {surah.revelation}
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
 
       <Footer />
