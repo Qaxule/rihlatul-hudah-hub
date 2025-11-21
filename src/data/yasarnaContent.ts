@@ -429,40 +429,300 @@ export const vowels: Vowel[] = [
 ];
 
 export const joiningExamples: JoiningExample[] = [
+  // Basic Connecting Letters
   {
     id: "1",
     letters: ["ك", "ت", "ب"],
     word: "كَتَبَ",
     transliteration: "ka-ta-ba",
-    breakdown: "ك (ka) + ت (ta) + ب (ba) = كَتَبَ (he wrote)"
+    breakdown: "ك (ka) + ت (ta) + ب (ba) = كَتَبَ (he wrote) - All letters connect smoothly in a flowing script"
   },
   {
     id: "2",
     letters: ["س", "ل", "م"],
     word: "سَلَامٌ",
     transliteration: "sa-la-mun",
-    breakdown: "س (sa) + ل (la) + م (mun) = سَلَامٌ (peace)"
+    breakdown: "س (sa) + ل (la) + م (mun) = سَلَامٌ (peace) - Notice how Seen's teeth flow into Lam"
   },
   {
     id: "3",
     letters: ["م", "ح", "م", "د"],
     word: "مُحَمَّدٌ",
     transliteration: "mu-ham-ma-dun",
-    breakdown: "م (mu) + ح (ha) + م (m) + د (dun) = مُحَمَّدٌ (Muhammad)"
+    breakdown: "م (mu) + ح (ha) + مّ (mma) + د (dun) = مُحَمَّدٌ (Muhammad) - Shows Meem connecting in different positions with shadda"
   },
   {
     id: "4",
     letters: ["ق", "ر", "أ"],
     word: "قَرَأَ",
     transliteration: "qa-ra-a",
-    breakdown: "ق (qa) + ر (ra) + أ (a) = قَرَأَ (he read)"
+    breakdown: "ق (qa) + ر (ra) + أ (a) = قَرَأَ (he read) - Ra and Hamza are non-connecting letters, creating breaks"
   },
   {
     id: "5",
     letters: ["م", "س", "ج", "د"],
     word: "مَسْجِدٌ",
     transliteration: "mas-ji-dun",
-    breakdown: "م (mas) + ج (ji) + د (dun) = مَسْجِدٌ (mosque)"
+    breakdown: "م (mas) + ج (ji) + د (dun) = مَسْجِدٌ (mosque) - Common Islamic word showing flowing connections"
+  },
+  
+  // Non-Connecting Letters Examples
+  {
+    id: "6",
+    letters: ["ا", "ل", "ل", "ه"],
+    word: "اللَّهُ",
+    transliteration: "Allah",
+    breakdown: "ا (A) + لل (lla) + ه (h) = اللَّهُ (Allah) - Alif doesn't connect to the right, creating a break"
+  },
+  {
+    id: "7",
+    letters: ["ن", "و", "ر"],
+    word: "نُورٌ",
+    transliteration: "noor",
+    breakdown: "ن (noo) + و (blank) + ر (r) = نُورٌ (light) - Waw and Ra don't connect forward, causing two breaks"
+  },
+  {
+    id: "8",
+    letters: ["د", "ي", "ن"],
+    word: "دِينٌ",
+    transliteration: "deen",
+    breakdown: "د (dee) + ي (blank) + ن (n) = دِينٌ (religion) - Dal doesn't connect forward, Ya connects backward only"
+  },
+  {
+    id: "9",
+    letters: ["ر", "ز", "ق"],
+    word: "رِزْقٌ",
+    transliteration: "rizq",
+    breakdown: "ر (ri) + ز (z) + ق (q) = رِزْقٌ (provision) - Ra and Zay are non-connectors, each stands separate"
+  },
+  {
+    id: "10",
+    letters: ["ذ", "ك", "ر"],
+    word: "ذِكْرٌ",
+    transliteration: "dhikr",
+    breakdown: "ذ (dhi) + ك (k) + ر (r) = ذِكْرٌ (remembrance) - Dhal and Ra don't connect to next letter"
+  },
+  
+  // Complex Joining Patterns
+  {
+    id: "11",
+    letters: ["ع", "ب", "د"],
+    word: "عَبْدٌ",
+    transliteration: "abd",
+    breakdown: "ع (a) + ب (b) + د (d) = عَبْدٌ (servant) - Ayn has unique middle form with deep connection"
+  },
+  {
+    id: "12",
+    letters: ["ق", "ل", "ب"],
+    word: "قَلْبٌ",
+    transliteration: "qalb",
+    breakdown: "ق (qal) + ل (blank) + ب (b) = قَلْبٌ (heart) - All connecting letters flow as one unit"
+  },
+  {
+    id: "13",
+    letters: ["ك", "ر", "ي", "م"],
+    word: "كَرِيمٌ",
+    transliteration: "kareem",
+    breakdown: "ك (ka) + ر (ree) + ي (blank) + م (m) = كَرِيمٌ (generous) - Ra breaks connection, Ya reconnects"
+  },
+  {
+    id: "14",
+    letters: ["ص", "ل", "ا", "ة"],
+    word: "صَلَاةٌ",
+    transliteration: "salaah",
+    breakdown: "ص (sa) + ل (laa) + ا (blank) + ة (h) = صَلَاةٌ (prayer) - Alif creates break, Ta Marbuta at end"
+  },
+  {
+    id: "15",
+    letters: ["ش", "ه", "ا", "د", "ة"],
+    word: "شَهَادَةٌ",
+    transliteration: "shahaadah",
+    breakdown: "ش (sha) + ه (haa) + ا (blank) + د (da) + ة (h) = شَهَادَةٌ (testimony) - Multiple breaks with Alif and Dal"
+  },
+  
+  // Words with Shadda (Doubling)
+  {
+    id: "16",
+    letters: ["ر", "ب"],
+    word: "رَبِّ",
+    transliteration: "rabbi",
+    breakdown: "ر (ra) + بِّ (bbi with shadda) = رَبِّ (my Lord) - Shadda creates emphasis, Ra doesn't connect forward"
+  },
+  {
+    id: "17",
+    letters: ["ح", "ق"],
+    word: "حَقٌّ",
+    transliteration: "haqq",
+    breakdown: "ح (ha) + قّ (qq with shadda) = حَقٌّ (truth) - Shadda doubles the Qaf sound"
+  },
+  {
+    id: "18",
+    letters: ["ا", "م", "ة"],
+    word: "أُمَّةٌ",
+    transliteration: "ummah",
+    breakdown: "أُ (u) + مَّ (mma with shadda) + ة (h) = أُمَّةٌ (nation) - Hamza on Alif, Meem doubled, Ta Marbuta ending"
+  },
+  {
+    id: "19",
+    letters: ["ج", "ن", "ة"],
+    word: "جَنَّةٌ",
+    transliteration: "jannah",
+    breakdown: "ج (ja) + نَّ (nna with shadda) + ة (h) = جَنَّةٌ (paradise) - Beautiful word showing Noon with shadda"
+  },
+  {
+    id: "20",
+    letters: ["ن", "ب", "ي"],
+    word: "نَبِيٌّ",
+    transliteration: "nabiyy",
+    breakdown: "ن (na) + ب (biy) + يّ (yy with shadda) = نَبِيٌّ (prophet) - Ya with shadda at the end"
+  },
+  
+  // Common Quranic Words
+  {
+    id: "21",
+    letters: ["ق", "ر", "ا", "ن"],
+    word: "قُرْآنٌ",
+    transliteration: "quran",
+    breakdown: "ق (qur) + ر (blank) + آ (aa) + ن (n) = قُرْآنٌ (Quran) - Madd Alif (آ) shows special form"
+  },
+  {
+    id: "22",
+    letters: ["ا", "ي", "م", "ا", "ن"],
+    word: "إِيمَانٌ",
+    transliteration: "eemaan",
+    breakdown: "إِ (ee) + ي (blank) + م (maa) + ا (blank) + ن (n) = إِيمَانٌ (faith) - Multiple non-connectors create spacing"
+  },
+  {
+    id: "23",
+    letters: ["ت", "و", "ب", "ة"],
+    word: "تَوْبَةٌ",
+    transliteration: "tawbah",
+    breakdown: "ت (taw) + و (blank) + ب (ba) + ة (h) = تَوْبَةٌ (repentance) - Waw breaks connection mid-word"
+  },
+  {
+    id: "24",
+    letters: ["ر", "ح", "م", "ة"],
+    word: "رَحْمَةٌ",
+    transliteration: "rahmah",
+    breakdown: "ر (rah) + ح (blank) + م (ma) + ة (h) = رَحْمَةٌ (mercy) - Ra causes break, Ha connects through"
+  },
+  {
+    id: "25",
+    letters: ["ص", "د", "ق", "ة"],
+    word: "صَدَقَةٌ",
+    transliteration: "sadaqah",
+    breakdown: "ص (sa) + د (da) + ق (qa) + ة (h) = صَدَقَةٌ (charity) - Dal breaks the flow before Qaf"
+  },
+  
+  // Advanced Patterns
+  {
+    id: "26",
+    letters: ["م", "ؤ", "م", "ن"],
+    word: "مُؤْمِنٌ",
+    transliteration: "mu'min",
+    breakdown: "م (mu') + ؤ (blank) + م (mi) + ن (n) = مُؤْمِنٌ (believer) - Hamza on Waw creates unique shape"
+  },
+  {
+    id: "27",
+    letters: ["ه", "د", "ا", "ي", "ة"],
+    word: "هِدَايَةٌ",
+    transliteration: "hidaayah",
+    breakdown: "ه (hi) + د (daa) + ا (blank) + ي (ya) + ة (h) = هِدَايَةٌ (guidance) - Complex word with multiple breaks"
+  },
+  {
+    id: "28",
+    letters: ["ع", "ل", "ي", "م"],
+    word: "عَلِيمٌ",
+    transliteration: "aleem",
+    breakdown: "ع (a) + ل (lee) + ي (blank) + م (m) = عَلِيمٌ (All-Knowing) - Name of Allah showing Ayn's connection"
+  },
+  {
+    id: "29",
+    letters: ["غ", "ف", "و", "ر"],
+    word: "غَفُورٌ",
+    transliteration: "ghafoor",
+    breakdown: "غ (gha) + ف (foo) + و (blank) + ر (r) = غَفُورٌ (Most Forgiving) - Waw and Ra both non-connecting"
+  },
+  {
+    id: "30",
+    letters: ["م", "ل", "ا", "ئ", "ك", "ة"],
+    word: "مَلَائِكَةٌ",
+    transliteration: "malaa'ikah",
+    breakdown: "م (ma) + ل (laa) + ا (blank) + ئ ('i) + ك (ka) + ة (h) = مَلَائِكَةٌ (angels) - Long word showing Hamza on Ya"
+  },
+  
+  // Letter Position Demonstrations
+  {
+    id: "31",
+    letters: ["ب", "س", "م"],
+    word: "بِسْمِ",
+    transliteration: "bismi",
+    breakdown: "ب (bis) + س (blank) + م (mi) = بِسْمِ (in the name of) - Part of Bismillah, all letters connect"
+  },
+  {
+    id: "32",
+    letters: ["ي", "و", "م"],
+    word: "يَوْمٌ",
+    transliteration: "yawm",
+    breakdown: "ي (yaw) + و (blank) + م (m) = يَوْمٌ (day) - Ya connects backward, Waw stands alone"
+  },
+  {
+    id: "33",
+    letters: ["ك", "ل"],
+    word: "كُلُّ",
+    transliteration: "kull",
+    breakdown: "ك (kul) + لّ (l with shadda) = كُلُّ (all/every) - Simple but important word with shadda"
+  },
+  {
+    id: "34",
+    letters: ["خ", "ي", "ر"],
+    word: "خَيْرٌ",
+    transliteration: "khayr",
+    breakdown: "خ (khay) + ي (blank) + ر (r) = خَيْرٌ (good) - Two non-connectors create separate segments"
+  },
+  {
+    id: "35",
+    letters: ["ن", "ف", "س"],
+    word: "نَفْسٌ",
+    transliteration: "nafs",
+    breakdown: "ن (naf) + ف (blank) + س (s) = نَفْسٌ (soul/self) - All connecting letters form continuous line"
+  },
+  
+  // Special Forms and Ligatures
+  {
+    id: "36",
+    letters: ["ل", "ا"],
+    word: "لَا",
+    transliteration: "laa",
+    breakdown: "ل (laa) + ا = لَا (no) - Special ligature where Lam and Alif merge into one shape"
+  },
+  {
+    id: "37",
+    letters: ["ا", "ل", "ر", "ح", "م", "ن"],
+    word: "الرَّحْمَٰنِ",
+    transliteration: "ar-rahmaan",
+    breakdown: "ال (ar) + ر (blank) + ح (ma) + م (blank) + ن (n) = الرَّحْمَٰنِ - AL + sun letter Ra with shadda"
+  },
+  {
+    id: "38",
+    letters: ["و", "ا", "ح", "د"],
+    word: "وَاحِدٌ",
+    transliteration: "waahid",
+    breakdown: "و (waa) + ا (blank) + ح (hi) + د (d) = وَاحِدٌ (one) - Waw and Alif non-connecting, then Ha-Dal connect"
+  },
+  {
+    id: "39",
+    letters: ["ج", "م", "ي", "ع"],
+    word: "جَمِيعٌ",
+    transliteration: "jamee'",
+    breakdown: "ج (ja) + م (mee) + ي (blank) + ع (' ) = جَمِيعٌ (all together) - Ya creates break before Ayn"
+  },
+  {
+    id: "40",
+    letters: ["ع", "ظ", "ي", "م"],
+    word: "عَظِيمٌ",
+    transliteration: "adheem",
+    breakdown: "ع (a) + ظ (dhee) + ي (blank) + م (m) = عَظِيمٌ (Magnificent) - Name of Allah with complex Ayn connection"
   }
 ];
 
