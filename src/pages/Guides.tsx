@@ -3,12 +3,37 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Heart } from "lucide-react";
+import { Heart, CheckCircle2 } from "lucide-react";
 import { guides } from "@/data/guidesContent";
 import * as Icons from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useState } from "react";
 
 const Guides = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const [completedGuides, setCompletedGuides] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    const loadCompletedGuides = async () => {
+      if (!user) return;
+
+      const { data, error } = await supabase
+        .from("guide_progress")
+        .select("guide_id, completed")
+        .eq("user_id", user.id)
+        .eq("completed", true);
+
+      if (error) {
+        console.error("Error loading completed guides:", error);
+      } else if (data) {
+        setCompletedGuides(new Set(data.map((g) => g.guide_id)));
+      }
+    };
+
+    loadCompletedGuides();
+  }, [user]);
 
   return (
     <div className="min-h-screen bg-gradient-subtle">
@@ -48,13 +73,21 @@ const Guides = () => {
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {guides.map((guide) => {
             const IconComponent = Icons[guide.icon as keyof typeof Icons] as React.ComponentType<{ className?: string }>;
+            const isCompleted = completedGuides.has(guide.id);
             
             return (
               <Card
                 key={guide.id}
                 onClick={() => navigate(`/guides/${guide.id}`)}
-                className="shadow-soft hover:shadow-elevated transition-all cursor-pointer hover:scale-[1.02]"
+                className={`shadow-soft hover:shadow-elevated transition-all cursor-pointer hover:scale-[1.02] relative ${
+                  isCompleted ? "border-green-500" : ""
+                }`}
               >
+                {isCompleted && (
+                  <div className="absolute top-4 right-4">
+                    <CheckCircle2 className="w-6 h-6 text-green-500" />
+                  </div>
+                )}
                 <CardHeader>
                   <div className="flex items-start justify-between mb-3">
                     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
@@ -68,9 +101,12 @@ const Guides = () => {
                   <p className="text-sm text-muted-foreground mb-3">
                     {guide.description}
                   </p>
-                  <div className="flex items-center text-xs text-muted-foreground">
-                    <Icons.List className="h-3 w-3 mr-1" />
-                    {guide.steps.length} steps
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <Icons.List className="h-3 w-3" />
+                    <span>{guide.steps.length} steps</span>
+                    {isCompleted && (
+                      <span className="text-green-500 font-medium">• Completed</span>
+                    )}
                   </div>
                 </CardContent>
               </Card>
