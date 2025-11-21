@@ -45,8 +45,19 @@ const Yasarna = () => {
     return (completedLessons.length / totalLessons) * 100;
   };
 
-  const handleQuizAnswer = (questionId: string, answer: string) => {
+  const handleQuizAnswer = (questionId: string, answer: string, correctAnswer: string) => {
     setQuizAnswers({ ...quizAnswers, [questionId]: answer });
+    
+    // Provide immediate feedback
+    if (answer === correctAnswer) {
+      setTimeout(() => {
+        const button = document.querySelector(`[data-answer="${questionId}-${answer}"]`);
+        if (button) {
+          button.classList.add('animate-pulse');
+          setTimeout(() => button.classList.remove('animate-pulse'), 1000);
+        }
+      }, 0);
+    }
   };
 
   const calculateQuizScore = () => {
@@ -360,32 +371,65 @@ const Yasarna = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  {!showResults ? (
-                    <>
-                      {quizQuestions.map((question) => (
-                        <div key={question.id} className="p-4 border rounded-lg space-y-3">
-                          <div className="font-medium">{question.question}</div>
-                          {question.arabic && (
-                            <div className="text-5xl font-arabic text-center py-4">
-                              {question.arabic}
-                            </div>
-                          )}
-                          <div className="grid grid-cols-2 gap-2">
-                            {question.options.map((option) => (
-                              <Button
-                                key={option}
-                                variant={
-                                  quizAnswers[question.id] === option ? "default" : "outline"
-                                }
-                                className="w-full"
-                                onClick={() => handleQuizAnswer(question.id, option)}
-                              >
-                                {option}
-                              </Button>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
+                      {!showResults ? (
+                        <>
+                          {quizQuestions.map((question) => {
+                            const userAnswer = quizAnswers[question.id];
+                            const isAnswered = userAnswer !== undefined;
+                            const isCorrect = userAnswer === question.correctAnswer;
+                            
+                            return (
+                              <div key={question.id} className="p-4 border rounded-lg space-y-3">
+                                <div className="font-medium">{question.question}</div>
+                                {question.arabic && (
+                                  <div className="text-5xl font-arabic text-center py-4">
+                                    {question.arabic}
+                                  </div>
+                                )}
+                                <div className="grid grid-cols-2 gap-2">
+                                  {question.options.map((option) => {
+                                    const isThisAnswerSelected = userAnswer === option;
+                                    const isThisCorrectAnswer = option === question.correctAnswer;
+                                    
+                                    let buttonVariant: "default" | "outline" | "destructive" = "outline";
+                                    let buttonClassName = "w-full transition-all";
+                                    
+                                    if (isAnswered) {
+                                      if (isThisAnswerSelected) {
+                                        if (isCorrect) {
+                                          buttonClassName += " bg-green-600 hover:bg-green-700 text-white border-green-600";
+                                        } else {
+                                          buttonClassName += " bg-red-600 hover:bg-red-700 text-white border-red-600";
+                                        }
+                                      } else if (!isCorrect && isThisCorrectAnswer) {
+                                        buttonClassName += " bg-green-100 border-green-500 text-green-700 dark:bg-green-950 dark:text-green-300";
+                                      }
+                                    } else {
+                                      buttonVariant = "outline";
+                                    }
+                                    
+                                    return (
+                                      <Button
+                                        key={option}
+                                        variant={buttonVariant}
+                                        className={buttonClassName}
+                                        data-answer={`${question.id}-${option}`}
+                                        onClick={() => handleQuizAnswer(question.id, option, question.correctAnswer)}
+                                        disabled={isAnswered}
+                                      >
+                                        {option}
+                                      </Button>
+                                    );
+                                  })}
+                                </div>
+                                {isAnswered && (
+                                  <div className={`text-sm font-medium mt-2 ${isCorrect ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                                    {isCorrect ? '✓ Correct!' : `✗ Incorrect. The correct answer is: ${question.correctAnswer}`}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
                       <Button
                         className="w-full"
                         size="lg"
