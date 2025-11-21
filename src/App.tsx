@@ -16,6 +16,7 @@ import Dhikr from "./pages/Dhikr";
 import Learning from "./pages/Learning";
 import LessonDetail from "./pages/LessonDetail";
 import Calendar from "./pages/Calendar";
+import Yasarna from "./pages/Yasarna";
 import Guides from "./pages/Guides";
 import GuideDetail from "./pages/GuideDetail";
 import Login from "./pages/Login";
@@ -48,6 +49,7 @@ const App = () => (
             <Route path="/dhikr" element={<Dhikr />} />
             <Route path="/learning" element={<Learning />} />
             <Route path="/learning/:lessonId" element={<LessonDetail />} />
+            <Route path="/yasarna" element={<Yasarna />} />
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/guides" element={<Guides />} />
             <Route path="/guides/:guideId" element={<GuideDetail />} />
