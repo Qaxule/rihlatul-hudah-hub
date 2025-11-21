@@ -47,15 +47,15 @@ const Quran = () => {
     );
   }, [searchTerm]);
 
-  const sortedData = useMemo(() => {
-    if (viewMode === "juz") {
-      const juzData = juzList.map(juz => ({
-        ...juz,
-        surahs: getSurahsByJuz(juz.number)
-      }));
-      return sortOrder === "asc" ? juzData : [...juzData].reverse();
-    }
+  const juzData = useMemo(() => {
+    const data = juzList.map(juz => ({
+      ...juz,
+      surahs: getSurahsByJuz(juz.number)
+    }));
+    return sortOrder === "asc" ? data : [...data].reverse();
+  }, [sortOrder]);
 
+  const surahData = useMemo(() => {
     let sorted = [...filteredSurahs];
     if (viewMode === "revelation") {
       sorted.sort((a, b) => a.revelationOrder - b.revelationOrder);
@@ -118,7 +118,7 @@ const Quran = () => {
             </div>
 
             <TabsContent value="surah" className="space-y-6 md:space-y-8 mt-0">
-              {(sortedData as typeof surahs).map((surah) => (
+              {surahData.map((surah) => (
                 <Link key={surah.number} to={`/surah/${surah.number}`}>
                   <Card className="shadow-soft hover:shadow-elevated transition-all duration-300 cursor-pointer group border-border/50">
                     <CardContent className="p-6 md:p-8">
@@ -157,7 +157,7 @@ const Quran = () => {
             </TabsContent>
 
             <TabsContent value="juz" className="space-y-6 md:space-y-8 mt-0">
-              {(sortedData as Array<{ number: number; name: string; surahs: typeof surahList }>).map((juz) => (
+              {juzData.map((juz) => (
                 <Card key={juz.number} className="shadow-soft border-border/50">
                   <CardContent className="p-6 md:p-8">
                     <div className="flex items-center gap-4 mb-4">
@@ -193,7 +193,7 @@ const Quran = () => {
             </TabsContent>
 
             <TabsContent value="revelation" className="space-y-6 md:space-y-8 mt-0">
-              {(sortedData as typeof surahs).map((surah) => (
+              {surahData.map((surah) => (
                 <Link key={surah.number} to={`/surah/${surah.number}`}>
                   <Card className="shadow-soft hover:shadow-elevated transition-all duration-300 cursor-pointer group border-border/50">
                     <CardContent className="p-6 md:p-8">
