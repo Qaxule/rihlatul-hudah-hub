@@ -119,20 +119,25 @@ const Index = () => {
 
       {/* Daily Wisdom */}
       <section className="container mx-auto px-4 py-16">
-        <Card className="max-w-3xl mx-auto shadow-elevated border-primary/20">
-          <CardContent className="p-8 space-y-4">
-            {loading ? <>
+        {loading ? (
+          <Card className="max-w-3xl mx-auto shadow-elevated border-primary/20">
+            <CardContent className="p-8 space-y-4">
+              <div className="flex items-center justify-between">
+                <Skeleton className="h-6 w-32" />
+                <Skeleton className="h-4 w-40" />
+              </div>
+              <Skeleton className="h-16 w-full" />
+              <Skeleton className="h-6 w-full" />
+              <Skeleton className="h-20 w-full" />
+            </CardContent>
+          </Card>
+        ) : ayatOfTheDay ? (
+          <Link to={`/surah/${ayatOfTheDay.surah.number}#${ayatOfTheDay.ayah.numberInSurah}`}>
+            <Card className="max-w-3xl mx-auto shadow-elevated border-primary/20 cursor-pointer hover:shadow-glow transition-all group">
+              <CardContent className="p-8 space-y-4">
                 <div className="flex items-center justify-between">
-                  <Skeleton className="h-6 w-32" />
-                  <Skeleton className="h-4 w-40" />
-                </div>
-                <Skeleton className="h-16 w-full" />
-                <Skeleton className="h-6 w-full" />
-                <Skeleton className="h-20 w-full" />
-              </> : ayatOfTheDay ? <>
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-primary flex items-center gap-2">
-                    
+                  <h3 className="text-lg font-semibold text-primary flex items-center gap-2 group-hover:text-primary/80 transition-colors">
+                    <Sparkles className="w-5 h-5" />
                     Ayah of the Day
                   </h3>
                   <span className="text-sm text-muted-foreground">
@@ -147,10 +152,16 @@ const Index = () => {
                     "{ayatOfTheDay.ayah.translation}"
                   </p>
                 </div>
-              </> : <>
+              </CardContent>
+            </Card>
+          </Link>
+        ) : (
+          <Link to="/surah/2#286">
+            <Card className="max-w-3xl mx-auto shadow-elevated border-primary/20 cursor-pointer hover:shadow-glow transition-all group">
+              <CardContent className="p-8 space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-primary flex items-center gap-2">
-                    
+                  <h3 className="text-lg font-semibold text-primary flex items-center gap-2 group-hover:text-primary/80 transition-colors">
+                    <Sparkles className="w-5 h-5" />
                     Ayah of the Day
                   </h3>
                   <span className="text-sm text-muted-foreground">Surah Al-Baqarah 2:286</span>
@@ -168,9 +179,10 @@ const Index = () => {
                     opportunity for growth in faith.
                   </p>
                 </div>
-              </>}
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
+          </Link>
+        )}
       </section>
 
       {/* Features Grid */}
