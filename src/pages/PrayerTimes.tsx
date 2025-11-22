@@ -7,18 +7,25 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Compass, MapPin, Loader2, Bell, Volume2 } from "lucide-react";
+import { Compass, MapPin, Loader2, Bell, Volume2, WifiOff } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
+import { useOfflinePrayerTimes } from "@/hooks/useOfflinePrayerTimes";
 
 const PrayerTimes = () => {
   const { user, session } = useAuth();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const [location, setLocation] = useState<{ lat: number; lon: number } | null>(null);
-  const [prayerTimes, setPrayerTimes] = useState<any>(null);
-  const [qiblaDirection, setQiblaDirection] = useState<number | null>(null);
+  
+  // Use offline caching hook
+  const { 
+    prayerTimes, 
+    qiblaDirection, 
+    loading, 
+    isOffline, 
+    fetchPrayerTimes 
+  } = useOfflinePrayerTimes(session);
+  
   const [notificationsEnabled, setNotificationsEnabled] = useState(() => {
     return localStorage.getItem("prayerNotifications") === "true";
   });
@@ -177,57 +184,16 @@ const PrayerTimes = () => {
     }
   };
 
-  const getPrayerTimes = async (lat: number, lon: number) => {
-    if (!session) {
-      toast.error("Please login to access prayer times");
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/prayer-times`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${session.access_token}`,
-            "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-          },
-          body: JSON.stringify({ latitude: lat, longitude: lon }),
-        }
-      );
-
-      if (!response.ok) throw new Error("Failed to fetch prayer times");
-      
-      const data = await response.json();
-      setPrayerTimes(data.data.timings);
-      setQiblaDirection(data.data.meta.qibla_direction);
-      
-      if (notificationsEnabled) {
-        schedulePrayerNotifications(data.data.timings);
-      }
-      
-      toast.success("Prayer times updated!");
-    } catch (error: any) {
-      toast.error(error.message || "Failed to fetch prayer times");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const getLocation = () => {
     if ("geolocation" in navigator) {
-      setLoading(true);
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
           setLocation({ lat: latitude, lon: longitude });
-          getPrayerTimes(latitude, longitude);
+          fetchPrayerTimes(latitude, longitude);
         },
         (error) => {
           toast.error("Unable to get your location");
-          setLoading(false);
         }
       );
     } else {
@@ -253,6 +219,12 @@ const PrayerTimes = () => {
             <p className="text-muted-foreground mb-6">
               Accurate prayer times based on your location
             </p>
+            {isOffline && (
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-muted text-sm text-muted-foreground mb-4">
+                <WifiOff className="h-4 w-4" />
+                Showing cached prayer times (offline)
+              </div>
+            )}
             <div className="flex flex-col items-center gap-4">
               <Button onClick={getLocation} disabled={loading}>
                 {loading ? (
