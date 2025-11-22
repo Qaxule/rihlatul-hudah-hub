@@ -149,58 +149,85 @@ export const lessons: LessonContent[] = [
   {
     id: "understanding-tawhid",
     title: "Understanding Tawhid",
-    description: "The concept of Divine Unity",
-    duration: "20 min",
+    description: "The concept of Divine Unity - Foundation of Islamic belief",
+    duration: "30 min",
     category: "Aqeedah",
     content: {
-      introduction: "Tawhid is the fundamental concept in Islam - the absolute oneness and uniqueness of Allah. It is the most important principle that distinguishes Islamic monotheism.",
+      introduction: "Tawhid is the absolute oneness and uniqueness of Allah - the most fundamental and important concept in Islam. It is what makes Islam unique among religions and what every Muslim must understand and embody. The Prophet ﷺ said: 'Whoever dies knowing that there is no god but Allah will enter Paradise.' [Sahih Muslim 26]",
       sections: [
         {
           title: "What is Tawhid?",
-          content: "Tawhid means the oneness of Allah in His essence, attributes, and actions. It is the pure monotheism that forms the core of Islamic belief.",
+          content: "Tawhid (التوحيد) means the oneness of Allah in His essence, attributes, and actions. It is the pure, uncompromising monotheism that forms the very core of Islamic belief and the foundation of the Shahada.\n\n📖 Quranic Foundation:\n'Say, \"He is Allah, [who is] One, Allah, the Eternal Refuge. He neither begets nor is born, nor is there to Him any equivalent.\"' (Surah Al-Ikhlas 112:1-4)\n\nThis short surah encapsulates the entire concept of Tawhid. The Prophet ﷺ said: 'It is equivalent to one-third of the Quran.' [Sahih al-Bukhari 5013]\n\n'And your god is one God. There is no deity [worthy of worship] except Him, the Entirely Merciful, the Especially Merciful.' (Surah Al-Baqarah 2:163)\n\n💡 Key Aspects of Tawhid:\nTawhid means affirming that Allah is:\n• One in His essence - no partners or associates\n• One in His attributes - none shares His perfect attributes\n• One in His actions - He alone creates, sustains, and controls\n• One in worship - only He deserves to be worshiped",
           points: [
-            "Allah is One with no partners",
-            "Nothing resembles Him",
-            "He alone deserves worship",
-            "All power belongs to Him alone"
+            "Allah is absolutely unique - 'There is nothing like Him' (Surah Ash-Shura 42:11)",
+            "He has no partners, helpers, or equals in any way",
+            "All power, knowledge, and authority belong exclusively to Him",
+            "He is self-sufficient and everything else depends on Him",
+            "He is eternal without beginning or end",
+            "Understanding Tawhid correctly is the key to Paradise"
           ]
         },
         {
-          title: "Types of Tawhid",
-          content: "Scholars categorize Tawhid into three main types to better understand this concept:",
+          title: "The Three Categories of Tawhid",
+          content: "Islamic scholars have categorized Tawhid into three interconnected types to help Muslims understand and apply this concept comprehensively. These categories are not separate beliefs but different aspects of the same unified concept.\n\n📚 Historical Context:\nThese categories were systematically organized by later scholars based on the Quran and Sunnah to clarify Islamic monotheism against various forms of shirk (polytheism) that existed.\n\n🔍 The Three Types:",
           points: [
-            "Tawhid ar-Rububiyyah: Oneness of Lordship - Allah alone is the Creator, Sustainer, and Controller",
-            "Tawhid al-Uluhiyyah: Oneness of Worship - Allah alone deserves worship",
-            "Tawhid al-Asma was-Sifat: Oneness of Names and Attributes - Allah's names and attributes are unique to Him"
+            "1. Tawhid ar-Rububiyyah (Oneness of Lordship): Believing that Allah alone is the Creator, Sustainer, Provider, and Controller of all existence. 'Indeed, your Lord is Allah, who created the heavens and the earth in six days and then established Himself above the Throne. He covers the night with the day, [another night] chasing it rapidly; and [He created] the sun, the moon, and the stars, subjected by His command. Unquestionably, His is the creation and the command; blessed is Allah, Lord of the worlds.' (Surah Al-A'raf 7:54)",
+            "2. Tawhid al-Uluhiyyah (Oneness of Worship): Directing all acts of worship exclusively to Allah - prayer, supplication, hope, fear, love, sacrifice, vows, and reliance. This is often where people fall into shirk. 'And your Lord says, \"Call upon Me; I will respond to you. Indeed, those who disdain My worship will enter Hell [rendered] contemptible.\"' (Surah Ghafir 40:60)",
+            "3. Tawhid al-Asma was-Sifat (Oneness of Names and Attributes): Affirming all of Allah's names and attributes as mentioned in the Quran and authentic Sunnah, without alteration, denial, or likening them to creation. 'And to Allah belong the best names, so invoke Him by them. And leave [the company of] those who practice deviation concerning His names.' (Surah Al-A'raf 7:180)",
+            "These three aspects are inseparable - true Tawhid requires understanding and implementing all three",
+            "Most people of shirk believed in Tawhid ar-Rububiyyah but failed in Tawhid al-Uluhiyyah"
           ]
         },
         {
           title: "The Opposite of Tawhid: Shirk",
-          content: "Shirk means associating partners with Allah. It is the only unforgivable sin if one dies without repenting from it.",
+          content: "Shirk (الشرك) means associating partners with Allah in any form. It is the greatest injustice and the only sin Allah has declared unforgivable if one dies without repenting from it.\n\n📖 Quranic Warning:\n'Indeed, Allah does not forgive association with Him, but He forgives what is less than that for whom He wills. And he who associates others with Allah has certainly fabricated a tremendous sin.' (Surah An-Nisa 4:48)\n\n'Indeed, he who associates others with Allah - Allah has forbidden him Paradise, and his refuge is the Fire. And there are not for the wrongdoers any helpers.' (Surah Al-Ma'idah 5:72)\n\n📚 Categories of Shirk:\nShirk is divided into major and minor categories, both of which must be avoided:",
           points: [
-            "Major shirk: Worshiping others besides Allah",
-            "Minor shirk: Showing off in worship, swearing by other than Allah",
-            "Hidden shirk: Relying on other than Allah in the heart"
+            "Major Shirk (Shirk Akbar): Takes one out of Islam completely. Examples: Worshiping idols, graves, or saints; believing others share Allah's power to create or control; supplicating to the dead; sacrificing to other than Allah; believing in fortune-tellers or astrologers who claim knowledge of the unseen",
+            "Minor Shirk (Shirk Asghar): Does not take one out of Islam but severely weakens faith. Examples: Showing off in worship (Riya'); swearing by other than Allah; saying 'What Allah wills and you will'; wearing amulets or charms for protection; minor superstitions",
+            "Hidden Shirk: Riya' (showing off) in worship, as the Prophet ﷺ warned: 'The thing I fear most for you is minor shirk - riya'' [Musnad Ahmad 27742]",
+            "Shirk in love: Loving someone or something equal to or more than Allah",
+            "Shirk in fear: Fearing others as one should only fear Allah",
+            "Shirk in hope: Placing ultimate hope in creation rather than the Creator",
+            "The mushrikoon (polytheists) of Makkah acknowledged Allah as Creator but still committed shirk by worshiping others alongside Him"
+          ]
+        },
+        {
+          title: "Tawhid in the Quran",
+          content: "The Quran emphasizes Tawhid from beginning to end. It is the central message of all prophets and the purpose of creation.\n\n📖 Key Verses on Tawhid:\n'And I did not create the jinn and mankind except to worship Me.' (Surah Adh-Dhariyat 51:56)\n\nThis verse clarifies the very purpose of our existence - to worship Allah alone in pure Tawhid.\n\n'And We certainly sent into every nation a messenger, [saying], \"Worship Allah and avoid Taghut.\"' (Surah An-Nahl 16:36)\n\nEvery single prophet from Adam to Muhammad ﷺ came with the same core message: Tawhid.\n\n'Allah witnesses that there is no deity except Him, and [so do] the angels and those of knowledge - [that He is] maintaining [creation] in justice. There is no deity except Him, the Exalted in Might, the Wise.' (Surah Aal-Imran 3:18)\n\n💡 Tawhid Throughout Revelation:\n• The greatest verse in the Quran is Ayat al-Kursi (Surah Al-Baqarah 2:255), which describes Allah's unique attributes\n• The greatest surah is Al-Fatihah, which begins by affirming Allah as Lord of all worlds\n• The most concise statement of Tawhid is Surah Al-Ikhlas (112), which the Prophet ﷺ said equals one-third of the Quran",
+          points: [
+            "Every Surah in the Quran either explicitly discusses Tawhid or implies it",
+            "The Quran refutes all forms of shirk systematically",
+            "Stories of previous prophets all center on calling to Tawhid",
+            "The Quran challenges those who worship others to bring proof of their deity's power",
+            "Paradise is the reward for those who die upon Tawhid",
+            "The final message of Islam perfected the understanding of Tawhid"
           ]
         },
         {
           title: "Living with Tawhid",
-          content: "Tawhid should manifest in every aspect of a Muslim's life.",
+          content: "Tawhid is not merely a belief to acknowledge intellectually - it must be embodied in every aspect of a Muslim's life. It should transform how we think, act, worship, and interact with all of creation.\n\n📚 The Prophet's ﷺ Guidance:\n'Whoever says \"There is no god but Allah\" and dies upon that will enter Paradise.' [Sahih Muslim 26]\n\nBut this statement must be accompanied by understanding, acceptance, compliance, love, and sincerity.\n\n💡 Practical Implementation:\n\n1. In Worship:\n• Direct all prayers, supplications, and rituals solely to Allah\n• Seek help and guidance only from Allah\n• Make vows and sacrifices only for Allah's sake\n• Trust in Allah's plan completely (Tawakkul)\n\n2. In Daily Life:\n• Say Bismillah before every action, acknowledging Allah's help\n• Attribute all success to Allah alone\n• Accept trials with patience, knowing only Allah decrees them\n• Avoid superstitions, fortune-telling, and relying on amulets\n\n3. In Heart and Mind:\n• Love Allah above all else\n• Fear Allah's displeasure more than any creation\n• Hope in Allah's mercy alone\n• Remember Allah frequently (Dhikr)\n• Purify intentions - act only to please Allah",
           points: [
-            "Direct all worship to Allah alone",
-            "Trust in Allah's plan completely",
-            "Seek help only from Allah",
-            "Follow only Allah's guidance",
-            "Purify intentions in all actions"
+            "Begin every task with 'Bismillah ar-Rahman ar-Raheem' (In the name of Allah, Most Gracious, Most Merciful)",
+            "When blessed, say 'Alhamdulillah' (All praise belongs to Allah)",
+            "When planning, say 'Insha'Allah' (If Allah wills)",
+            "When afflicted, say 'Inna lillahi wa inna ilayhi raji'oon' (We belong to Allah and to Him we return)",
+            "Reject all forms of shirk - major, minor, and hidden",
+            "Learn and call others to Tawhid, as it's the foundation of Da'wah",
+            "Study Allah's names and attributes to strengthen Tawhid",
+            "Remember death and the meeting with Allah to maintain focus on Tawhid"
           ]
         }
       ],
-      conclusion: "Tawhid is not just a belief to affirm, but a reality to live by. It should guide every decision, action, and thought in a Muslim's life, bringing peace, purpose, and clarity.",
+      conclusion: "Tawhid is the essence of Islam and the key to eternal success. The Prophet ﷺ said: 'Whoever's last words are \"La ilaha illa Allah\" (There is no god but Allah) will enter Paradise.' [Sunan Abu Dawud 3116] Understanding Tawhid correctly, embodying it in belief and action, and dying upon it is the ultimate goal of every Muslim. It brings peace to the heart, purpose to life, and salvation in the Hereafter. May Allah grant us all true understanding of Tawhid and the ability to live by it until we meet Him.",
       keyTakeaways: [
-        "Tawhid is the foundation of Islam",
-        "It encompasses belief, worship, and daily life",
-        "Shirk (associating partners with Allah) contradicts Tawhid",
-        "True Tawhid brings inner peace and purpose"
+        "Tawhid is the absolute oneness of Allah - the foundation of Islam and purpose of creation",
+        "Three categories: Tawhid of Lordship, Worship, and Names/Attributes - all must be fulfilled",
+        "Shirk (associating partners with Allah) is the greatest sin and nullifies Tawhid",
+        "Major shirk takes one out of Islam; minor shirk severely weakens faith",
+        "Every prophet's core message was Tawhid - 'Worship Allah and avoid false gods'",
+        "Tawhid must be lived in worship, daily actions, and the heart - not just believed intellectually",
+        "The Quran is entirely about establishing Tawhid and refuting shirk",
+        "Dying upon pure Tawhid guarantees Paradise"
       ]
     },
     quiz: [
