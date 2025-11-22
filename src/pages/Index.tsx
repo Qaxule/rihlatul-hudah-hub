@@ -8,7 +8,6 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/contexts/AuthContext";
-
 interface AyatOfTheDay {
   surah: {
     number: number;
@@ -23,35 +22,29 @@ interface AyatOfTheDay {
     translation: string;
   };
 }
-
 interface ReadingProgress {
   surah_number: number;
   ayah_number: number;
 }
-
 const Index = () => {
   const [ayatOfTheDay, setAyatOfTheDay] = useState<AyatOfTheDay | null>(null);
   const [loading, setLoading] = useState(true);
   const [readingProgress, setReadingProgress] = useState<ReadingProgress | null>(null);
-  const { user } = useAuth();
-
+  const {
+    user
+  } = useAuth();
   useEffect(() => {
     fetchAyatOfTheDay();
     if (user) {
       fetchReadingProgress();
     }
   }, [user]);
-
   const fetchReadingProgress = async () => {
     if (!user) return;
-
     try {
-      const { data } = await supabase
-        .from('reading_progress')
-        .select('surah_number, ayah_number')
-        .eq('user_id', user.id)
-        .maybeSingle();
-
+      const {
+        data
+      } = await supabase.from('reading_progress').select('surah_number, ayah_number').eq('user_id', user.id).maybeSingle();
       if (data) {
         setReadingProgress(data);
       }
@@ -59,7 +52,6 @@ const Index = () => {
       console.error('Error fetching reading progress:', error);
     }
   };
-
   const fetchAyatOfTheDay = async () => {
     try {
       const {
@@ -95,21 +87,17 @@ const Index = () => {
           </div>
           
           <div className="flex flex-wrap justify-center gap-4 pt-4 animate-fade-in [animation-delay:0.7s]">
-            {readingProgress ? (
-              <Button asChild size="lg" className="shadow-elevated hover:shadow-glow transition-all">
+            {readingProgress ? <Button asChild size="lg" className="shadow-elevated hover:shadow-glow transition-all">
                 <Link to={`/surah/${readingProgress.surah_number}`}>
                   <BookOpen className="mr-2 h-5 w-5" />
                   Continue Reading
                 </Link>
-              </Button>
-            ) : (
-              <Button asChild size="lg" className="shadow-elevated hover:shadow-glow transition-all">
+              </Button> : <Button asChild size="lg" className="shadow-elevated hover:shadow-glow transition-all">
                 <Link to="/quran">
                   Explore Qur'an
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
-              </Button>
-            )}
+              </Button>}
             <Button asChild variant="outline" size="lg" className="shadow-soft">
               <Link to="/guides">New to Islam?</Link>
             </Button>
@@ -119,8 +107,7 @@ const Index = () => {
 
       {/* Daily Wisdom */}
       <section className="container mx-auto px-4 py-16">
-        {loading ? (
-          <Card className="max-w-3xl mx-auto shadow-elevated border-primary/20">
+        {loading ? <Card className="max-w-3xl mx-auto shadow-elevated border-primary/20">
             <CardContent className="p-8 space-y-4">
               <div className="flex items-center justify-between">
                 <Skeleton className="h-6 w-32" />
@@ -130,14 +117,12 @@ const Index = () => {
               <Skeleton className="h-6 w-full" />
               <Skeleton className="h-20 w-full" />
             </CardContent>
-          </Card>
-        ) : ayatOfTheDay ? (
-          <Link to={`/surah/${ayatOfTheDay.surah.number}#ayah-${ayatOfTheDay.ayah.numberInSurah}`}>
+          </Card> : ayatOfTheDay ? <Link to={`/surah/${ayatOfTheDay.surah.number}#ayah-${ayatOfTheDay.ayah.numberInSurah}`}>
             <Card className="max-w-3xl mx-auto shadow-elevated border-primary/20 cursor-pointer hover:shadow-glow transition-all group">
               <CardContent className="p-8 space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-primary flex items-center gap-2 group-hover:text-primary/80 transition-colors">
-                    <Sparkles className="w-5 h-5" />
+                    
                     Ayah of the Day
                   </h3>
                   <span className="text-sm text-muted-foreground">
@@ -154,9 +139,7 @@ const Index = () => {
                 </div>
               </CardContent>
             </Card>
-          </Link>
-        ) : (
-          <Link to="/surah/2#ayah-286">
+          </Link> : <Link to="/surah/2#ayah-286">
             <Card className="max-w-3xl mx-auto shadow-elevated border-primary/20 cursor-pointer hover:shadow-glow transition-all group">
               <CardContent className="p-8 space-y-4">
                 <div className="flex items-center justify-between">
@@ -181,8 +164,7 @@ const Index = () => {
                 </div>
               </CardContent>
             </Card>
-          </Link>
-        )}
+          </Link>}
       </section>
 
       {/* Features Grid */}
