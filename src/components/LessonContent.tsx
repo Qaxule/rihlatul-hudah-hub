@@ -78,7 +78,7 @@ const LessonContent = ({ text, className = "" }: LessonContentProps) => {
         parts.push(
           <button
             key={`surah-${match.index}`}
-            onClick={() => navigate(`/quran/${surahNum}`)}
+            onClick={() => navigate(`/surah/${surahNum}`)}
             className="inline-flex items-center gap-1 text-primary hover:text-primary/80 underline decoration-dotted underline-offset-2 transition-colors font-medium"
           >
             {fullMatch}
