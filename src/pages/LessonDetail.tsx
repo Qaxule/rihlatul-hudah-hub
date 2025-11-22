@@ -12,6 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import LessonQuiz from "@/components/LessonQuiz";
+import LessonContent from "@/components/LessonContent";
 
 const LessonDetail = () => {
   const { lessonId } = useParams();
@@ -196,18 +197,20 @@ const LessonDetail = () => {
               {/* Introduction */}
               <div>
                 <h3 className="text-lg font-semibold mb-2">Introduction</h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  {lesson.content.introduction}
-                </p>
+                <LessonContent
+                  text={lesson.content.introduction}
+                  className="text-muted-foreground leading-relaxed"
+                />
               </div>
 
               {/* Sections */}
               {lesson.content.sections.map((section, index) => (
                 <div key={index} className="border-t pt-6">
                   <h3 className="text-lg font-semibold mb-3">{section.title}</h3>
-                  <p className="text-muted-foreground mb-3 leading-relaxed">
-                    {section.content}
-                  </p>
+                  <LessonContent
+                    text={section.content}
+                    className="text-muted-foreground mb-3 leading-relaxed whitespace-pre-line"
+                  />
                   {section.points && section.points.length > 0 && (
                     <ul className="space-y-2 ml-4">
                       {section.points.map((point, pointIndex) => (
@@ -216,7 +219,10 @@ const LessonDetail = () => {
                           className="text-muted-foreground flex items-start gap-2"
                         >
                           <span className="text-primary mt-1.5">•</span>
-                          <span className="flex-1">{point}</span>
+                          <LessonContent
+                            text={point}
+                            className="flex-1"
+                          />
                         </li>
                       ))}
                     </ul>
@@ -227,9 +233,10 @@ const LessonDetail = () => {
               {/* Conclusion */}
               <div className="border-t pt-6">
                 <h3 className="text-lg font-semibold mb-2">Conclusion</h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  {lesson.content.conclusion}
-                </p>
+                <LessonContent
+                  text={lesson.content.conclusion}
+                  className="text-muted-foreground leading-relaxed"
+                />
               </div>
 
               {/* Key Takeaways */}
@@ -242,7 +249,10 @@ const LessonDetail = () => {
                   {lesson.content.keyTakeaways.map((takeaway, index) => (
                     <li key={index} className="flex items-start gap-2">
                       <span className="text-primary mt-1">✓</span>
-                      <span className="flex-1">{takeaway}</span>
+                      <LessonContent
+                        text={takeaway}
+                        className="flex-1"
+                      />
                     </li>
                   ))}
                 </ul>

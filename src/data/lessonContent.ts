@@ -28,70 +28,89 @@ export const lessons: LessonContent[] = [
   {
     id: "five-pillars",
     title: "The Five Pillars of Islam",
-    description: "Foundation of Islamic practice",
-    duration: "15 min",
+    description: "Foundation of Islamic practice with authentic sources",
+    duration: "25 min",
     category: "Fundamentals",
     content: {
-      introduction: "The Five Pillars of Islam are the core practices that every Muslim must follow. They form the foundation of a Muslim's faith and practice.",
+      introduction: "The Five Pillars of Islam are the core practices that define a Muslim's life and worship. These pillars are firmly established in the Quran and Sunnah, forming the foundation upon which the entire religion stands. The Prophet ﷺ said: 'Islam is built upon five pillars...' [Sahih al-Bukhari 8, Sahih Muslim 16]",
       sections: [
         {
           title: "1. Shahada (Declaration of Faith)",
-          content: "The testimony that there is no god but Allah, and Muhammad is His messenger.",
+          content: "The testimony that 'There is no god but Allah, and Muhammad is His messenger' (Ash-hadu an la ilaha illa Allah, wa ash-hadu anna Muhammadan rasul Allah). This declaration is the gateway to Islam and the foundation of all other pillars.\n\n📖 Quranic Foundation:\n'Allah - there is no deity except Him, the Ever-Living, the Sustainer of existence...' (Surah Al-Baqarah 2:255 - Ayat al-Kursi)\n\n'Muhammad is not the father of any of your men, but he is the Messenger of Allah and the last of the prophets.' (Surah Al-Ahzab 33:40)\n\n💡 Deeper Understanding:\nThe Shahada embodies two key concepts:\n1. La ilaha illa Allah (No god but Allah) - Affirms Tawhid, the absolute oneness of Allah\n2. Muhammadan rasul Allah (Muhammad is His messenger) - Affirms prophethood and our duty to follow the Sunnah",
           points: [
-            "The foundation of Islamic belief",
-            "Must be said with conviction and understanding",
-            "Affirms monotheism and prophethood"
+            "Must be pronounced with full understanding and conviction",
+            "Requires belief in the heart, not just verbal statement",
+            "Negates all false deities and affirms Allah's uniqueness",
+            "Obligates following Prophet Muhammad's ﷺ teachings",
+            "Said during conversion, and recommended to repeat regularly",
+            "The last words a Muslim hopes to say before death"
           ]
         },
         {
           title: "2. Salah (Prayer)",
-          content: "Performing the five daily prayers at prescribed times throughout the day and night.",
+          content: "Performing the five daily prayers (Salah) is the most important pillar after Shahada. It is the direct link between the believer and Allah, performed five times daily at specific times.\n\n📖 Quranic Foundation:\n'Indeed, I am Allah. There is no deity except Me, so worship Me and establish prayer for My remembrance.' (Surah Ta-Ha 20:14)\n\n'Guard strictly your prayers, especially the Middle Prayer, and stand before Allah devoutly.' (Surah Al-Baqarah 2:238)\n\n📚 Hadith Evidence:\n'The first matter that the slave will be brought to account for on the Day of Judgment is the prayer. If it is sound, then the rest of his deeds will be sound. And if it is bad, then the rest of his deeds will be bad.' [Sunan al-Tirmidhi 413]\n\n⏰ The Five Daily Prayers:\n1. Fajr - Dawn prayer (2 Rakah) - Before sunrise\n2. Dhuhr - Noon prayer (4 Rakah) - After sun passes meridian  \n3. Asr - Afternoon prayer (4 Rakah) - Mid-afternoon\n4. Maghrib - Sunset prayer (3 Rakah) - Right after sunset\n5. Isha - Night prayer (4 Rakah) - After twilight disappears",
           points: [
-            "Fajr (before sunrise)",
-            "Dhuhr (noon)",
-            "Asr (afternoon)",
-            "Maghrib (sunset)",
-            "Isha (night)",
-            "Strengthens connection with Allah"
+            "Salah purifies the soul and keeps one away from evil: 'Indeed, prayer prohibits immorality and wrongdoing' (Surah Al-Ankabut 29:45)",
+            "Requires ritual purity (Wudu - ablution)",
+            "Must face the Qibla (direction of Kaaba in Mecca)",
+            "Includes standing, bowing, prostrating, and sitting",
+            "Can be shortened during travel",
+            "Women menstruating or in postpartum bleeding are exempt",
+            "Salah is better than sleep - as said in Fajr Adhan"
           ]
         },
         {
-          title: "3. Zakat (Charity)",
-          content: "Giving a portion of one's wealth to those in need, typically 2.5% of savings annually.",
+          title: "3. Zakat (Obligatory Charity)",
+          content: "Zakat is the obligatory charity given annually on wealth that has reached the Nisab (minimum threshold) and been held for one lunar year. It purifies wealth and helps those in need, redistributing resources to create social justice.\n\n📖 Quranic Foundation:\n'And establish prayer and give Zakat, and whatever good you put forward for yourselves - you will find it with Allah.' (Surah Al-Baqarah 2:110)\n\n'Take from their wealth a charity by which you purify them and cause them increase, and invoke Allah's blessings upon them.' (Surah At-Tawbah 9:103)\n\n📊 Zakat Calculation:\n• Standard Rate: 2.5% of eligible wealth annually\n• Nisab: Equivalent to 85 grams of gold or 595 grams of silver\n• Due on: Cash, gold, silver, business inventory, stocks, rental income, agricultural produce (different rates)\n\n👥 Who Receives Zakat:\nAllah specified eight categories in Surah At-Tawbah (9:60):\n1. The poor (Al-Fuqara)\n2. The needy (Al-Masakin)  \n3. Zakat administrators\n4. Those whose hearts are to be reconciled\n5. Freeing captives\n6. Those in debt\n7. In the cause of Allah\n8. Travelers in need",
           points: [
-            "Purifies wealth",
-            "Helps those in need",
-            "Creates social equity",
-            "Due on specific types of wealth"
+            "Different from voluntary charity (Sadaqah) - Zakat is obligatory",
+            "Purifies wealth and soul: 'their wealth will be a form of punishment for them' if not given (Surah At-Tawbah 9:34-35)",
+            "Creates circulation of wealth in society",
+            "Cannot give to: parents, children, spouse (must support them regardless)",
+            "Can give to: extended family members in need, other eligible recipients",
+            "Not just financial obligation - spiritual purification",
+            "Withheld Zakat is a major sin warned about in Quran and Hadith"
           ]
         },
         {
-          title: "4. Sawm (Fasting)",
-          content: "Fasting during the month of Ramadan from dawn until sunset.",
+          title: "4. Sawm (Fasting in Ramadan)",
+          content: "Fasting during the blessed month of Ramadan (the 9th month of Islamic calendar) from dawn (Fajr) until sunset (Maghrib). Muslims abstain from food, drink, and marital relations during daylight hours.\n\n📖 Quranic Foundation:\n'O you who have believed, fasting is prescribed for you as it was prescribed for those before you, that you may become righteous.' (Surah Al-Baqarah 2:183)\n\n'The month of Ramadan in which was revealed the Quran, a guidance for mankind and clear proofs for guidance and criterion.' (Surah Al-Baqarah 2:185)\n\n🌙 Significance of Ramadan:\n• Month when the Quran was first revealed\n• Contains Laylat al-Qadr (Night of Power) - better than 1000 months\n• Gates of Paradise opened, gates of Hell closed\n• Devils are chained up\n• Rewards for good deeds are multiplied\n\n📚 Hadith Evidence:\n'Whoever fasts Ramadan out of faith and seeking reward, his previous sins will be forgiven.' [Sahih al-Bukhari 1901, Sahih Muslim 760]",
           points: [
-            "Abstaining from food, drink, and intimate relations",
-            "Increases taqwa (God-consciousness)",
-            "Teaches self-discipline and empathy",
-            "Exceptions for travelers, sick, and others"
+            "Fast begins at Fajr (dawn) with Suhoor (pre-dawn meal)",
+            "Fast breaks at Maghrib (sunset) with Iftar, traditionally with dates",
+            "Develops Taqwa (consciousness of Allah) and self-discipline",
+            "Teaches empathy for the hungry and poor",
+            "Exempt: Children before puberty, elderly, sick, pregnant/nursing women, travelers, menstruating women",
+            "Missed fasts must be made up later except for valid permanent reasons",
+            "Eid al-Fitr celebrates the completion of Ramadan",
+            "Spiritual retreat (I'tikaf) in last 10 nights is recommended"
           ]
         },
         {
-          title: "5. Hajj (Pilgrimage)",
-          content: "Making pilgrimage to Mecca at least once in a lifetime if physically and financially able.",
+          title: "5. Hajj (Pilgrimage to Mecca)",
+          content: "Hajj is the pilgrimage to the sacred city of Mecca, required once in a lifetime for those who are physically and financially capable. Performed during the Islamic month of Dhul-Hijjah, it brings together millions of Muslims from across the world.\n\n📖 Quranic Foundation:\n'And proclaim to the people the Hajj; they will come to you on foot and on every lean camel; they will come from every distant pass.' (Surah Al-Hajj 22:27)\n\n'Pilgrimage to the House is a duty owed to Allah by people who are able to undertake it. And whoever disbelieves - then indeed, Allah is Free from need of the worlds.' (Surah Aal-Imran 3:97)\n\n🕋 Hajj Rituals Overview:\n1. Ihram - State of consecration and pilgrims' garments\n2. Tawaf - Circumambulating the Kaaba 7 times\n3. Sa'i - Walking between Safa and Marwa 7 times  \n4. Day of Arafah - Standing at Mount Arafah (9th Dhul-Hijjah)\n5. Muzdalifah - Spending night and collecting pebbles\n6. Rami - Stoning the pillars representing Satan\n7. Sacrifice - Animal sacrifice on Eid al-Adha\n8. Tawaf al-Ifadah - Tawaf of returning\n\n📚 Hadith Evidence:\n'Whoever performs Hajj and does not commit any obscenity or transgression will return [free from sin] as on the day his mother gave birth to him.' [Sahih al-Bukhari 1521, Sahih Muslim 1350]",
           points: [
-            "Performed during the Islamic month of Dhul-Hijjah",
-            "Unites Muslims from around the world",
-            "Commemorates Prophet Ibrahim's devotion",
-            "Required only for those who are able"
+            "Only obligatory for those physically and financially able",
+            "Must have safe passage and funds for family during absence",
+            "Women should travel with a Mahram (male guardian) or safe group",
+            "Commemorates Prophet Ibrahim, his wife Hajar, and son Ismail",
+            "Represents equality - all pilgrims wear simple white garments",
+            "Sins forgiven if performed with sincerity and devotion",
+            "The Day of Arafah is the core and most important day",
+            "Umrah (minor pilgrimage) can be performed year-round"
           ]
         }
       ],
-      conclusion: "These five pillars work together to strengthen a Muslim's relationship with Allah and create a balanced, purposeful life. They combine belief, worship, charity, self-discipline, and unity.",
+      conclusion: "The Five Pillars work in harmony to create a balanced, purposeful life centered on worship, character, and community. The Prophet ﷺ described them as the foundation: 'Islam is built upon five: testifying that there is no god but Allah and that Muhammad is His messenger, establishing prayer, giving Zakat, fasting Ramadan, and pilgrimage to the House for whoever is able.' [Sahih al-Bukhari 8] Each pillar strengthens our connection to Allah, develops our character, and binds the Muslim community together.",
       keyTakeaways: [
-        "The Five Pillars are obligatory for all Muslims",
-        "They cover belief, worship, charity, fasting, and pilgrimage",
-        "Each pillar has specific rules and conditions",
-        "Together they create a comprehensive way of life"
+        "The Five Pillars are firmly established in Quran and authentic Hadith",
+        "Shahada is the foundation; other pillars are built upon it",
+        "Salah is the most important act of worship after Shahada",
+        "Zakat purifies wealth and creates social justice - 8 categories of recipients",
+        "Ramadan fasting develops Taqwa and includes Laylat al-Qadr",
+        "Hajj unites the Ummah and commemorates Prophet Ibrahim's legacy",
+        "Each pillar has conditions, exemptions, and deeper spiritual meanings",
+        "Together they form a comprehensive system for worship and life"
       ]
     },
     quiz: [
