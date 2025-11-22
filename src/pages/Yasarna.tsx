@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -7,7 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { BookOpen, Type, Link2, GraduationCap, Brain, Volume2 } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { BookOpen, Type, Link2, GraduationCap, Brain, Volume2, Clock, Timer } from "lucide-react";
 import {
   arabicAlphabet,
   vowels,
@@ -25,6 +27,11 @@ const Yasarna = () => {
   const [revealedJoining, setRevealedJoining] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState("alphabet");
   const [selectedDifficulty, setSelectedDifficulty] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner');
+  const [timedMode, setTimedMode] = useState(false);
+  const [timerDuration, setTimerDuration] = useState(5); // in minutes
+  const [timeRemaining, setTimeRemaining] = useState<number | null>(null); // in seconds
+  const [quizStartTime, setQuizStartTime] = useState<Date | null>(null);
+  const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem("yasarna_progress");
@@ -44,6 +51,56 @@ const Yasarna = () => {
   const calculateProgress = () => {
     const totalLessons = readingLessons.length;
     return (completedLessons.length / totalLessons) * 100;
+  };
+
+  // Timer effects
+  useEffect(() => {
+    if (timedMode && timeRemaining !== null && timeRemaining > 0 && !showResults) {
+      timerIntervalRef.current = setInterval(() => {
+        setTimeRemaining((prev) => {
+          if (prev === null || prev <= 1) {
+            // Time's up - auto submit
+            if (timerIntervalRef.current) {
+              clearInterval(timerIntervalRef.current);
+            }
+            setShowResults(true);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => {
+        if (timerIntervalRef.current) {
+          clearInterval(timerIntervalRef.current);
+        }
+      };
+    }
+  }, [timedMode, timeRemaining, showResults]);
+
+  // Start timer when first answer is given in timed mode
+  useEffect(() => {
+    if (timedMode && Object.keys(quizAnswers).length === 1 && timeRemaining === null && !showResults) {
+      setTimeRemaining(timerDuration * 60);
+      setQuizStartTime(new Date());
+    }
+  }, [quizAnswers, timedMode, timeRemaining, timerDuration, showResults]);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const resetQuiz = () => {
+    setQuizAnswers({});
+    setShowResults(false);
+    setCurrentQuiz(0);
+    setTimeRemaining(null);
+    setQuizStartTime(null);
+    if (timerIntervalRef.current) {
+      clearInterval(timerIntervalRef.current);
+    }
   };
 
   const handleQuizAnswer = (questionId: string, answer: string, correctAnswer: string) => {
@@ -368,7 +425,7 @@ const Yasarna = () => {
             <TabsContent value="quizzes">
               <Card>
                 <CardHeader>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between mb-4">
                     <div>
                       <CardTitle>Test Your Knowledge</CardTitle>
                       <CardDescription>
@@ -377,8 +434,7 @@ const Yasarna = () => {
                     </div>
                     <Select value={selectedDifficulty} onValueChange={(value: any) => {
                       setSelectedDifficulty(value);
-                      setQuizAnswers({});
-                      setShowResults(false);
+                      resetQuiz();
                     }}>
                       <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="Select difficulty" />
@@ -401,6 +457,60 @@ const Yasarna = () => {
                         </SelectItem>
                       </SelectContent>
                     </Select>
+                  </div>
+                  
+                  {/* Timer Settings */}
+                  <div className="border-t pt-4 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Timer className="h-5 w-5 text-primary" />
+                        <Label htmlFor="timed-mode" className="font-semibold">Timed Mode</Label>
+                      </div>
+                      <Switch
+                        id="timed-mode"
+                        checked={timedMode}
+                        onCheckedChange={(checked) => {
+                          setTimedMode(checked);
+                          if (!checked) {
+                            resetQuiz();
+                          }
+                        }}
+                      />
+                    </div>
+                    
+                    {timedMode && (
+                      <div className="flex items-center gap-4">
+                        <Label htmlFor="timer-duration" className="text-sm">Duration:</Label>
+                        <Select 
+                          value={timerDuration.toString()} 
+                          onValueChange={(value) => {
+                            setTimerDuration(parseInt(value));
+                            resetQuiz();
+                          }}
+                          disabled={Object.keys(quizAnswers).length > 0}
+                        >
+                          <SelectTrigger className="w-[120px]">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="3">3 minutes</SelectItem>
+                            <SelectItem value="5">5 minutes</SelectItem>
+                            <SelectItem value="10">10 minutes</SelectItem>
+                            <SelectItem value="15">15 minutes</SelectItem>
+                            <SelectItem value="20">20 minutes</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        {timeRemaining !== null && (
+                          <Badge 
+                            variant={timeRemaining < 60 ? "destructive" : "default"} 
+                            className="ml-auto text-lg px-4 py-2"
+                          >
+                            <Clock className="h-4 w-4 mr-2" />
+                            {formatTime(timeRemaining)}
+                          </Badge>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -483,6 +593,14 @@ const Yasarna = () => {
                           You got {Object.values(quizAnswers).filter((a, i) => a === filteredQuizQuestions[i].correctAnswer).length} out of{" "}
                           {filteredQuizQuestions.length} correct!
                         </p>
+                        {timedMode && quizStartTime && (
+                          <div className="mt-4">
+                            <Badge variant="secondary" className="text-base px-4 py-2">
+                              <Clock className="h-4 w-4 mr-2" />
+                              {timeRemaining === 0 ? "Time's up!" : `Completed with ${formatTime(timeRemaining || 0)} remaining`}
+                            </Badge>
+                          </div>
+                        )}
                       </div>
                       <div className="space-y-3">
                         {filteredQuizQuestions.map((q) => {
@@ -514,10 +632,7 @@ const Yasarna = () => {
                       </div>
                       <div className="flex gap-4 justify-center">
                         <Button
-                          onClick={() => {
-                            setShowResults(false);
-                            setQuizAnswers({});
-                          }}
+                          onClick={resetQuiz}
                           size="lg"
                         >
                           Try Again
@@ -526,8 +641,7 @@ const Yasarna = () => {
                           <Button
                             onClick={() => {
                               setSelectedDifficulty('intermediate');
-                              setQuizAnswers({});
-                              setShowResults(false);
+                              resetQuiz();
                             }}
                             size="lg"
                             variant="secondary"
@@ -539,8 +653,7 @@ const Yasarna = () => {
                           <Button
                             onClick={() => {
                               setSelectedDifficulty('advanced');
-                              setQuizAnswers({});
-                              setShowResults(false);
+                              resetQuiz();
                             }}
                             size="lg"
                             variant="secondary"
