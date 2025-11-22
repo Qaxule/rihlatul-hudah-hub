@@ -93,7 +93,7 @@ const PrayerTimes = () => {
         const dailySummary = prayers.map(p => `${p.name}: ${p.time}`).join("\n");
         new Notification("Today's Prayer Times", {
           body: `As-salamu alaykum! Here are today's prayer times:\n${dailySummary}`,
-          icon: "/favicon.ico",
+          icon: "/favicon.png",
           tag: "daily-summary",
         });
         playAdhan(notificationSound);
@@ -117,7 +117,7 @@ const PrayerTimes = () => {
         if ("Notification" in window && Notification.permission === "granted") {
           new Notification(`Time for ${prayer.name} Prayer`, {
             body: `It's ${prayer.time}. Time to pray ${prayer.name}.`,
-            icon: "/favicon.ico",
+            icon: "/favicon.png",
             tag: prayer.name,
           });
           playAdhan(notificationSound);
@@ -148,7 +148,7 @@ const PrayerTimes = () => {
     if ("Notification" in window && Notification.permission === "granted") {
       new Notification("Prayer Time Reminder", {
         body: "This is how you'll be notified at prayer times. May Allah accept your prayers.",
-        icon: "/favicon.ico",
+        icon: "/favicon.png",
         tag: "test",
       });
       playAdhan(notificationSound);
