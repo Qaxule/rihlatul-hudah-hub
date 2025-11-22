@@ -6,7 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Compass, MapPin, Loader2, Bell } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Compass, MapPin, Loader2, Bell, Volume2 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -21,6 +22,35 @@ const PrayerTimes = () => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(() => {
     return localStorage.getItem("prayerNotifications") === "true";
   });
+  const [notificationSound, setNotificationSound] = useState(() => {
+    return localStorage.getItem("prayerNotificationSound") || "adhan1";
+  });
+
+  const soundOptions = [
+    { value: "silent", label: "Silent" },
+    { value: "adhan1", label: "Adhan (Makkah)" },
+    { value: "adhan2", label: "Adhan (Madinah)" },
+    { value: "adhan3", label: "Adhan (Egypt)" },
+    { value: "adhan4", label: "Adhan (Turkey)" },
+  ];
+
+  const adhanAudioUrls: Record<string, string> = {
+    silent: "",
+    adhan1: "https://www.islamcan.com/audio/adhan/adhan1.mp3",
+    adhan2: "https://www.islamcan.com/audio/adhan/adhan2.mp3",
+    adhan3: "https://www.islamcan.com/audio/adhan/adhan3.mp3",
+    adhan4: "https://www.islamcan.com/audio/adhan/adhan4.mp3",
+  };
+
+  const playAdhan = (soundType: string) => {
+    if (soundType === "silent") return;
+    
+    const audioUrl = adhanAudioUrls[soundType];
+    if (audioUrl) {
+      const audio = new Audio(audioUrl);
+      audio.play().catch(err => console.log("Audio play failed:", err));
+    }
+  };
 
   useEffect(() => {
     if (!user) {
@@ -59,6 +89,7 @@ const PrayerTimes = () => {
           icon: "/favicon.ico",
           tag: "daily-summary",
         });
+        playAdhan(notificationSound);
       }
     }, timeUntilFajr);
 
@@ -82,6 +113,7 @@ const PrayerTimes = () => {
             icon: "/favicon.ico",
             tag: prayer.name,
           });
+          playAdhan(notificationSound);
         }
       }, timeUntilPrayer);
     });
@@ -112,10 +144,17 @@ const PrayerTimes = () => {
         icon: "/favicon.ico",
         tag: "test",
       });
+      playAdhan(notificationSound);
       toast.success("Test notification sent!");
     } else {
       toast.error("Please enable notifications first");
     }
+  };
+
+  const handleSoundChange = (value: string) => {
+    setNotificationSound(value);
+    localStorage.setItem("prayerNotificationSound", value);
+    toast.success(`Notification sound updated to ${soundOptions.find(s => s.value === value)?.label}`);
   };
 
   const toggleNotifications = async (enabled: boolean) => {
@@ -238,14 +277,32 @@ const PrayerTimes = () => {
                     />
                   </div>
                   {notificationsEnabled && (
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={testNotification}
-                    >
-                      <Bell className="mr-2 h-4 w-4" />
-                      Test Notification
-                    </Button>
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="flex items-center gap-2">
+                        <Volume2 className="h-4 w-4 text-muted-foreground" />
+                        <Label>Notification Sound</Label>
+                        <Select value={notificationSound} onValueChange={handleSoundChange}>
+                          <SelectTrigger className="w-[180px]">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {soundOptions.map((option) => (
+                              <SelectItem key={option.value} value={option.value}>
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={testNotification}
+                      >
+                        <Bell className="mr-2 h-4 w-4" />
+                        Test Notification
+                      </Button>
+                    </div>
                   )}
                 </div>
               )}
