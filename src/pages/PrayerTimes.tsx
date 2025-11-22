@@ -81,6 +81,19 @@ const PrayerTimes = () => {
     return false;
   };
 
+  const testNotification = () => {
+    if ("Notification" in window && Notification.permission === "granted") {
+      new Notification("Prayer Time Reminder", {
+        body: "This is how you'll be notified at prayer times. May Allah accept your prayers.",
+        icon: "/favicon.ico",
+        tag: "test",
+      });
+      toast.success("Test notification sent!");
+    } else {
+      toast.error("Please enable notifications first");
+    }
+  };
+
   const toggleNotifications = async (enabled: boolean) => {
     if (enabled) {
       const granted = await requestNotificationPermission();
@@ -188,16 +201,28 @@ const PrayerTimes = () => {
               </Button>
               
               {prayerTimes && (
-                <div className="flex items-center gap-2">
-                  <Bell className="h-4 w-4 text-muted-foreground" />
-                  <Label htmlFor="notifications" className="cursor-pointer">
-                    Enable Prayer Notifications
-                  </Label>
-                  <Switch
-                    id="notifications"
-                    checked={notificationsEnabled}
-                    onCheckedChange={toggleNotifications}
-                  />
+                <div className="flex flex-col items-center gap-3">
+                  <div className="flex items-center gap-2">
+                    <Bell className="h-4 w-4 text-muted-foreground" />
+                    <Label htmlFor="notifications" className="cursor-pointer">
+                      Enable Prayer Notifications
+                    </Label>
+                    <Switch
+                      id="notifications"
+                      checked={notificationsEnabled}
+                      onCheckedChange={toggleNotifications}
+                    />
+                  </div>
+                  {notificationsEnabled && (
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={testNotification}
+                    >
+                      <Bell className="mr-2 h-4 w-4" />
+                      Test Notification
+                    </Button>
+                  )}
                 </div>
               )}
             </div>
