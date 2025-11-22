@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Heart, Mail, FileText, Shield, DollarSign } from "lucide-react";
+import { Mail, FileText, Shield, DollarSign } from "lucide-react";
 const Footer = () => {
   return <footer className="bg-muted/30 border-t border-border mt-auto">
       <div className="container mx-auto px-4 py-12">
@@ -106,7 +106,7 @@ const Footer = () => {
               © {new Date().getFullYear()} Rihlatul Hudah. All rights reserved.
             </p>
             <p className="text-sm text-muted-foreground flex items-center gap-2">
-              Made with <Heart className="w-4 h-4 text-red-500 fill-red-500" /> for the Ummah
+              May Allah accept our effort and forgive our shortcomings.            for the Ummah
             </p>
           </div>
         </div>
