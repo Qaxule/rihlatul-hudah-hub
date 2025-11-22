@@ -38,9 +38,33 @@ const PrayerTimes = () => {
       { name: "Isha", time: timings.Isha },
     ];
 
+    // Schedule daily summary at Fajr time
+    const [fajrHours, fajrMinutes] = timings.Fajr.split(":").map(Number);
+    const now = new Date();
+    const fajrTime = new Date(now);
+    fajrTime.setHours(fajrHours, fajrMinutes, 0, 0);
+
+    // If Fajr has passed today, schedule for tomorrow
+    if (fajrTime < now) {
+      fajrTime.setDate(fajrTime.getDate() + 1);
+    }
+
+    const timeUntilFajr = fajrTime.getTime() - now.getTime();
+
+    setTimeout(() => {
+      if ("Notification" in window && Notification.permission === "granted") {
+        const dailySummary = prayers.map(p => `${p.name}: ${p.time}`).join("\n");
+        new Notification("Today's Prayer Times", {
+          body: `As-salamu alaykum! Here are today's prayer times:\n${dailySummary}`,
+          icon: "/favicon.ico",
+          tag: "daily-summary",
+        });
+      }
+    }, timeUntilFajr);
+
+    // Schedule individual prayer notifications
     prayers.forEach((prayer) => {
       const [hours, minutes] = prayer.time.split(":").map(Number);
-      const now = new Date();
       const prayerTime = new Date(now);
       prayerTime.setHours(hours, minutes, 0, 0);
 
