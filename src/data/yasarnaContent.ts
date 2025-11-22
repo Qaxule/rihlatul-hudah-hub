@@ -1120,6 +1120,402 @@ export const quizQuestions: QuizQuestion[] = [
     question: "Which letter makes the 'k' sound?",
     options: ["ك", "ق", "خ", "ح"],
     correctAnswer: "ك"
+  },
+  {
+    id: "q9",
+    type: "transliteration",
+    question: "What is the transliteration of this letter?",
+    arabic: "ر",
+    options: ["ra", "za", "da", "ta"],
+    correctAnswer: "ra"
+  },
+  {
+    id: "q10",
+    type: "transliteration",
+    question: "What is the transliteration of this letter?",
+    arabic: "ع",
+    options: ["'", "gh", "kh", "h"],
+    correctAnswer: "'"
+  },
+  {
+    id: "q11",
+    type: "vowel",
+    question: "Which vowel is this? ُ",
+    options: ["Damma", "Fatha", "Kasra", "Sukoon"],
+    correctAnswer: "Damma"
+  },
+  {
+    id: "q12",
+    type: "vowel",
+    question: "Which vowel is this? ْ",
+    options: ["Sukoon", "Fatha", "Kasra", "Damma"],
+    correctAnswer: "Sukoon"
+  },
+  {
+    id: "q13",
+    type: "vowel",
+    question: "What sound does Damma (ُ) make?",
+    options: ["u", "a", "i", "no sound"],
+    correctAnswer: "u"
+  },
+  {
+    id: "q14",
+    type: "vowel",
+    question: "What does Sukoon (ْ) indicate?",
+    options: ["No vowel sound", "Short 'a' sound", "Short 'i' sound", "Short 'u' sound"],
+    correctAnswer: "No vowel sound"
+  },
+  {
+    id: "q15",
+    type: "vowel",
+    question: "Which symbol is Shadda ّ?",
+    options: ["ّ", "ً", "ٍ", "ٌ"],
+    correctAnswer: "ّ"
+  },
+  {
+    id: "q16",
+    type: "vowel",
+    question: "What does Shadda ّ do?",
+    options: ["Doubles the letter sound", "Makes it silent", "Adds 'an' sound", "Adds 'in' sound"],
+    correctAnswer: "Doubles the letter sound"
+  },
+  {
+    id: "q17",
+    type: "reading",
+    question: "Read this word:",
+    arabic: "كِتَاب",
+    options: ["kitab", "kitib", "kutab", "katab"],
+    correctAnswer: "kitab"
+  },
+  {
+    id: "q18",
+    type: "reading",
+    question: "Read this word:",
+    arabic: "مَسْجِد",
+    options: ["masjid", "masgid", "masjud", "masjad"],
+    correctAnswer: "masjid"
+  },
+  {
+    id: "q19",
+    type: "reading",
+    question: "Read this word:",
+    arabic: "قُرْآن",
+    options: ["quran", "qurin", "qaran", "qiran"],
+    correctAnswer: "quran"
+  },
+  {
+    id: "q20",
+    type: "reading",
+    question: "Read this phrase:",
+    arabic: "الْحَمْدُ لِلَّهِ",
+    options: ["alhamdulillah", "bismillah", "subhanallah", "allahu akbar"],
+    correctAnswer: "alhamdulillah"
+  },
+  {
+    id: "q21",
+    type: "reading",
+    question: "Read this phrase:",
+    arabic: "سُبْحَانَ اللَّهِ",
+    options: ["subhanallah", "alhamdulillah", "bismillah", "astaghfirullah"],
+    correctAnswer: "subhanallah"
+  },
+  {
+    id: "q22",
+    type: "reading",
+    question: "Read this phrase:",
+    arabic: "اللَّهُ أَكْبَرُ",
+    options: ["allahu akbar", "la ilaha illallah", "subhanallah", "alhamdulillah"],
+    correctAnswer: "allahu akbar"
+  },
+  {
+    id: "q23",
+    type: "matching",
+    question: "Which letter makes the 'sh' sound?",
+    options: ["ش", "س", "ص", "ض"],
+    correctAnswer: "ش"
+  },
+  {
+    id: "q24",
+    type: "matching",
+    question: "Which letter makes the 'h' sound (heavy)?",
+    options: ["ح", "ه", "خ", "غ"],
+    correctAnswer: "ح"
+  },
+  {
+    id: "q25",
+    type: "matching",
+    question: "Which letter makes the 'th' sound?",
+    options: ["ث", "ذ", "ظ", "ت"],
+    correctAnswer: "ث"
+  },
+  {
+    id: "q26",
+    type: "transliteration",
+    question: "What is the transliteration?",
+    arabic: "صَلَاة",
+    options: ["salah", "salat", "sala", "salaah"],
+    correctAnswer: "salah"
+  },
+  {
+    id: "q27",
+    type: "transliteration",
+    question: "What is the transliteration?",
+    arabic: "إِيمَان",
+    options: ["iman", "eman", "ayman", "eiman"],
+    correctAnswer: "iman"
+  },
+  {
+    id: "q28",
+    type: "transliteration",
+    question: "What is the transliteration?",
+    arabic: "جَنَّة",
+    options: ["jannah", "janah", "gannah", "ganah"],
+    correctAnswer: "jannah"
+  },
+  {
+    id: "q29",
+    type: "reading",
+    question: "Read this word:",
+    arabic: "رَحْمَة",
+    options: ["rahmah", "rahmeh", "rahmaa", "rahma"],
+    correctAnswer: "rahmah"
+  },
+  {
+    id: "q30",
+    type: "reading",
+    question: "Read this word:",
+    arabic: "حِكْمَة",
+    options: ["hikmah", "hikma", "hakma", "hakmah"],
+    correctAnswer: "hikmah"
+  },
+  {
+    id: "q31",
+    type: "vowel",
+    question: "Which Tanween adds 'un' sound?",
+    options: ["ٌ", "ً", "ٍ", "ْ"],
+    correctAnswer: "ٌ"
+  },
+  {
+    id: "q32",
+    type: "vowel",
+    question: "Which Tanween adds 'an' sound?",
+    options: ["ً", "ٌ", "ٍ", "َ"],
+    correctAnswer: "ً"
+  },
+  {
+    id: "q33",
+    type: "vowel",
+    question: "Which Tanween adds 'in' sound?",
+    options: ["ٍ", "ً", "ٌ", "ِ"],
+    correctAnswer: "ٍ"
+  },
+  {
+    id: "q34",
+    type: "reading",
+    question: "Read this word with Tanween:",
+    arabic: "كِتَابٌ",
+    options: ["kitabun", "kitaban", "kitabin", "kitab"],
+    correctAnswer: "kitabun"
+  },
+  {
+    id: "q35",
+    type: "reading",
+    question: "Read this word with Tanween:",
+    arabic: "شُكْرًا",
+    options: ["shukran", "shukrun", "shukrin", "shukr"],
+    correctAnswer: "shukran"
+  },
+  {
+    id: "q36",
+    type: "matching",
+    question: "Which letter is Alif?",
+    options: ["ا", "ل", "و", "ي"],
+    correctAnswer: "ا"
+  },
+  {
+    id: "q37",
+    type: "matching",
+    question: "Which letter is Lam?",
+    options: ["ل", "ا", "ن", "م"],
+    correctAnswer: "ل"
+  },
+  {
+    id: "q38",
+    type: "matching",
+    question: "Which letter doesn't connect to the next letter?",
+    options: ["د", "ب", "ت", "ث"],
+    correctAnswer: "د"
+  },
+  {
+    id: "q39",
+    type: "matching",
+    question: "Which letter doesn't connect to the next letter?",
+    options: ["ر", "س", "ص", "ط"],
+    correctAnswer: "ر"
+  },
+  {
+    id: "q40",
+    type: "matching",
+    question: "Which letter doesn't connect to the next letter?",
+    options: ["و", "ن", "ي", "ف"],
+    correctAnswer: "و"
+  },
+  {
+    id: "q41",
+    type: "reading",
+    question: "Read this word:",
+    arabic: "يَوْم",
+    options: ["yawm", "yoom", "youm", "yaum"],
+    correctAnswer: "yawm"
+  },
+  {
+    id: "q42",
+    type: "reading",
+    question: "Read this word:",
+    arabic: "بَيْت",
+    options: ["bayt", "beet", "bait", "beyt"],
+    correctAnswer: "bayt"
+  },
+  {
+    id: "q43",
+    type: "reading",
+    question: "Read this word:",
+    arabic: "خَيْر",
+    options: ["khayr", "kheer", "khair", "kheyr"],
+    correctAnswer: "khayr"
+  },
+  {
+    id: "q44",
+    type: "transliteration",
+    question: "What is the transliteration of this letter?",
+    arabic: "ق",
+    options: ["q", "k", "g", "gh"],
+    correctAnswer: "q"
+  },
+  {
+    id: "q45",
+    type: "transliteration",
+    question: "What is the transliteration of this letter?",
+    arabic: "خ",
+    options: ["kh", "h", "k", "gh"],
+    correctAnswer: "kh"
+  },
+  {
+    id: "q46",
+    type: "transliteration",
+    question: "What is the transliteration of this letter?",
+    arabic: "غ",
+    options: ["gh", "kh", "g", "r"],
+    correctAnswer: "gh"
+  },
+  {
+    id: "q47",
+    type: "reading",
+    question: "Read this phrase:",
+    arabic: "لَا إِلَٰهَ إِلَّا اللَّهُ",
+    options: ["la ilaha illallah", "allahu akbar", "subhanallah", "bismillah"],
+    correctAnswer: "la ilaha illallah"
+  },
+  {
+    id: "q48",
+    type: "reading",
+    question: "Read this word:",
+    arabic: "رَبِّ",
+    options: ["rabbi", "rabi", "rabba", "rabb"],
+    correctAnswer: "rabbi"
+  },
+  {
+    id: "q49",
+    type: "reading",
+    question: "Read this word:",
+    arabic: "حَقّ",
+    options: ["haqq", "haq", "haqa", "haqqa"],
+    correctAnswer: "haqq"
+  },
+  {
+    id: "q50",
+    type: "matching",
+    question: "Which letter makes the 'j' sound?",
+    options: ["ج", "خ", "ح", "غ"],
+    correctAnswer: "ج"
+  },
+  {
+    id: "q51",
+    type: "matching",
+    question: "Which letter makes the 's' sound (soft)?",
+    options: ["س", "ص", "ش", "ض"],
+    correctAnswer: "س"
+  },
+  {
+    id: "q52",
+    type: "matching",
+    question: "Which letter makes the emphatic 's' sound?",
+    options: ["ص", "س", "ش", "ز"],
+    correctAnswer: "ص"
+  },
+  {
+    id: "q53",
+    type: "reading",
+    question: "Read this word:",
+    arabic: "نُور",
+    options: ["noor", "door", "nour", "nur"],
+    correctAnswer: "noor"
+  },
+  {
+    id: "q54",
+    type: "reading",
+    question: "Read this word:",
+    arabic: "دِين",
+    options: ["deen", "diin", "dayn", "diin"],
+    correctAnswer: "deen"
+  },
+  {
+    id: "q55",
+    type: "reading",
+    question: "Read this word:",
+    arabic: "عِلْم",
+    options: ["'ilm", "ilm", "alm", "elm"],
+    correctAnswer: "'ilm"
+  },
+  {
+    id: "q56",
+    type: "transliteration",
+    question: "What is the transliteration?",
+    arabic: "رَسُول",
+    options: ["rasool", "rasul", "rasol", "rasuul"],
+    correctAnswer: "rasool"
+  },
+  {
+    id: "q57",
+    type: "transliteration",
+    question: "What is the transliteration?",
+    arabic: "نَبِيّ",
+    options: ["nabi", "nabii", "nabiiy", "naby"],
+    correctAnswer: "nabi"
+  },
+  {
+    id: "q58",
+    type: "transliteration",
+    question: "What is the transliteration?",
+    arabic: "مَلَك",
+    options: ["malak", "malek", "malik", "melek"],
+    correctAnswer: "malak"
+  },
+  {
+    id: "q59",
+    type: "reading",
+    question: "Read this word:",
+    arabic: "حَمْد",
+    options: ["hamd", "hamed", "hamad", "hamid"],
+    correctAnswer: "hamd"
+  },
+  {
+    id: "q60",
+    type: "reading",
+    question: "Read this word:",
+    arabic: "فَجْر",
+    options: ["fajr", "fagr", "fajer", "fager"],
+    correctAnswer: "fajr"
   }
 ];
 
