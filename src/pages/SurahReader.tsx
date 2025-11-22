@@ -4,7 +4,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, BookOpen, Bookmark, BookmarkCheck, ChevronDown, ChevronUp, Share2, Menu } from "lucide-react";
+import { ChevronLeft, ChevronRight, BookOpen, Bookmark, BookmarkCheck, ChevronDown, ChevronUp, Share2, Menu, WifiOff } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -15,6 +15,8 @@ import { Label } from "@/components/ui/label";
 import { QuranNavigator } from "@/components/QuranNavigator";
 import { AyahSkeleton } from "@/components/AyahSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useOfflineQuranData } from "@/hooks/useOfflineQuranData";
+import { offlineCache, CACHE_CONFIG, STORES } from "@/lib/offlineCache";
 
 interface Ayah {
   number: number;
@@ -34,7 +36,16 @@ interface SurahData {
 
 const SurahReader = () => {
   const { surahNumber } = useParams<{ surahNumber: string }>();
-  const [loading, setLoading] = useState(true);
+  const surahNum = parseInt(surahNumber || "1");
+  
+  // Use offline caching hooks
+  const { data: arabicResult, loading: arabicLoading, isOffline: arabicOffline } = useOfflineQuranData(surahNum, "ar.alafasy");
+  const { data: translationResult, loading: translationLoading, isOffline: translationOffline } = useOfflineQuranData(surahNum, "en.sahih");
+  const { data: transliterationResult, loading: transliterationLoading, isOffline: transliterationOffline } = useOfflineQuranData(surahNum, "en.transliteration");
+  
+  const loading = arabicLoading || translationLoading || transliterationLoading;
+  const isOffline = arabicOffline || translationOffline || transliterationOffline;
+  
   const [arabicData, setArabicData] = useState<SurahData | null>(null);
   const [translationData, setTranslationData] = useState<SurahData | null>(null);
   const [transliterationData, setTransliterationData] = useState<SurahData | null>(null);
@@ -153,12 +164,27 @@ const SurahReader = () => {
     }
   };
 
+  // Process data when loaded
   useEffect(() => {
-    if (surahNumber) {
-      fetchSurahData(parseInt(surahNumber));
-      if (user) {
-        fetchBookmarks(parseInt(surahNumber));
+    if (arabicResult && translationResult && transliterationResult) {
+      // Bismillah text to filter out
+      const bismillah = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
+      
+      // Remove Bismillah from first ayah if present (except for Surah 1 and 9)
+      if (surahNum !== 1 && surahNum !== 9 && arabicResult.ayahs[0]) {
+        const firstAyah = arabicResult.ayahs[0];
+        firstAyah.text = firstAyah.text.replace(bismillah, '').trim();
       }
+      
+      setArabicData(arabicResult);
+      setTranslationData(translationResult);
+      setTransliterationData(transliterationResult);
+    }
+  }, [arabicResult, translationResult, transliterationResult, surahNum]);
+  
+  useEffect(() => {
+    if (surahNumber && user) {
+      fetchBookmarks(parseInt(surahNumber));
     }
   }, [surahNumber, user]);
 
@@ -214,39 +240,6 @@ const SurahReader = () => {
     }
   };
 
-  const fetchTafsir = async (ayahNumber: number) => {
-    const tafsirKey = `${ayahNumber}-${selectedTafsir}-${selectedTafsir === "1" ? isAbridged : "full"}`;
-    if (tafsirData[tafsirKey]) {
-      return; // Already loaded
-    }
-
-    setLoadingTafsir(new Set(loadingTafsir).add(ayahNumber));
-
-    try {
-      const { data, error } = await supabase.functions.invoke("quran-tafsir", {
-        body: {
-          surah: parseInt(surahNumber!),
-          ayah: ayahNumber,
-          tafsirId: parseInt(selectedTafsir),
-          abridged: selectedTafsir === "1" ? isAbridged : false,
-        },
-      });
-
-      if (error) throw error;
-
-      setTafsirData({
-        ...tafsirData,
-        [tafsirKey]: data.text,
-      });
-    } catch (error) {
-      console.error("Error fetching tafsir:", error);
-      toast.error("Failed to load tafsir");
-    } finally {
-      const newLoadingTafsir = new Set(loadingTafsir);
-      newLoadingTafsir.delete(ayahNumber);
-      setLoadingTafsir(newLoadingTafsir);
-    }
-  };
 
   const handleShareAyah = async (ayahNumber: number) => {
     if (!arabicData || !translationData) return;
@@ -345,55 +338,59 @@ const SurahReader = () => {
     }
   };
 
-  const fetchSurahData = async (number: number) => {
+  // Fetch tafsir with offline caching
+  const fetchTafsir = async (ayahNumber: number) => {
+    const tafsirKey = `${ayahNumber}-${selectedTafsir}-${selectedTafsir === "1" ? isAbridged : "full"}`;
+    if (tafsirData[tafsirKey]) {
+      return; // Already loaded
+    }
+
+    setLoadingTafsir(new Set(loadingTafsir).add(ayahNumber));
+
     try {
-      setLoading(true);
-
-      // Bismillah text to filter out
-      const bismillah = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
-
-      // Fetch Arabic text
-      const { data: arabicResult, error: arabicError } = await supabase.functions.invoke(
-        "quran-data",
-        {
-          body: { surah: number, edition: "ar.alafasy", type: "surah" },
-        }
+      // Try to get from cache first
+      const cacheKey = CACHE_CONFIG.TAFSIR(surahNum, ayahNumber, parseInt(selectedTafsir), selectedTafsir === "1" ? isAbridged : false);
+      const cachedTafsir = await offlineCache.get(
+        STORES.TAFSIR,
+        cacheKey,
+        CACHE_CONFIG.TAFSIR_MAX_AGE
       );
 
-      // Fetch English translation
-      const { data: translationResult, error: translationError } = await supabase.functions.invoke(
-        "quran-data",
-        {
-          body: { surah: number, edition: "en.sahih", type: "surah" },
-        }
-      );
-
-      // Fetch transliteration
-      const { data: transliterationResult, error: transliterationError } = await supabase.functions.invoke(
-        "quran-data",
-        {
-          body: { surah: number, edition: "en.transliteration", type: "surah" },
-        }
-      );
-
-      if (arabicError || translationError || transliterationError) {
-        throw new Error("Failed to fetch Surah data");
+      if (cachedTafsir) {
+        setTafsirData({
+          ...tafsirData,
+          [tafsirKey]: cachedTafsir,
+        });
+        setLoadingTafsir(new Set(Array.from(loadingTafsir).filter(n => n !== ayahNumber)));
+        return;
       }
 
-      // Remove Bismillah from first ayah if present (except for Surah 1 and 9)
-      if (number !== 1 && number !== 9 && arabicResult.data.ayahs[0]) {
-        const firstAyah = arabicResult.data.ayahs[0];
-        firstAyah.text = firstAyah.text.replace(bismillah, '').trim();
-      }
+      // Fetch from network
+      const { data, error } = await supabase.functions.invoke("quran-tafsir", {
+        body: {
+          surah: surahNum,
+          ayah: ayahNumber,
+          tafsirId: parseInt(selectedTafsir),
+          abridged: selectedTafsir === "1" ? isAbridged : false,
+        },
+      });
 
-      setArabicData(arabicResult.data);
-      setTranslationData(translationResult.data);
-      setTransliterationData(transliterationResult.data);
-    } catch (error: any) {
-      toast.error(error.message || "Failed to load Surah");
-      console.error("Error fetching Surah:", error);
+      if (error) throw error;
+
+      // Cache the result
+      await offlineCache.set(STORES.TAFSIR, cacheKey, data.text);
+
+      setTafsirData({
+        ...tafsirData,
+        [tafsirKey]: data.text,
+      });
+    } catch (error) {
+      console.error("Error fetching tafsir:", error);
+      toast.error("Failed to load tafsir");
     } finally {
-      setLoading(false);
+      const newLoadingTafsir = new Set(loadingTafsir);
+      newLoadingTafsir.delete(ayahNumber);
+      setLoadingTafsir(newLoadingTafsir);
     }
   };
   const currentSurahNum = parseInt(surahNumber || "1");
@@ -441,15 +438,23 @@ const SurahReader = () => {
                 <BookOpen className="h-4 w-4 mr-2" />
                 Back to Quran
               </Link>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setNavigatorOpen(true)}
-                className="gap-2"
-              >
-                <Menu className="h-4 w-4" />
-                Navigate
-              </Button>
+              <div className="flex items-center gap-2">
+                {isOffline && (
+                  <div className="flex items-center gap-1 px-2 py-1 rounded-md bg-muted text-xs text-muted-foreground">
+                    <WifiOff className="h-3 w-3" />
+                    Offline
+                  </div>
+                )}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setNavigatorOpen(true)}
+                  className="gap-2"
+                >
+                  <Menu className="h-4 w-4" />
+                  Navigate
+                </Button>
+              </div>
             </div>
             <div className="flex justify-end mb-4">
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-muted">
