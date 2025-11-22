@@ -132,7 +132,7 @@ const Index = () => {
             </CardContent>
           </Card>
         ) : ayatOfTheDay ? (
-          <Link to={`/surah/${ayatOfTheDay.surah.number}#${ayatOfTheDay.ayah.numberInSurah}`}>
+          <Link to={`/surah/${ayatOfTheDay.surah.number}#ayah-${ayatOfTheDay.ayah.numberInSurah}`}>
             <Card className="max-w-3xl mx-auto shadow-elevated border-primary/20 cursor-pointer hover:shadow-glow transition-all group">
               <CardContent className="p-8 space-y-4">
                 <div className="flex items-center justify-between">
@@ -156,7 +156,7 @@ const Index = () => {
             </Card>
           </Link>
         ) : (
-          <Link to="/surah/2#286">
+          <Link to="/surah/2#ayah-286">
             <Card className="max-w-3xl mx-auto shadow-elevated border-primary/20 cursor-pointer hover:shadow-glow transition-all group">
               <CardContent className="p-8 space-y-4">
                 <div className="flex items-center justify-between">
