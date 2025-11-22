@@ -47,6 +47,7 @@ export interface ReadingLesson {
 export interface QuizQuestion {
   id: string;
   type: 'transliteration' | 'matching' | 'vowel' | 'reading';
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
   question: string;
   arabic?: string;
   options: string[];
@@ -1060,9 +1061,11 @@ export const readingLessons: ReadingLesson[] = [
 ];
 
 export const quizQuestions: QuizQuestion[] = [
+  // Beginner Level (Basic letters and vowels)
   {
     id: "q1",
     type: "transliteration",
+    difficulty: "beginner",
     question: "What is the transliteration of this letter?",
     arabic: "ب",
     options: ["ba", "ta", "na", "la"],
@@ -1071,6 +1074,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q2",
     type: "transliteration",
+    difficulty: "beginner",
     question: "What is the transliteration of this letter?",
     arabic: "م",
     options: ["na", "ma", "la", "ra"],
@@ -1079,6 +1083,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q3",
     type: "vowel",
+    difficulty: "beginner",
     question: "Which vowel is this? َ",
     options: ["Fatha", "Kasra", "Damma", "Sukoon"],
     correctAnswer: "Fatha"
@@ -1086,6 +1091,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q4",
     type: "reading",
+    difficulty: "beginner",
     question: "Read this word:",
     arabic: "نُورٌ",
     options: ["noor", "door", "hoor", "boor"],
@@ -1094,6 +1100,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q5",
     type: "transliteration",
+    difficulty: "beginner",
     question: "What is the transliteration?",
     arabic: "سَلَام",
     options: ["salam", "kalam", "halam", "qalam"],
@@ -1102,6 +1109,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q6",
     type: "vowel",
+    difficulty: "beginner",
     question: "What sound does Kasra (ِ) make?",
     options: ["i", "a", "u", "no sound"],
     correctAnswer: "i"
@@ -1109,6 +1117,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q7",
     type: "reading",
+    difficulty: "beginner",
     question: "Read this phrase:",
     arabic: "بِسْمِ اللَّهِ",
     options: ["bismillah", "alhamdulillah", "subhanallah", "mashallah"],
@@ -1117,6 +1126,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q8",
     type: "matching",
+    difficulty: "beginner",
     question: "Which letter makes the 'k' sound?",
     options: ["ك", "ق", "خ", "ح"],
     correctAnswer: "ك"
@@ -1124,6 +1134,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q9",
     type: "transliteration",
+    difficulty: "beginner",
     question: "What is the transliteration of this letter?",
     arabic: "ر",
     options: ["ra", "za", "da", "ta"],
@@ -1132,6 +1143,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q10",
     type: "transliteration",
+    difficulty: "beginner",
     question: "What is the transliteration of this letter?",
     arabic: "ع",
     options: ["'", "gh", "kh", "h"],
@@ -1140,6 +1152,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q11",
     type: "vowel",
+    difficulty: "beginner",
     question: "Which vowel is this? ُ",
     options: ["Damma", "Fatha", "Kasra", "Sukoon"],
     correctAnswer: "Damma"
@@ -1147,6 +1160,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q12",
     type: "vowel",
+    difficulty: "beginner",
     question: "Which vowel is this? ْ",
     options: ["Sukoon", "Fatha", "Kasra", "Damma"],
     correctAnswer: "Sukoon"
@@ -1154,6 +1168,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q13",
     type: "vowel",
+    difficulty: "beginner",
     question: "What sound does Damma (ُ) make?",
     options: ["u", "a", "i", "no sound"],
     correctAnswer: "u"
@@ -1161,13 +1176,16 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q14",
     type: "vowel",
+    difficulty: "beginner",
     question: "What does Sukoon (ْ) indicate?",
     options: ["No vowel sound", "Short 'a' sound", "Short 'i' sound", "Short 'u' sound"],
     correctAnswer: "No vowel sound"
   },
+  // Intermediate Level (Shadda, Tanween, and Common Words)
   {
     id: "q15",
     type: "vowel",
+    difficulty: "intermediate",
     question: "Which symbol is Shadda ّ?",
     options: ["ّ", "ً", "ٍ", "ٌ"],
     correctAnswer: "ّ"
@@ -1175,6 +1193,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q16",
     type: "vowel",
+    difficulty: "intermediate",
     question: "What does Shadda ّ do?",
     options: ["Doubles the letter sound", "Makes it silent", "Adds 'an' sound", "Adds 'in' sound"],
     correctAnswer: "Doubles the letter sound"
@@ -1182,6 +1201,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q17",
     type: "reading",
+    difficulty: "intermediate",
     question: "Read this word:",
     arabic: "كِتَاب",
     options: ["kitab", "kitib", "kutab", "katab"],
@@ -1190,6 +1210,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q18",
     type: "reading",
+    difficulty: "intermediate",
     question: "Read this word:",
     arabic: "مَسْجِد",
     options: ["masjid", "masgid", "masjud", "masjad"],
@@ -1198,6 +1219,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q19",
     type: "reading",
+    difficulty: "intermediate",
     question: "Read this word:",
     arabic: "قُرْآن",
     options: ["quran", "qurin", "qaran", "qiran"],
@@ -1206,6 +1228,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q20",
     type: "reading",
+    difficulty: "intermediate",
     question: "Read this phrase:",
     arabic: "الْحَمْدُ لِلَّهِ",
     options: ["alhamdulillah", "bismillah", "subhanallah", "allahu akbar"],
@@ -1214,6 +1237,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q21",
     type: "reading",
+    difficulty: "intermediate",
     question: "Read this phrase:",
     arabic: "سُبْحَانَ اللَّهِ",
     options: ["subhanallah", "alhamdulillah", "bismillah", "astaghfirullah"],
@@ -1222,6 +1246,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q22",
     type: "reading",
+    difficulty: "intermediate",
     question: "Read this phrase:",
     arabic: "اللَّهُ أَكْبَرُ",
     options: ["allahu akbar", "la ilaha illallah", "subhanallah", "alhamdulillah"],
@@ -1230,6 +1255,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q23",
     type: "matching",
+    difficulty: "intermediate",
     question: "Which letter makes the 'sh' sound?",
     options: ["ش", "س", "ص", "ض"],
     correctAnswer: "ش"
@@ -1237,6 +1263,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q24",
     type: "matching",
+    difficulty: "intermediate",
     question: "Which letter makes the 'h' sound (heavy)?",
     options: ["ح", "ه", "خ", "غ"],
     correctAnswer: "ح"
@@ -1244,6 +1271,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q25",
     type: "matching",
+    difficulty: "intermediate",
     question: "Which letter makes the 'th' sound?",
     options: ["ث", "ذ", "ظ", "ت"],
     correctAnswer: "ث"
@@ -1251,6 +1279,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q26",
     type: "transliteration",
+    difficulty: "intermediate",
     question: "What is the transliteration?",
     arabic: "صَلَاة",
     options: ["salah", "salat", "sala", "salaah"],
@@ -1259,6 +1288,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q27",
     type: "transliteration",
+    difficulty: "intermediate",
     question: "What is the transliteration?",
     arabic: "إِيمَان",
     options: ["iman", "eman", "ayman", "eiman"],
@@ -1267,6 +1297,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q28",
     type: "transliteration",
+    difficulty: "intermediate",
     question: "What is the transliteration?",
     arabic: "جَنَّة",
     options: ["jannah", "janah", "gannah", "ganah"],
@@ -1275,6 +1306,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q29",
     type: "reading",
+    difficulty: "intermediate",
     question: "Read this word:",
     arabic: "رَحْمَة",
     options: ["rahmah", "rahmeh", "rahmaa", "rahma"],
@@ -1283,6 +1315,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q30",
     type: "reading",
+    difficulty: "intermediate",
     question: "Read this word:",
     arabic: "حِكْمَة",
     options: ["hikmah", "hikma", "hakma", "hakmah"],
@@ -1291,6 +1324,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q31",
     type: "vowel",
+    difficulty: "intermediate",
     question: "Which Tanween adds 'un' sound?",
     options: ["ٌ", "ً", "ٍ", "ْ"],
     correctAnswer: "ٌ"
@@ -1298,6 +1332,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q32",
     type: "vowel",
+    difficulty: "intermediate",
     question: "Which Tanween adds 'an' sound?",
     options: ["ً", "ٌ", "ٍ", "َ"],
     correctAnswer: "ً"
@@ -1305,6 +1340,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q33",
     type: "vowel",
+    difficulty: "intermediate",
     question: "Which Tanween adds 'in' sound?",
     options: ["ٍ", "ً", "ٌ", "ِ"],
     correctAnswer: "ٍ"
@@ -1312,6 +1348,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q34",
     type: "reading",
+    difficulty: "intermediate",
     question: "Read this word with Tanween:",
     arabic: "كِتَابٌ",
     options: ["kitabun", "kitaban", "kitabin", "kitab"],
@@ -1320,6 +1357,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q35",
     type: "reading",
+    difficulty: "intermediate",
     question: "Read this word with Tanween:",
     arabic: "شُكْرًا",
     options: ["shukran", "shukrun", "shukrin", "shukr"],
@@ -1328,6 +1366,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q36",
     type: "matching",
+    difficulty: "intermediate",
     question: "Which letter is Alif?",
     options: ["ا", "ل", "و", "ي"],
     correctAnswer: "ا"
@@ -1335,6 +1374,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q37",
     type: "matching",
+    difficulty: "intermediate",
     question: "Which letter is Lam?",
     options: ["ل", "ا", "ن", "م"],
     correctAnswer: "ل"
@@ -1342,6 +1382,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q38",
     type: "matching",
+    difficulty: "intermediate",
     question: "Which letter doesn't connect to the next letter?",
     options: ["د", "ب", "ت", "ث"],
     correctAnswer: "د"
@@ -1349,6 +1390,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q39",
     type: "matching",
+    difficulty: "intermediate",
     question: "Which letter doesn't connect to the next letter?",
     options: ["ر", "س", "ص", "ط"],
     correctAnswer: "ر"
@@ -1356,6 +1398,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q40",
     type: "matching",
+    difficulty: "intermediate",
     question: "Which letter doesn't connect to the next letter?",
     options: ["و", "ن", "ي", "ف"],
     correctAnswer: "و"
@@ -1363,6 +1406,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q41",
     type: "reading",
+    difficulty: "intermediate",
     question: "Read this word:",
     arabic: "يَوْم",
     options: ["yawm", "yoom", "youm", "yaum"],
@@ -1371,6 +1415,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q42",
     type: "reading",
+    difficulty: "intermediate",
     question: "Read this word:",
     arabic: "بَيْت",
     options: ["bayt", "beet", "bait", "beyt"],
@@ -1379,14 +1424,17 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q43",
     type: "reading",
+    difficulty: "intermediate",
     question: "Read this word:",
     arabic: "خَيْر",
     options: ["khayr", "kheer", "khair", "kheyr"],
     correctAnswer: "khayr"
   },
+  // Advanced Level (Complex words, phrases, and subtle distinctions)
   {
     id: "q44",
     type: "transliteration",
+    difficulty: "advanced",
     question: "What is the transliteration of this letter?",
     arabic: "ق",
     options: ["q", "k", "g", "gh"],
@@ -1395,6 +1443,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q45",
     type: "transliteration",
+    difficulty: "advanced",
     question: "What is the transliteration of this letter?",
     arabic: "خ",
     options: ["kh", "h", "k", "gh"],
@@ -1403,6 +1452,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q46",
     type: "transliteration",
+    difficulty: "advanced",
     question: "What is the transliteration of this letter?",
     arabic: "غ",
     options: ["gh", "kh", "g", "r"],
@@ -1411,6 +1461,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q47",
     type: "reading",
+    difficulty: "advanced",
     question: "Read this phrase:",
     arabic: "لَا إِلَٰهَ إِلَّا اللَّهُ",
     options: ["la ilaha illallah", "allahu akbar", "subhanallah", "bismillah"],
@@ -1419,6 +1470,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q48",
     type: "reading",
+    difficulty: "advanced",
     question: "Read this word:",
     arabic: "رَبِّ",
     options: ["rabbi", "rabi", "rabba", "rabb"],
@@ -1427,6 +1479,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q49",
     type: "reading",
+    difficulty: "advanced",
     question: "Read this word:",
     arabic: "حَقّ",
     options: ["haqq", "haq", "haqa", "haqqa"],
@@ -1435,6 +1488,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q50",
     type: "matching",
+    difficulty: "advanced",
     question: "Which letter makes the 'j' sound?",
     options: ["ج", "خ", "ح", "غ"],
     correctAnswer: "ج"
@@ -1442,6 +1496,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q51",
     type: "matching",
+    difficulty: "advanced",
     question: "Which letter makes the 's' sound (soft)?",
     options: ["س", "ص", "ش", "ض"],
     correctAnswer: "س"
@@ -1449,6 +1504,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q52",
     type: "matching",
+    difficulty: "advanced",
     question: "Which letter makes the emphatic 's' sound?",
     options: ["ص", "س", "ش", "ز"],
     correctAnswer: "ص"
@@ -1456,6 +1512,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q53",
     type: "reading",
+    difficulty: "advanced",
     question: "Read this word:",
     arabic: "نُور",
     options: ["noor", "door", "nour", "nur"],
@@ -1464,6 +1521,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q54",
     type: "reading",
+    difficulty: "advanced",
     question: "Read this word:",
     arabic: "دِين",
     options: ["deen", "diin", "dayn", "diin"],
@@ -1472,6 +1530,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q55",
     type: "reading",
+    difficulty: "advanced",
     question: "Read this word:",
     arabic: "عِلْم",
     options: ["'ilm", "ilm", "alm", "elm"],
@@ -1480,6 +1539,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q56",
     type: "transliteration",
+    difficulty: "advanced",
     question: "What is the transliteration?",
     arabic: "رَسُول",
     options: ["rasool", "rasul", "rasol", "rasuul"],
@@ -1488,6 +1548,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q57",
     type: "transliteration",
+    difficulty: "advanced",
     question: "What is the transliteration?",
     arabic: "نَبِيّ",
     options: ["nabi", "nabii", "nabiiy", "naby"],
@@ -1496,6 +1557,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q58",
     type: "transliteration",
+    difficulty: "advanced",
     question: "What is the transliteration?",
     arabic: "مَلَك",
     options: ["malak", "malek", "malik", "melek"],
@@ -1504,6 +1566,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q59",
     type: "reading",
+    difficulty: "advanced",
     question: "Read this word:",
     arabic: "حَمْد",
     options: ["hamd", "hamed", "hamad", "hamid"],
@@ -1512,6 +1575,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "q60",
     type: "reading",
+    difficulty: "advanced",
     question: "Read this word:",
     arabic: "فَجْر",
     options: ["fajr", "fagr", "fajer", "fager"],

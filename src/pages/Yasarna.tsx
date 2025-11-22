@@ -24,6 +24,7 @@ const Yasarna = () => {
   const [showResults, setShowResults] = useState(false);
   const [revealedJoining, setRevealedJoining] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState("alphabet");
+  const [selectedDifficulty, setSelectedDifficulty] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner');
 
   useEffect(() => {
     const saved = localStorage.getItem("yasarna_progress");
@@ -60,12 +61,14 @@ const Yasarna = () => {
     }
   };
 
+  const filteredQuizQuestions = quizQuestions.filter(q => q.difficulty === selectedDifficulty);
+
   const calculateQuizScore = () => {
     let correct = 0;
-    quizQuestions.forEach((q) => {
+    filteredQuizQuestions.forEach((q) => {
       if (quizAnswers[q.id] === q.correctAnswer) correct++;
     });
-    return Math.round((correct / quizQuestions.length) * 100);
+    return Math.round((correct / filteredQuizQuestions.length) * 100);
   };
 
   const toggleJoiningReveal = (id: string) => {
@@ -365,15 +368,45 @@ const Yasarna = () => {
             <TabsContent value="quizzes">
               <Card>
                 <CardHeader>
-                  <CardTitle>Test Your Knowledge</CardTitle>
-                  <CardDescription>
-                    Answer the questions below to test your understanding
-                  </CardDescription>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle>Test Your Knowledge</CardTitle>
+                      <CardDescription>
+                        Answer the questions below to test your understanding
+                      </CardDescription>
+                    </div>
+                    <Select value={selectedDifficulty} onValueChange={(value: any) => {
+                      setSelectedDifficulty(value);
+                      setQuizAnswers({});
+                      setShowResults(false);
+                    }}>
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Select difficulty" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="beginner">
+                          <div className="flex items-center gap-2">
+                            <Badge variant="secondary">Beginner</Badge>
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="intermediate">
+                          <div className="flex items-center gap-2">
+                            <Badge variant="secondary">Intermediate</Badge>
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="advanced">
+                          <div className="flex items-center gap-2">
+                            <Badge variant="secondary">Advanced</Badge>
+                          </div>
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </CardHeader>
                 <CardContent className="space-y-6">
                       {!showResults ? (
                         <>
-                          {quizQuestions.map((question) => {
+                          {filteredQuizQuestions.map((question) => {
                             const userAnswer = quizAnswers[question.id];
                             const isAnswered = userAnswer !== undefined;
                             const isCorrect = userAnswer === question.correctAnswer;
@@ -434,7 +467,7 @@ const Yasarna = () => {
                         className="w-full"
                         size="lg"
                         onClick={() => setShowResults(true)}
-                        disabled={Object.keys(quizAnswers).length !== quizQuestions.length}
+                        disabled={Object.keys(quizAnswers).length !== filteredQuizQuestions.length}
                       >
                         Submit Quiz
                       </Button>
@@ -447,12 +480,12 @@ const Yasarna = () => {
                           {calculateQuizScore()}%
                         </div>
                         <p className="text-muted-foreground">
-                          You got {Object.values(quizAnswers).filter((a, i) => a === quizQuestions[i].correctAnswer).length} out of{" "}
-                          {quizQuestions.length} correct!
+                          You got {Object.values(quizAnswers).filter((a, i) => a === filteredQuizQuestions[i].correctAnswer).length} out of{" "}
+                          {filteredQuizQuestions.length} correct!
                         </p>
                       </div>
                       <div className="space-y-3">
-                        {quizQuestions.map((q) => {
+                        {filteredQuizQuestions.map((q) => {
                           const isCorrect = quizAnswers[q.id] === q.correctAnswer;
                           return (
                             <div
@@ -479,14 +512,43 @@ const Yasarna = () => {
                           );
                         })}
                       </div>
-                      <Button
-                        onClick={() => {
-                          setShowResults(false);
-                          setQuizAnswers({});
-                        }}
-                      >
-                        Retake Quiz
-                      </Button>
+                      <div className="flex gap-4 justify-center">
+                        <Button
+                          onClick={() => {
+                            setShowResults(false);
+                            setQuizAnswers({});
+                          }}
+                          size="lg"
+                        >
+                          Try Again
+                        </Button>
+                        {selectedDifficulty === 'beginner' && calculateQuizScore() >= 80 && (
+                          <Button
+                            onClick={() => {
+                              setSelectedDifficulty('intermediate');
+                              setQuizAnswers({});
+                              setShowResults(false);
+                            }}
+                            size="lg"
+                            variant="secondary"
+                          >
+                            Try Intermediate
+                          </Button>
+                        )}
+                        {selectedDifficulty === 'intermediate' && calculateQuizScore() >= 80 && (
+                          <Button
+                            onClick={() => {
+                              setSelectedDifficulty('advanced');
+                              setQuizAnswers({});
+                              setShowResults(false);
+                            }}
+                            size="lg"
+                            variant="secondary"
+                          >
+                            Try Advanced
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   )}
                 </CardContent>
