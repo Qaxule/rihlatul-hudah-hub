@@ -4,7 +4,9 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Compass, MapPin, Loader2 } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Compass, MapPin, Loader2, Bell } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -16,6 +18,9 @@ const PrayerTimes = () => {
   const [location, setLocation] = useState<{ lat: number; lon: number } | null>(null);
   const [prayerTimes, setPrayerTimes] = useState<any>(null);
   const [qiblaDirection, setQiblaDirection] = useState<number | null>(null);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(() => {
+    return localStorage.getItem("prayerNotifications") === "true";
+  });
 
   useEffect(() => {
     if (!user) {
@@ -23,6 +28,78 @@ const PrayerTimes = () => {
       navigate("/login");
     }
   }, [user, navigate]);
+
+  const schedulePrayerNotifications = (timings: any) => {
+    const prayers = [
+      { name: "Fajr", time: timings.Fajr },
+      { name: "Dhuhr", time: timings.Dhuhr },
+      { name: "Asr", time: timings.Asr },
+      { name: "Maghrib", time: timings.Maghrib },
+      { name: "Isha", time: timings.Isha },
+    ];
+
+    prayers.forEach((prayer) => {
+      const [hours, minutes] = prayer.time.split(":").map(Number);
+      const now = new Date();
+      const prayerTime = new Date(now);
+      prayerTime.setHours(hours, minutes, 0, 0);
+
+      // If prayer time has passed today, schedule for tomorrow
+      if (prayerTime < now) {
+        prayerTime.setDate(prayerTime.getDate() + 1);
+      }
+
+      const timeUntilPrayer = prayerTime.getTime() - now.getTime();
+
+      setTimeout(() => {
+        if ("Notification" in window && Notification.permission === "granted") {
+          new Notification(`Time for ${prayer.name} Prayer`, {
+            body: `It's ${prayer.time}. Time to pray ${prayer.name}.`,
+            icon: "/favicon.ico",
+            tag: prayer.name,
+          });
+        }
+      }, timeUntilPrayer);
+    });
+  };
+
+  const requestNotificationPermission = async () => {
+    if (!("Notification" in window)) {
+      toast.error("This browser does not support notifications");
+      return false;
+    }
+
+    if (Notification.permission === "granted") {
+      return true;
+    }
+
+    if (Notification.permission !== "denied") {
+      const permission = await Notification.requestPermission();
+      return permission === "granted";
+    }
+
+    return false;
+  };
+
+  const toggleNotifications = async (enabled: boolean) => {
+    if (enabled) {
+      const granted = await requestNotificationPermission();
+      if (granted) {
+        setNotificationsEnabled(true);
+        localStorage.setItem("prayerNotifications", "true");
+        if (prayerTimes) {
+          schedulePrayerNotifications(prayerTimes);
+        }
+        toast.success("Prayer notifications enabled");
+      } else {
+        toast.error("Notification permission denied");
+      }
+    } else {
+      setNotificationsEnabled(false);
+      localStorage.setItem("prayerNotifications", "false");
+      toast.success("Prayer notifications disabled");
+    }
+  };
 
   const getPrayerTimes = async (lat: number, lon: number) => {
     if (!session) {
@@ -50,6 +127,11 @@ const PrayerTimes = () => {
       const data = await response.json();
       setPrayerTimes(data.data.timings);
       setQiblaDirection(data.data.meta.qibla_direction);
+      
+      if (notificationsEnabled) {
+        schedulePrayerNotifications(data.data.timings);
+      }
+      
       toast.success("Prayer times updated!");
     } catch (error: any) {
       toast.error(error.message || "Failed to fetch prayer times");
@@ -95,14 +177,30 @@ const PrayerTimes = () => {
             <p className="text-muted-foreground mb-6">
               Accurate prayer times based on your location
             </p>
-            <Button onClick={getLocation} disabled={loading}>
-              {loading ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <MapPin className="mr-2 h-4 w-4" />
+            <div className="flex flex-col items-center gap-4">
+              <Button onClick={getLocation} disabled={loading}>
+                {loading ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <MapPin className="mr-2 h-4 w-4" />
+                )}
+                Get My Location
+              </Button>
+              
+              {prayerTimes && (
+                <div className="flex items-center gap-2">
+                  <Bell className="h-4 w-4 text-muted-foreground" />
+                  <Label htmlFor="notifications" className="cursor-pointer">
+                    Enable Prayer Notifications
+                  </Label>
+                  <Switch
+                    id="notifications"
+                    checked={notificationsEnabled}
+                    onCheckedChange={toggleNotifications}
+                  />
+                </div>
               )}
-              Get My Location
-            </Button>
+            </div>
           </div>
 
           {prayerTimes && (
