@@ -730,7 +730,7 @@ export const readingLessons: ReadingLesson[] = [
   {
     id: "syllables-fatha",
     level: "syllable",
-    title: "Basic Syllables with Fatha (َ)",
+    title: "Basic Syllables with Fatha َ",
     examples: [
       { arabic: "بَ", transliteration: "ba" },
       { arabic: "تَ", transliteration: "ta" },
@@ -749,7 +749,7 @@ export const readingLessons: ReadingLesson[] = [
   {
     id: "syllables-kasra",
     level: "syllable",
-    title: "Syllables with Kasra (ِ)",
+    title: "Syllables with Kasra ِ",
     examples: [
       { arabic: "بِ", transliteration: "bi" },
       { arabic: "تِ", transliteration: "ti" },
@@ -768,7 +768,7 @@ export const readingLessons: ReadingLesson[] = [
   {
     id: "syllables-damma",
     level: "syllable",
-    title: "Syllables with Damma (ُ)",
+    title: "Syllables with Damma ُ",
     examples: [
       { arabic: "بُ", transliteration: "bu" },
       { arabic: "تُ", transliteration: "tu" },
@@ -787,7 +787,7 @@ export const readingLessons: ReadingLesson[] = [
   {
     id: "syllables-sukoon",
     level: "syllable",
-    title: "Syllables with Sukoon (ْ)",
+    title: "Syllables with Sukoon ْ",
     examples: [
       { arabic: "بْ", transliteration: "b" },
       { arabic: "تْ", transliteration: "t" },
@@ -838,7 +838,7 @@ export const readingLessons: ReadingLesson[] = [
   {
     id: "three-letter-shadda",
     level: "word",
-    title: "Words with Shadda (ّ)",
+    title: "Words with Shadda ّ",
     examples: [
       { arabic: "رَبّ", transliteration: "rabb", meaning: "Lord" },
       { arabic: "حَجّ", transliteration: "hajj", meaning: "pilgrimage" },
@@ -853,7 +853,7 @@ export const readingLessons: ReadingLesson[] = [
   {
     id: "words-tanween",
     level: "word",
-    title: "Words with Tanween (ٌ ٍ ً)",
+    title: "Words with Tanween ٌ ٍ ً",
     examples: [
       { arabic: "كِتَابٌ", transliteration: "kitabun", meaning: "a book" },
       { arabic: "رَجُلٌ", transliteration: "rajulun", meaning: "a man" },
