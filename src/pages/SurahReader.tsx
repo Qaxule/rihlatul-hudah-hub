@@ -17,6 +17,7 @@ import { AyahSkeleton } from "@/components/AyahSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useOfflineQuranData } from "@/hooks/useOfflineQuranData";
 import { offlineCache, CACHE_CONFIG, STORES } from "@/lib/offlineCache";
+import AudioPlayer from "@/components/AudioPlayer";
 
 interface Ayah {
   number: number;
@@ -504,9 +505,15 @@ const SurahReader = () => {
               >
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-muted-foreground">
-                      {currentSurahNum}:{ayah.numberInSurah}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium text-muted-foreground">
+                        {currentSurahNum}:{ayah.numberInSurah}
+                      </span>
+                      <AudioPlayer 
+                        surahNumber={currentSurahNum}
+                        ayahNumber={ayah.numberInSurah}
+                      />
+                    </div>
                     <div className="flex items-center gap-2">
                       <Button
                         variant="ghost"
