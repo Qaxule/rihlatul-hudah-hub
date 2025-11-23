@@ -62,6 +62,7 @@ const SurahReader = () => {
   const [arabicOnlyMode, setArabicOnlyMode] = useState<boolean>(false);
   const [playingAyah, setPlayingAyah] = useState<number | null>(null);
   const [selectedReciter, setSelectedReciter] = useState<string>("ar.alafasy");
+  const [showAudioBar, setShowAudioBar] = useState<boolean>(false);
   const ayahRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const { user } = useAuth();
 
@@ -368,6 +369,7 @@ const SurahReader = () => {
     if (playingAyah !== null) {
       setPlayingAyah(null);
     } else {
+      setShowAudioBar(true);
       setPlayingAyah(1);
       scrollToAyah(1);
     }
@@ -391,6 +393,7 @@ const SurahReader = () => {
 
   const handleCloseAudioBar = () => {
     setPlayingAyah(null);
+    setShowAudioBar(false);
   };
 
   // Fetch tafsir with offline caching
@@ -762,10 +765,10 @@ const SurahReader = () => {
       <Footer />
 
       {/* Audio Control Bar */}
-      {playingAyah !== null && arabicData && (
+      {showAudioBar && arabicData && (
         <AudioControlBar
           isPlaying={playingAyah !== null}
-          currentAyah={playingAyah}
+          currentAyah={playingAyah || 1}
           totalAyahs={arabicData.numberOfAyahs}
           surahName={arabicData.englishName}
           onPlayPause={handlePlaySurah}
