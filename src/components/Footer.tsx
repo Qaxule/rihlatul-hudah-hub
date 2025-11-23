@@ -106,7 +106,7 @@ const Footer = () => {
               © {new Date().getFullYear()} Rihlatul Hudah. All rights reserved.
             </p>
             <p className="text-sm text-muted-foreground flex items-center gap-2">
-              May Allah accept our effort and forgive our shortcomings.            for the Ummah
+              May Allah accept our effort and forgive our shortcomings.                                                                    
             </p>
           </div>
         </div>
