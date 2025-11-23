@@ -4,7 +4,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, BookOpen, Bookmark, BookmarkCheck, ChevronDown, ChevronUp, Share2, Menu, WifiOff } from "lucide-react";
+import { ChevronLeft, ChevronRight, BookOpen, Bookmark, BookmarkCheck, ChevronDown, ChevronUp, Share2, Menu, WifiOff, Play, Pause } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -59,6 +59,7 @@ const SurahReader = () => {
   const [navigatorOpen, setNavigatorOpen] = useState(false);
   const [currentVisibleAyah, setCurrentVisibleAyah] = useState<number>(1);
   const [arabicOnlyMode, setArabicOnlyMode] = useState<boolean>(false);
+  const [playingAyah, setPlayingAyah] = useState<number | null>(null);
   const ayahRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const { user } = useAuth();
 
@@ -339,6 +340,37 @@ const SurahReader = () => {
     }
   };
 
+  const handleAyahPlay = (ayahNumberInSurah: number) => {
+    if (playingAyah === ayahNumberInSurah) {
+      setPlayingAyah(null);
+    } else {
+      setPlayingAyah(ayahNumberInSurah);
+    }
+  };
+
+  const handleAyahEnded = () => {
+    if (!arabicData || playingAyah === null) return;
+    
+    const nextAyahNumber = playingAyah + 1;
+    if (nextAyahNumber <= arabicData.numberOfAyahs) {
+      setPlayingAyah(nextAyahNumber);
+      // Scroll to next ayah
+      setTimeout(() => scrollToAyah(nextAyahNumber), 100);
+    } else {
+      setPlayingAyah(null);
+      toast.success("Surah completed");
+    }
+  };
+
+  const handlePlaySurah = () => {
+    if (playingAyah !== null) {
+      setPlayingAyah(null);
+    } else {
+      setPlayingAyah(1);
+      scrollToAyah(1);
+    }
+  };
+
   // Fetch tafsir with offline caching
   const fetchTafsir = async (ayahNumber: number) => {
     const tafsirKey = `${ayahNumber}-${selectedTafsir}-${selectedTafsir === "1" ? isAbridged : "full"}`;
@@ -457,7 +489,24 @@ const SurahReader = () => {
                 </Button>
               </div>
             </div>
-            <div className="flex justify-end mb-4">
+            <div className="flex justify-between items-center mb-4">
+              <Button
+                onClick={handlePlaySurah}
+                variant="outline"
+                className="gap-2"
+              >
+                {playingAyah !== null ? (
+                  <>
+                    <Pause className="h-4 w-4" />
+                    Stop Surah
+                  </>
+                ) : (
+                  <>
+                    <Play className="h-4 w-4" />
+                    Play Surah
+                  </>
+                )}
+              </Button>
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-muted">
                 <Switch
                   id="arabic-only"
@@ -511,6 +560,9 @@ const SurahReader = () => {
                       </span>
                       <AudioPlayer 
                         ayahNumber={ayah.number}
+                        isPlaying={playingAyah === ayah.numberInSurah}
+                        onPlay={() => handleAyahPlay(ayah.numberInSurah)}
+                        onEnded={handleAyahEnded}
                       />
                     </div>
                     <div className="flex items-center gap-2">
