@@ -60,6 +60,7 @@ const SurahReader = () => {
   const [currentVisibleAyah, setCurrentVisibleAyah] = useState<number>(1);
   const [arabicOnlyMode, setArabicOnlyMode] = useState<boolean>(false);
   const [playingAyah, setPlayingAyah] = useState<number | null>(null);
+  const [selectedReciter, setSelectedReciter] = useState<string>("ar.alafasy");
   const ayahRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const { user } = useAuth();
 
@@ -489,24 +490,41 @@ const SurahReader = () => {
                 </Button>
               </div>
             </div>
-            <div className="flex justify-between items-center mb-4">
-              <Button
-                onClick={handlePlaySurah}
-                variant="outline"
-                className="gap-2"
-              >
-                {playingAyah !== null ? (
-                  <>
-                    <Pause className="h-4 w-4" />
-                    Stop Surah
-                  </>
-                ) : (
-                  <>
-                    <Play className="h-4 w-4" />
-                    Play Surah
-                  </>
-                )}
-              </Button>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <Button
+                  onClick={handlePlaySurah}
+                  variant="outline"
+                  className="gap-2"
+                >
+                  {playingAyah !== null ? (
+                    <>
+                      <Pause className="h-4 w-4" />
+                      Stop Surah
+                    </>
+                  ) : (
+                    <>
+                      <Play className="h-4 w-4" />
+                      Play Surah
+                    </>
+                  )}
+                </Button>
+                <Select value={selectedReciter} onValueChange={setSelectedReciter}>
+                  <SelectTrigger className="w-[200px] h-9 bg-background">
+                    <SelectValue placeholder="Select Reciter" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background z-50">
+                    <SelectItem value="ar.alafasy">Mishary Alafasy</SelectItem>
+                    <SelectItem value="ar.abdulbasit">Abdul Basit</SelectItem>
+                    <SelectItem value="ar.abdurrahmaansudais">Abdur-Rahman Al-Sudais</SelectItem>
+                    <SelectItem value="ar.shaatree">Abu Bakr Al-Shatri</SelectItem>
+                    <SelectItem value="ar.husary">Mahmoud Al-Husary</SelectItem>
+                    <SelectItem value="ar.minshawi">Mohamed Al-Minshawi</SelectItem>
+                    <SelectItem value="ar.muhammadayyoub">Muhammad Ayyub</SelectItem>
+                    <SelectItem value="ar.muhammadjibreel">Muhammad Jibreel</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-muted">
                 <Switch
                   id="arabic-only"
@@ -560,6 +578,7 @@ const SurahReader = () => {
                       </span>
                       <AudioPlayer 
                         ayahNumber={ayah.number}
+                        reciter={selectedReciter}
                         isPlaying={playingAyah === ayah.numberInSurah}
                         onPlay={() => handleAyahPlay(ayah.numberInSurah)}
                         onEnded={handleAyahEnded}
