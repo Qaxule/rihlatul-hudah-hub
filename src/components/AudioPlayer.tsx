@@ -4,6 +4,7 @@ import { Play, Pause } from "lucide-react";
 
 interface AudioPlayerProps {
   ayahNumber: number;
+  reciter: string;
   isPlaying: boolean;
   onPlay?: () => void;
   onEnded?: () => void;
@@ -15,11 +16,11 @@ export interface AudioPlayerRef {
 }
 
 const AudioPlayer = forwardRef<AudioPlayerRef, AudioPlayerProps>(
-  ({ ayahNumber, isPlaying, onPlay, onEnded }, ref) => {
+  ({ ayahNumber, reciter, isPlaying, onPlay, onEnded }, ref) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   
-  // Format: https://cdn.islamic.network/quran/audio/128/ar.alafasy/{global_ayah_number}.mp3
-  const audioUrl = `https://cdn.islamic.network/quran/audio/128/ar.alafasy/${ayahNumber}.mp3`;
+  // Format: https://cdn.islamic.network/quran/audio/128/{reciter}/{global_ayah_number}.mp3
+  const audioUrl = `https://cdn.islamic.network/quran/audio/128/${reciter}/${ayahNumber}.mp3`;
 
   useImperativeHandle(ref, () => ({
     play: () => {
