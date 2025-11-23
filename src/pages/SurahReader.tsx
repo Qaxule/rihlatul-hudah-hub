@@ -18,6 +18,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useOfflineQuranData } from "@/hooks/useOfflineQuranData";
 import { offlineCache, CACHE_CONFIG, STORES } from "@/lib/offlineCache";
 import AudioPlayer from "@/components/AudioPlayer";
+import AudioControlBar from "@/components/AudioControlBar";
 
 interface Ayah {
   number: number;
@@ -370,6 +371,26 @@ const SurahReader = () => {
       setPlayingAyah(1);
       scrollToAyah(1);
     }
+  };
+
+  const handleNextAyah = () => {
+    if (playingAyah !== null && arabicData && playingAyah < arabicData.numberOfAyahs) {
+      const nextAyah = playingAyah + 1;
+      setPlayingAyah(nextAyah);
+      scrollToAyah(nextAyah);
+    }
+  };
+
+  const handlePreviousAyah = () => {
+    if (playingAyah !== null && playingAyah > 1) {
+      const prevAyah = playingAyah - 1;
+      setPlayingAyah(prevAyah);
+      scrollToAyah(prevAyah);
+    }
+  };
+
+  const handleCloseAudioBar = () => {
+    setPlayingAyah(null);
   };
 
   // Fetch tafsir with offline caching
@@ -739,6 +760,20 @@ const SurahReader = () => {
       </main>
 
       <Footer />
+
+      {/* Audio Control Bar */}
+      {playingAyah !== null && arabicData && (
+        <AudioControlBar
+          isPlaying={playingAyah !== null}
+          currentAyah={playingAyah}
+          totalAyahs={arabicData.numberOfAyahs}
+          surahName={arabicData.englishName}
+          onPlayPause={handlePlaySurah}
+          onNext={handleNextAyah}
+          onPrevious={handlePreviousAyah}
+          onClose={handleCloseAudioBar}
+        />
+      )}
     </div>
   );
 };
