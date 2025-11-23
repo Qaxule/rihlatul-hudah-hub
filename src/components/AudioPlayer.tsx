@@ -3,23 +3,35 @@ import { Button } from "@/components/ui/button";
 import { Play, Pause } from "lucide-react";
 
 interface AudioPlayerProps {
-  surahNumber: number;
   ayahNumber: number;
   onPlay?: () => void;
 }
 
-const AudioPlayer = ({ surahNumber, ayahNumber, onPlay }: AudioPlayerProps) => {
+const AudioPlayer = ({ ayahNumber, onPlay }: AudioPlayerProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   
-  // Format: https://cdn.islamic.network/quran/audio/128/ar.alafasy/{surah}:{ayah}.mp3
-  const audioUrl = `https://cdn.islamic.network/quran/audio/128/ar.alafasy/${surahNumber}:${ayahNumber}.mp3`;
+  // Format: https://cdn.islamic.network/quran/audio/128/ar.alafasy/{global_ayah_number}.mp3
+  const audioUrl = `https://cdn.islamic.network/quran/audio/128/ar.alafasy/${ayahNumber}.mp3`;
 
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.addEventListener("ended", () => setIsPlaying(false));
+    const audio = audioRef.current;
+    if (audio) {
+      const handleEnded = () => setIsPlaying(false);
+      const handleError = (e: Event) => {
+        console.error("Audio error:", e);
+        setIsPlaying(false);
+      };
+      
+      audio.addEventListener("ended", handleEnded);
+      audio.addEventListener("error", handleError);
+      
+      return () => {
+        audio.removeEventListener("ended", handleEnded);
+        audio.removeEventListener("error", handleError);
+      };
     }
-  }, []);
+  }, [audioUrl]);
 
   const togglePlay = () => {
     if (audioRef.current) {
