@@ -510,8 +510,7 @@ const SurahReader = () => {
                         {currentSurahNum}:{ayah.numberInSurah}
                       </span>
                       <AudioPlayer 
-                        surahNumber={currentSurahNum}
-                        ayahNumber={ayah.numberInSurah}
+                        ayahNumber={ayah.number}
                       />
                     </div>
                     <div className="flex items-center gap-2">
