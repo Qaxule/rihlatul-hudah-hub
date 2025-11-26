@@ -73,6 +73,7 @@ const SurahReader = () => {
   const [longPressAyah, setLongPressAyah] = useState<number | null>(null);
   const touchStart = useRef<{ x: number; y: number; time: number } | null>(null);
   const movedTooMuch = useRef<boolean>(false);
+  const justOpened = useRef<boolean>(false);
   const ayahRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const { user } = useAuth();
 
@@ -488,11 +489,26 @@ const SurahReader = () => {
         ayahNumber,
         position: { x: menuX, y: menuY },
       });
+      
+      // Mark that we just opened the menu
+      justOpened.current = true;
+      setTimeout(() => {
+        justOpened.current = false;
+      }, 300);
+    } else {
+      // If it wasn't a successful long press, close immediately
+      setLongPressAyah(null);
     }
 
-    setTimeout(() => setLongPressAyah(null), 200);
     touchStart.current = null;
     movedTooMuch.current = false;
+  };
+
+  const handleBackdropClick = () => {
+    if (!justOpened.current) {
+      setLongPressAyah(null);
+      setActionMenuState({ isOpen: false, ayahNumber: null, position: { x: 0, y: 0 } });
+    }
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -690,7 +706,7 @@ const SurahReader = () => {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               className="fixed inset-0 z-40 bg-background/60 backdrop-blur-sm"
-              style={{ pointerEvents: 'none' }}
+              onClick={handleBackdropClick}
             />
           )}
 
@@ -903,7 +919,10 @@ const SurahReader = () => {
       {/* iOS-style Action Menu */}
       <AyahActionMenu
         isOpen={actionMenuState.isOpen}
-        onClose={() => setActionMenuState({ isOpen: false, ayahNumber: null, position: { x: 0, y: 0 } })}
+        onClose={() => {
+          setActionMenuState({ isOpen: false, ayahNumber: null, position: { x: 0, y: 0 } });
+          setLongPressAyah(null);
+        }}
         position={actionMenuState.position}
         onCopyAyah={handleCopyAyah}
         onCopyTranslation={handleCopyTranslation}
