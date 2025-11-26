@@ -1,7 +1,8 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
-import { Book, Search, ArrowUpDown } from "lucide-react";
+import { Book, Search, ArrowUpDown, ChevronRight } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
@@ -27,6 +28,7 @@ const revelationOrder: { [key: number]: number } = {
 const surahs = surahList.map(surah => ({
   number: surah.number,
   name: surah.englishName,
+  arabicName: surah.name,
   translation: surah.englishNameTranslation,
   verses: surah.numberOfAyahs,
   revelation: surah.revelationType,
@@ -117,43 +119,44 @@ const Quran = () => {
               </button>
             </div>
 
-            <TabsContent value="surah" className="space-y-12 md:space-y-16 mt-0">
-              {surahData.map((surah) => (
-                <Link key={surah.number} to={`/surah/${surah.number}`}>
-                  <Card className="shadow-soft hover:shadow-elevated transition-all duration-300 cursor-pointer group border-border/50">
-                    <CardContent className="p-6 md:p-8">
-                      <div className="flex items-center justify-between gap-6">
-                        <div className="flex items-center gap-6 md:gap-8">
-                          <div className="flex-shrink-0 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                            <span className="text-primary font-bold text-lg md:text-xl">{surah.number}</span>
+            <TabsContent value="surah" className="mt-0">
+              <div className="bg-card rounded-lg border border-border/50 overflow-hidden">
+                {surahData.map((surah, index) => (
+                  <div key={surah.number}>
+                    <Link to={`/surah/${surah.number}`}>
+                      <div className="flex items-center justify-between px-4 py-4 hover:bg-muted/50 transition-colors cursor-pointer group">
+                        <div className="flex items-center gap-4 flex-1">
+                          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                            <span className="text-primary font-semibold text-sm">{surah.number}</span>
                           </div>
-                          <div className="space-y-2">
-                            <h3 className="text-xl md:text-2xl font-semibold text-foreground group-hover:text-primary transition-colors">
-                              {surah.name}
-                            </h3>
-                            <p className="text-sm md:text-base text-muted-foreground">
-                              {surah.translation}
-                            </p>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-baseline gap-2 mb-1">
+                              <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors">
+                                {surah.name}
+                              </h3>
+                              <span className="text-lg font-arabic text-muted-foreground">{surah.arabicName}</span>
+                            </div>
+                            <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                              <span>{surah.translation}</span>
+                              <span>•</span>
+                              <span>{surah.revelation}</span>
+                              <span>•</span>
+                              <span>{surah.verses} verses</span>
+                            </div>
                           </div>
                         </div>
-                        <div className="text-right space-y-2 flex-shrink-0">
-                          <p className="text-sm md:text-base font-medium text-muted-foreground">
-                            {surah.verses} verses
-                          </p>
-                          <p className="text-xs md:text-sm text-muted-foreground">
-                            {surah.revelation}
-                          </p>
-                        </div>
+                        <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
                       </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
-              {filteredSurahs.length === 0 && (
-                <div className="text-center py-12">
-                  <p className="text-muted-foreground">No surahs found matching your search.</p>
-                </div>
-              )}
+                    </Link>
+                    {index < surahData.length - 1 && <Separator />}
+                  </div>
+                ))}
+                {filteredSurahs.length === 0 && (
+                  <div className="text-center py-12">
+                    <p className="text-muted-foreground">No surahs found matching your search.</p>
+                  </div>
+                )}
+              </div>
             </TabsContent>
 
             <TabsContent value="juz" className="space-y-12 md:space-y-16 mt-0">
@@ -192,41 +195,41 @@ const Quran = () => {
               ))}
             </TabsContent>
 
-            <TabsContent value="revelation" className="space-y-12 md:space-y-16 mt-0">
-              {surahData.map((surah) => (
-                <Link key={surah.number} to={`/surah/${surah.number}`}>
-                  <Card className="shadow-soft hover:shadow-elevated transition-all duration-300 cursor-pointer group border-border/50">
-                    <CardContent className="p-6 md:p-8">
-                      <div className="flex items-center justify-between gap-6">
-                        <div className="flex items-center gap-6 md:gap-8">
-                          <div className="flex-shrink-0 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                            <span className="text-primary font-bold text-lg md:text-xl">{surah.revelationOrder}</span>
+            <TabsContent value="revelation" className="mt-0">
+              <div className="bg-card rounded-lg border border-border/50 overflow-hidden">
+                {surahData.map((surah, index) => (
+                  <div key={surah.number}>
+                    <Link to={`/surah/${surah.number}`}>
+                      <div className="flex items-center justify-between px-4 py-4 hover:bg-muted/50 transition-colors cursor-pointer group">
+                        <div className="flex items-center gap-4 flex-1">
+                          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                            <span className="text-primary font-semibold text-sm">{surah.revelationOrder}</span>
                           </div>
-                          <div className="space-y-2">
-                            <h3 className="text-xl md:text-2xl font-semibold text-foreground group-hover:text-primary transition-colors">
-                              {surah.name}
-                            </h3>
-                            <p className="text-sm md:text-base text-muted-foreground">
-                              {surah.translation}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              Surah {surah.number}
-                            </p>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-baseline gap-2 mb-1">
+                              <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors">
+                                {surah.name}
+                              </h3>
+                              <span className="text-lg font-arabic text-muted-foreground">{surah.arabicName}</span>
+                            </div>
+                            <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                              <span>{surah.translation}</span>
+                              <span>•</span>
+                              <span>Surah {surah.number}</span>
+                              <span>•</span>
+                              <span>{surah.revelation}</span>
+                              <span>•</span>
+                              <span>{surah.verses} verses</span>
+                            </div>
                           </div>
                         </div>
-                        <div className="text-right space-y-2 flex-shrink-0">
-                          <p className="text-sm md:text-base font-medium text-muted-foreground">
-                            {surah.verses} verses
-                          </p>
-                          <p className="text-xs md:text-sm text-muted-foreground">
-                            {surah.revelation}
-                          </p>
-                        </div>
+                        <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
                       </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
+                    </Link>
+                    {index < surahData.length - 1 && <Separator />}
+                  </div>
+                ))}
+              </div>
             </TabsContent>
           </Tabs>
         </div>
