@@ -26,8 +26,27 @@ export const AyahActionMenu = ({
 }: AyahActionMenuProps) => {
   const isMobile = useIsMobile();
   
-  // Determine if menu should appear above or below based on vertical position
-  const shouldPositionAbove = position.y > window.innerHeight / 2;
+  // Calculate safe positioning to prevent menu cut-off
+  const calculateSafePosition = () => {
+    const menuWidth = 280; // Approximate menu width
+    const menuHeight = 60; // Approximate menu height
+    const padding = 16; // Safe padding from edges
+    
+    let safeX = position.x;
+    let safeY = position.y;
+    
+    // Prevent horizontal overflow
+    const maxX = window.innerWidth - menuWidth / 2 - padding;
+    const minX = menuWidth / 2 + padding;
+    safeX = Math.max(minX, Math.min(safeX, maxX));
+    
+    // Determine if menu should appear above or below
+    const shouldPositionAbove = position.y > window.innerHeight / 2;
+    
+    return { safeX, safeY, shouldPositionAbove };
+  };
+  
+  const { safeX, safeY, shouldPositionAbove } = calculateSafePosition();
   
   const menuItems = [
     {
@@ -84,7 +103,7 @@ export const AyahActionMenu = ({
             style={{ background: 'transparent' }}
           />
           
-          {/* Horizontal Bubble Menu */}
+          {/* Horizontal Bubble Menu with Pointer */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -97,18 +116,28 @@ export const AyahActionMenu = ({
             }}
             style={{
               position: "fixed",
-              left: `${position.x}px`,
-              top: `${position.y}px`,
+              left: `${safeX}px`,
+              top: `${safeY}px`,
               transform: shouldPositionAbove
-                ? "translate(-50%, calc(-100% - 16px))"
-                : "translate(-50%, 16px)",
+                ? "translate(-50%, calc(-100% - 20px))"
+                : "translate(-50%, 20px)",
             }}
             className={cn(
-              "z-[60] rounded-full overflow-hidden",
+              "z-[60] rounded-full overflow-visible relative",
               "bg-card/98 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.12)]",
               "border border-border/40 px-2 py-2"
             )}
           >
+            {/* Pointer/Arrow connecting menu to card */}
+            <div
+              className={cn(
+                "absolute left-1/2 -translate-x-1/2 w-3 h-3",
+                "bg-card/98 border-border/40",
+                shouldPositionAbove
+                  ? "bottom-[-6px] border-b border-r rotate-45"
+                  : "top-[-6px] border-t border-l rotate-45"
+              )}
+            />
             <div className="flex items-center gap-1">
               {menuItems.map((item, index) => {
                 const Icon = item.icon;
