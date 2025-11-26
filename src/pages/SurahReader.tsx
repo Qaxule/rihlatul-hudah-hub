@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -681,22 +682,55 @@ const SurahReader = () => {
             </Card>
           )}
 
+          {/* Backdrop blur overlay */}
+          {longPressAyah !== null && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-40 bg-background/60 backdrop-blur-sm"
+              style={{ pointerEvents: 'none' }}
+            />
+          )}
+
           {/* Ayahs */}
           <div className="space-y-6">
             {arabicData.ayahs.map((ayah, index) => (
-              <Card
+              <motion.div
                 key={ayah.number}
-                className={`shadow-soft transition-transform duration-200 select-none ${
-                  longPressAyah === ayah.numberInSurah ? "scale-[0.98]" : ""
-                }`}
-                ref={(el) => (ayahRefs.current[ayah.numberInSurah] = el)}
-                data-ayah={ayah.numberInSurah}
-                onTouchStart={(e) => handleTouchStart(e, ayah.numberInSurah)}
-                onTouchEnd={(e) => handleTouchEnd(e, ayah.numberInSurah)}
-                onTouchMove={handleTouchMove}
-                onContextMenu={(e) => handleContextMenu(e, ayah.numberInSurah)}
-                style={{ WebkitUserSelect: 'none', userSelect: 'none', WebkitTouchCallout: 'none' }}
+                animate={
+                  longPressAyah === ayah.numberInSurah
+                    ? {
+                        scale: 1.05,
+                        zIndex: 50,
+                      }
+                    : {
+                        scale: 1,
+                        zIndex: 1,
+                      }
+                }
+                transition={{
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 25,
+                }}
+                className="relative"
               >
+                <Card
+                  className={`shadow-soft transition-shadow select-none ${
+                    longPressAyah === ayah.numberInSurah
+                      ? "shadow-2xl shadow-primary/20"
+                      : ""
+                  }`}
+                  ref={(el) => (ayahRefs.current[ayah.numberInSurah] = el)}
+                  data-ayah={ayah.numberInSurah}
+                  onTouchStart={(e) => handleTouchStart(e, ayah.numberInSurah)}
+                  onTouchEnd={(e) => handleTouchEnd(e, ayah.numberInSurah)}
+                  onTouchMove={handleTouchMove}
+                  onContextMenu={(e) => handleContextMenu(e, ayah.numberInSurah)}
+                  style={{ WebkitUserSelect: 'none', userSelect: 'none', WebkitTouchCallout: 'none' }}
+                >
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -827,6 +861,7 @@ const SurahReader = () => {
                   )}
                 </CardContent>
               </Card>
+              </motion.div>
             ))}
           </div>
 

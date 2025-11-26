@@ -68,49 +68,60 @@ export const AyahActionMenu = ({
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop - Invisible but clickable */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 z-50 bg-background/20 backdrop-blur-sm"
+            className="fixed inset-0 z-50"
+            style={{ background: 'transparent' }}
           />
           
-          {/* Menu */}
+          {/* iMessage-style Bubble Menu */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 10 }}
+            initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 10 }}
-            transition={{ type: "spring", duration: 0.3, bounce: 0.2 }}
+            exit={{ opacity: 0, scale: 0.8, y: 10 }}
+            transition={{ 
+              type: "spring", 
+              stiffness: 400, 
+              damping: 30,
+              mass: 0.8
+            }}
             style={{
               position: "fixed",
               left: `${position.x}px`,
               top: `${position.y}px`,
-              transform: "translate(-50%, -100%)",
+              transform: "translate(-50%, calc(-100% - 12px))",
             }}
             className={cn(
-              "z-50 rounded-2xl overflow-hidden shadow-2xl min-w-[200px]",
-              "bg-background/95 backdrop-blur-xl border border-border/50"
+              "z-[60] rounded-2xl overflow-hidden min-w-[220px]",
+              "bg-card/98 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.12)]",
+              "border border-border/40"
             )}
           >
-            <div className="py-2">
+            <div className="py-1">
               {menuItems.map((item, index) => {
                 const Icon = item.icon;
+                const isLast = index === menuItems.length - 1;
                 return (
                   <button
                     key={index}
                     onClick={item.onClick}
                     className={cn(
-                      "w-full px-4 py-3 flex items-center gap-3 transition-colors",
-                      "hover:bg-muted/50 active:bg-muted",
-                      item.isCancel
-                        ? "border-t border-border/50 text-destructive"
+                      "w-full px-5 py-3.5 flex items-center gap-3.5 transition-all duration-150",
+                      "hover:bg-accent/80 active:bg-accent active:scale-[0.98]",
+                      isLast
+                        ? "border-t border-border/40 text-destructive font-medium mt-1"
                         : "text-foreground"
                     )}
                   >
-                    <Icon className="h-4 w-4" />
-                    <span className="text-sm font-medium">{item.label}</span>
+                    <Icon className={cn(
+                      "h-[18px] w-[18px]",
+                      isLast ? "text-destructive" : "text-muted-foreground"
+                    )} />
+                    <span className="text-[15px] font-medium">{item.label}</span>
                   </button>
                 );
               })}
