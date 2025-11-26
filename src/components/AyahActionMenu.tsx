@@ -26,6 +26,9 @@ export const AyahActionMenu = ({
 }: AyahActionMenuProps) => {
   const isMobile = useIsMobile();
   
+  // Determine if menu should appear above or below based on vertical position
+  const shouldPositionAbove = position.y > window.innerHeight / 2;
+  
   const menuItems = [
     {
       label: "Copy Ayah",
@@ -36,7 +39,7 @@ export const AyahActionMenu = ({
       },
     },
     {
-      label: "Copy Translation",
+      label: "Copy Translation", 
       icon: Copy,
       onClick: () => {
         onCopyTranslation();
@@ -81,52 +84,50 @@ export const AyahActionMenu = ({
             style={{ background: 'transparent' }}
           />
           
-          {/* iMessage-style Bubble Menu */}
+          {/* Horizontal Bubble Menu */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 10 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
             transition={{ 
               type: "spring", 
-              stiffness: 400, 
-              damping: 30,
-              mass: 0.8
+              stiffness: 500, 
+              damping: 35,
+              mass: 0.5
             }}
             style={{
               position: "fixed",
               left: `${position.x}px`,
               top: `${position.y}px`,
-              transform: isMobile 
-                ? "translate(-50%, calc(-100% - 24px))" 
-                : "translate(-50%, calc(-100% - 12px))",
+              transform: shouldPositionAbove
+                ? "translate(-50%, calc(-100% - 16px))"
+                : "translate(-50%, 16px)",
             }}
             className={cn(
-              "z-[60] rounded-2xl overflow-hidden min-w-[220px]",
+              "z-[60] rounded-full overflow-hidden",
               "bg-card/98 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.12)]",
-              "border border-border/40"
+              "border border-border/40 px-2 py-2"
             )}
           >
-            <div className="py-1">
+            <div className="flex items-center gap-1">
               {menuItems.map((item, index) => {
                 const Icon = item.icon;
-                const isLast = index === menuItems.length - 1;
+                const isCancel = item.isCancel;
                 return (
                   <button
                     key={index}
                     onClick={item.onClick}
+                    title={item.label}
                     className={cn(
-                      "w-full px-5 py-3.5 flex items-center gap-3.5 transition-all duration-150",
-                      "hover:bg-accent/80 active:bg-accent active:scale-[0.98]",
-                      isLast
-                        ? "border-t border-border/40 text-destructive font-medium mt-1"
-                        : "text-foreground"
+                      "p-3 rounded-full transition-all duration-150",
+                      "hover:bg-accent/80 active:bg-accent active:scale-95",
+                      isCancel
+                        ? "text-destructive hover:bg-destructive/10"
+                        : "text-foreground hover:text-primary",
+                      index < menuItems.length - 1 && "mr-0.5"
                     )}
                   >
-                    <Icon className={cn(
-                      "h-[18px] w-[18px]",
-                      isLast ? "text-destructive" : "text-muted-foreground"
-                    )} />
-                    <span className="text-[15px] font-medium">{item.label}</span>
+                    <Icon className="h-5 w-5" />
                   </button>
                 );
               })}
