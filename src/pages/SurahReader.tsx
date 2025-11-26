@@ -736,6 +736,7 @@ const SurahReader = () => {
               transition={{ duration: 0.2 }}
               className="fixed inset-0 z-40 bg-background/60 backdrop-blur-sm"
               onClick={handleBackdropClick}
+              onTouchMove={(e) => e.preventDefault()}
             />
           )}
 
