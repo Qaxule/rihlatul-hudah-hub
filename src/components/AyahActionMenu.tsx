@@ -28,21 +28,24 @@ export const AyahActionMenu = ({
   
   // Calculate safe positioning to prevent menu cut-off
   const calculateSafePosition = () => {
-    const menuWidth = 280; // Approximate menu width
-    const menuHeight = 60; // Approximate menu height
     const padding = 16; // Safe padding from edges
-    
+    const baseMenuWidth = isMobile
+      ? Math.min(320, window.innerWidth - padding * 2)
+      : 280; // Approximate desktop width
+    const menuWidth = Math.max(220, baseMenuWidth);
+    const menuHeight = 60; // Approximate menu height (used for future refinements)
+
     let safeX = position.x;
     let safeY = position.y;
-    
-    // Prevent horizontal overflow
+
+    // Prevent horizontal overflow so the bubble never gets clipped
     const maxX = window.innerWidth - menuWidth / 2 - padding;
     const minX = menuWidth / 2 + padding;
     safeX = Math.max(minX, Math.min(safeX, maxX));
-    
-    // Determine if menu should appear above or below
+
+    // Determine if menu should appear above or below the ayah card
     const shouldPositionAbove = position.y > window.innerHeight / 2;
-    
+
     return { safeX, safeY, shouldPositionAbove };
   };
   
@@ -118,12 +121,14 @@ export const AyahActionMenu = ({
               position: "fixed",
               left: `${safeX}px`,
               top: `${safeY}px`,
+              maxWidth: isMobile ? "min(320px, calc(100vw - 32px))" : "320px",
+              width: "auto",
               transform: shouldPositionAbove
                 ? "translate(-50%, calc(-100% - 20px))"
                 : "translate(-50%, 20px)",
             }}
             className={cn(
-              "z-[60] rounded-full overflow-visible relative",
+              "z-[60] rounded-full overflow-visible relative w-max",
               "bg-card/98 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.12)]",
               "border border-border/40 px-2 py-2"
             )}
