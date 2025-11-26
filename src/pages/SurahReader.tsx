@@ -70,8 +70,8 @@ const SurahReader = () => {
     position: { x: number; y: number };
   }>({ isOpen: false, ayahNumber: null, position: { x: 0, y: 0 } });
   const [longPressAyah, setLongPressAyah] = useState<number | null>(null);
-  const longPressTimer = useRef<NodeJS.Timeout | null>(null);
   const touchStart = useRef<{ x: number; y: number; time: number } | null>(null);
+  const movedTooMuch = useRef<boolean>(false);
   const ayahRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const { user } = useAuth();
 
@@ -463,47 +463,48 @@ const SurahReader = () => {
 
   // Long press handlers
   const handleTouchStart = (e: React.TouchEvent, ayahNumber: number) => {
-    // Prevent default to avoid text selection
-    e.preventDefault();
     const touch = e.touches[0];
     touchStart.current = { x: touch.clientX, y: touch.clientY, time: Date.now() };
-    
-    longPressTimer.current = setTimeout(() => {
-      setLongPressAyah(ayahNumber);
-      const rect = e.currentTarget.getBoundingClientRect();
+    movedTooMuch.current = false;
+    setLongPressAyah(ayahNumber);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent, ayahNumber: number) => {
+    if (!touchStart.current) {
+      setLongPressAyah(null);
+      return;
+    }
+
+    const duration = Date.now() - touchStart.current.time;
+
+    if (duration >= 450 && !movedTooMuch.current) {
+      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
       const menuX = rect.left + rect.width / 2;
       const menuY = rect.top - 10;
-      
+
       setActionMenuState({
         isOpen: true,
         ayahNumber,
         position: { x: menuX, y: menuY },
       });
-    }, 500); // 500ms for long press
-  };
-
-  const handleTouchEnd = () => {
-    if (longPressTimer.current) {
-      clearTimeout(longPressTimer.current);
-      longPressTimer.current = null;
     }
-    setTimeout(() => setLongPressAyah(null), 300);
+
+    setTimeout(() => setLongPressAyah(null), 200);
     touchStart.current = null;
+    movedTooMuch.current = false;
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (!touchStart.current) return;
-    
+    if (!touchStart.current || movedTooMuch.current) return;
+
     const touch = e.touches[0];
     const deltaX = Math.abs(touch.clientX - touchStart.current.x);
     const deltaY = Math.abs(touch.clientY - touchStart.current.y);
-    
-    // If moved more than 10px, cancel long press
-    if (deltaX > 10 || deltaY > 10) {
-      if (longPressTimer.current) {
-        clearTimeout(longPressTimer.current);
-        longPressTimer.current = null;
-      }
+
+    // If moved more than 25px, cancel long press trigger
+    if (deltaX > 25 || deltaY > 25) {
+      movedTooMuch.current = true;
+      setLongPressAyah(null);
     }
   };
 
@@ -691,7 +692,7 @@ const SurahReader = () => {
                 ref={(el) => (ayahRefs.current[ayah.numberInSurah] = el)}
                 data-ayah={ayah.numberInSurah}
                 onTouchStart={(e) => handleTouchStart(e, ayah.numberInSurah)}
-                onTouchEnd={handleTouchEnd}
+                onTouchEnd={(e) => handleTouchEnd(e, ayah.numberInSurah)}
                 onTouchMove={handleTouchMove}
                 onContextMenu={(e) => handleContextMenu(e, ayah.numberInSurah)}
                 style={{ WebkitUserSelect: 'none', userSelect: 'none', WebkitTouchCallout: 'none' }}
