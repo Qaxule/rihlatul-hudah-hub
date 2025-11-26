@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Copy, Bookmark, Share2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface AyahActionMenuProps {
   isOpen: boolean;
@@ -23,6 +24,8 @@ export const AyahActionMenu = ({
   onShare,
   isBookmarked,
 }: AyahActionMenuProps) => {
+  const isMobile = useIsMobile();
+  
   const menuItems = [
     {
       label: "Copy Ayah",
@@ -93,7 +96,9 @@ export const AyahActionMenu = ({
               position: "fixed",
               left: `${position.x}px`,
               top: `${position.y}px`,
-              transform: "translate(-50%, calc(-100% - 12px))",
+              transform: isMobile 
+                ? "translate(-50%, calc(-100% - 24px))" 
+                : "translate(-50%, calc(-100% - 12px))",
             }}
             className={cn(
               "z-[60] rounded-2xl overflow-hidden min-w-[220px]",
