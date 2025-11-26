@@ -19,6 +19,7 @@ import { useOfflineQuranData } from "@/hooks/useOfflineQuranData";
 import { offlineCache, CACHE_CONFIG, STORES } from "@/lib/offlineCache";
 import AudioPlayer from "@/components/AudioPlayer";
 import AudioControlBar from "@/components/AudioControlBar";
+import { AyahActionMenu } from "@/components/AyahActionMenu";
 
 interface Ayah {
   number: number;
@@ -63,6 +64,14 @@ const SurahReader = () => {
   const [playingAyah, setPlayingAyah] = useState<number | null>(null);
   const [selectedReciter, setSelectedReciter] = useState<string>("ar.alafasy");
   const [showAudioBar, setShowAudioBar] = useState<boolean>(false);
+  const [actionMenuState, setActionMenuState] = useState<{
+    isOpen: boolean;
+    ayahNumber: number | null;
+    position: { x: number; y: number };
+  }>({ isOpen: false, ayahNumber: null, position: { x: 0, y: 0 } });
+  const [longPressAyah, setLongPressAyah] = useState<number | null>(null);
+  const longPressTimer = useRef<NodeJS.Timeout | null>(null);
+  const touchStart = useRef<{ x: number; y: number; time: number } | null>(null);
   const ayahRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const { user } = useAuth();
 
@@ -451,6 +460,90 @@ const SurahReader = () => {
       setLoadingTafsir(newLoadingTafsir);
     }
   };
+
+  // Long press handlers
+  const handleTouchStart = (e: React.TouchEvent, ayahNumber: number) => {
+    const touch = e.touches[0];
+    touchStart.current = { x: touch.clientX, y: touch.clientY, time: Date.now() };
+    
+    longPressTimer.current = setTimeout(() => {
+      setLongPressAyah(ayahNumber);
+      const rect = e.currentTarget.getBoundingClientRect();
+      const menuX = rect.left + rect.width / 2;
+      const menuY = rect.top - 10;
+      
+      setActionMenuState({
+        isOpen: true,
+        ayahNumber,
+        position: { x: menuX, y: menuY },
+      });
+    }, 500); // 500ms for long press
+  };
+
+  const handleTouchEnd = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+    setTimeout(() => setLongPressAyah(null), 300);
+    touchStart.current = null;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!touchStart.current) return;
+    
+    const touch = e.touches[0];
+    const deltaX = Math.abs(touch.clientX - touchStart.current.x);
+    const deltaY = Math.abs(touch.clientY - touchStart.current.y);
+    
+    // If moved more than 10px, cancel long press
+    if (deltaX > 10 || deltaY > 10) {
+      if (longPressTimer.current) {
+        clearTimeout(longPressTimer.current);
+        longPressTimer.current = null;
+      }
+    }
+  };
+
+  const handleContextMenu = (e: React.MouseEvent, ayahNumber: number) => {
+    e.preventDefault();
+    setActionMenuState({
+      isOpen: true,
+      ayahNumber,
+      position: { x: e.clientX, y: e.clientY - 10 },
+    });
+  };
+
+  const handleCopyAyah = () => {
+    if (actionMenuState.ayahNumber === null) return;
+    const ayah = arabicData?.ayahs.find(a => a.numberInSurah === actionMenuState.ayahNumber);
+    if (ayah) {
+      navigator.clipboard.writeText(ayah.text);
+      toast.success("Arabic text copied to clipboard");
+    }
+  };
+
+  const handleCopyTranslation = () => {
+    if (actionMenuState.ayahNumber === null) return;
+    const index = arabicData?.ayahs.findIndex(a => a.numberInSurah === actionMenuState.ayahNumber);
+    if (index !== undefined && index >= 0 && translationData?.ayahs[index]) {
+      navigator.clipboard.writeText(translationData.ayahs[index].text);
+      toast.success("Translation copied to clipboard");
+    }
+  };
+
+  const handleMenuBookmark = () => {
+    if (actionMenuState.ayahNumber !== null) {
+      toggleBookmark(actionMenuState.ayahNumber);
+    }
+  };
+
+  const handleMenuShare = () => {
+    if (actionMenuState.ayahNumber !== null) {
+      handleShareAyah(actionMenuState.ayahNumber);
+    }
+  };
+
   const currentSurahNum = parseInt(surahNumber || "1");
   const prevSurah = currentSurahNum > 1 ? currentSurahNum - 1 : null;
   const nextSurah = currentSurahNum < 114 ? currentSurahNum + 1 : null;
@@ -590,9 +683,15 @@ const SurahReader = () => {
             {arabicData.ayahs.map((ayah, index) => (
               <Card
                 key={ayah.number}
-                className="shadow-soft"
+                className={`shadow-soft transition-transform duration-200 ${
+                  longPressAyah === ayah.numberInSurah ? "scale-[0.98]" : ""
+                }`}
                 ref={(el) => (ayahRefs.current[ayah.numberInSurah] = el)}
                 data-ayah={ayah.numberInSurah}
+                onTouchStart={(e) => handleTouchStart(e, ayah.numberInSurah)}
+                onTouchEnd={handleTouchEnd}
+                onTouchMove={handleTouchMove}
+                onContextMenu={(e) => handleContextMenu(e, ayah.numberInSurah)}
               >
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
@@ -761,6 +860,18 @@ const SurahReader = () => {
           onAyahSelect={scrollToAyah}
         />
       </main>
+
+      {/* iOS-style Action Menu */}
+      <AyahActionMenu
+        isOpen={actionMenuState.isOpen}
+        onClose={() => setActionMenuState({ isOpen: false, ayahNumber: null, position: { x: 0, y: 0 } })}
+        position={actionMenuState.position}
+        onCopyAyah={handleCopyAyah}
+        onCopyTranslation={handleCopyTranslation}
+        onBookmark={handleMenuBookmark}
+        onShare={handleMenuShare}
+        isBookmarked={actionMenuState.ayahNumber !== null && bookmarks.has(actionMenuState.ayahNumber)}
+      />
 
       <Footer />
 
