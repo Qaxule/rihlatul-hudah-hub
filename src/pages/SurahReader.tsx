@@ -463,6 +463,8 @@ const SurahReader = () => {
 
   // Long press handlers
   const handleTouchStart = (e: React.TouchEvent, ayahNumber: number) => {
+    // Prevent default to avoid text selection
+    e.preventDefault();
     const touch = e.touches[0];
     touchStart.current = { x: touch.clientX, y: touch.clientY, time: Date.now() };
     
@@ -683,7 +685,7 @@ const SurahReader = () => {
             {arabicData.ayahs.map((ayah, index) => (
               <Card
                 key={ayah.number}
-                className={`shadow-soft transition-transform duration-200 ${
+                className={`shadow-soft transition-transform duration-200 select-none ${
                   longPressAyah === ayah.numberInSurah ? "scale-[0.98]" : ""
                 }`}
                 ref={(el) => (ayahRefs.current[ayah.numberInSurah] = el)}
@@ -692,6 +694,7 @@ const SurahReader = () => {
                 onTouchEnd={handleTouchEnd}
                 onTouchMove={handleTouchMove}
                 onContextMenu={(e) => handleContextMenu(e, ayah.numberInSurah)}
+                style={{ WebkitUserSelect: 'none', userSelect: 'none', WebkitTouchCallout: 'none' }}
               >
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
