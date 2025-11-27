@@ -26,31 +26,6 @@ export const AyahActionMenu = ({
 }: AyahActionMenuProps) => {
   const isMobile = useIsMobile();
   
-  // Calculate safe positioning to prevent menu cut-off
-  const calculateSafePosition = () => {
-    const padding = 16; // Safe padding from edges
-    const baseMenuWidth = isMobile
-      ? Math.min(320, window.innerWidth - padding * 2)
-      : 280; // Approximate desktop width
-    const menuWidth = Math.max(220, baseMenuWidth);
-    const menuHeight = 60; // Approximate menu height (used for future refinements)
-
-    let safeX = position.x;
-    let safeY = position.y;
-
-    // Prevent horizontal overflow so the bubble never gets clipped
-    const maxX = window.innerWidth - menuWidth / 2 - padding;
-    const minX = menuWidth / 2 + padding;
-    safeX = Math.max(minX, Math.min(safeX, maxX));
-
-    // Determine if menu should appear above or below the ayah card
-    const shouldPositionAbove = position.y > window.innerHeight / 2;
-
-    return { safeX, safeY, shouldPositionAbove };
-  };
-  
-  const { safeX, safeY, shouldPositionAbove } = calculateSafePosition();
-  
   const menuItems = [
     {
       label: "Copy Ayah",
@@ -61,7 +36,7 @@ export const AyahActionMenu = ({
       },
     },
     {
-      label: "Copy Translation", 
+      label: "Copy Translation",
       icon: Copy,
       onClick: () => {
         onCopyTranslation();
@@ -106,62 +81,52 @@ export const AyahActionMenu = ({
             style={{ background: 'transparent' }}
           />
           
-          {/* Horizontal Bubble Menu with Pointer */}
+          {/* iMessage-style Bubble Menu */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 10 }}
             transition={{ 
               type: "spring", 
-              stiffness: 500, 
-              damping: 35,
-              mass: 0.5
+              stiffness: 400, 
+              damping: 30,
+              mass: 0.8
             }}
             style={{
               position: "fixed",
-              left: `${safeX}px`,
-              top: `${safeY}px`,
-              maxWidth: isMobile ? "min(320px, calc(100vw - 32px))" : "320px",
-              width: "auto",
-              transform: shouldPositionAbove
-                ? "translate(-50%, calc(-100% - 20px))"
-                : "translate(-50%, 20px)",
+              left: `${position.x}px`,
+              top: `${position.y}px`,
+              transform: isMobile 
+                ? "translate(-50%, calc(-100% - 24px))" 
+                : "translate(-50%, calc(-100% - 12px))",
             }}
             className={cn(
-              "z-[60] rounded-full overflow-visible relative w-max",
+              "z-[60] rounded-2xl overflow-hidden min-w-[220px]",
               "bg-card/98 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.12)]",
-              "border border-border/40 px-2 py-2"
+              "border border-border/40"
             )}
           >
-            {/* Pointer/Arrow connecting menu to card */}
-            <div
-              className={cn(
-                "absolute left-1/2 -translate-x-1/2 w-3 h-3",
-                "bg-card/98 border-border/40",
-                shouldPositionAbove
-                  ? "bottom-[-6px] border-b border-r rotate-45"
-                  : "top-[-6px] border-t border-l rotate-45"
-              )}
-            />
-            <div className="flex items-center gap-1">
+            <div className="py-1">
               {menuItems.map((item, index) => {
                 const Icon = item.icon;
-                const isCancel = item.isCancel;
+                const isLast = index === menuItems.length - 1;
                 return (
                   <button
                     key={index}
                     onClick={item.onClick}
-                    title={item.label}
                     className={cn(
-                      "p-3 rounded-full transition-all duration-150",
-                      "hover:bg-accent/80 active:bg-accent active:scale-95",
-                      isCancel
-                        ? "text-destructive hover:bg-destructive/10"
-                        : "text-foreground hover:text-primary",
-                      index < menuItems.length - 1 && "mr-0.5"
+                      "w-full px-5 py-3.5 flex items-center gap-3.5 transition-all duration-150",
+                      "hover:bg-accent/80 active:bg-accent active:scale-[0.98]",
+                      isLast
+                        ? "border-t border-border/40 text-destructive font-medium mt-1"
+                        : "text-foreground"
                     )}
                   >
-                    <Icon className="h-5 w-5" />
+                    <Icon className={cn(
+                      "h-[18px] w-[18px]",
+                      isLast ? "text-destructive" : "text-muted-foreground"
+                    )} />
+                    <span className="text-[15px] font-medium">{item.label}</span>
                   </button>
                 );
               })}
