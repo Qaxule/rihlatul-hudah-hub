@@ -4,6 +4,7 @@ import { Menu, X, Bookmark, LogIn, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ThemeSelector from "./ThemeSelector";
 import { useAuth } from "@/contexts/AuthContext";
+import logo from "@/assets/logo.png";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,8 +33,9 @@ const Navigation = () => {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="text-2xl font-bold bg-gradient-emerald bg-clip-text text-transparent">
-              رحلة الهدى
+            <img src={logo} alt="Rihlatul Hudah" className="h-8 w-8" />
+            <div className="text-xl font-bold bg-gradient-emerald bg-clip-text text-transparent">
+              Rihlatul Hudah
             </div>
           </Link>
 
