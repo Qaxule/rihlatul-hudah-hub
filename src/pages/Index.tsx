@@ -73,13 +73,19 @@ const Index = () => {
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         {/* Islamic Geometric Pattern Background */}
-        <div className="absolute inset-0 opacity-[0.03]" aria-hidden="true">
+        <div className="absolute inset-0 opacity-[0.06]" aria-hidden="true">
           <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <pattern id="islamic-pattern" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
-                <path d="M30 0L60 30L30 60L0 30Z" fill="none" stroke="currentColor" strokeWidth="1"/>
-                <circle cx="30" cy="30" r="10" fill="none" stroke="currentColor" strokeWidth="1"/>
-                <path d="M30 20L40 30L30 40L20 30Z" fill="none" stroke="currentColor" strokeWidth="1"/>
+              <pattern id="islamic-pattern" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+                {/* Eight-pointed star pattern */}
+                <path d="M40 0L50 30L80 40L50 50L40 80L30 50L0 40L30 30Z" fill="none" stroke="currentColor" strokeWidth="0.5"/>
+                <circle cx="40" cy="40" r="15" fill="none" stroke="currentColor" strokeWidth="0.5"/>
+                <path d="M40 25L55 40L40 55L25 40Z" fill="none" stroke="currentColor" strokeWidth="0.5"/>
+                {/* Corner decorations */}
+                <circle cx="0" cy="0" r="8" fill="none" stroke="currentColor" strokeWidth="0.5"/>
+                <circle cx="80" cy="0" r="8" fill="none" stroke="currentColor" strokeWidth="0.5"/>
+                <circle cx="0" cy="80" r="8" fill="none" stroke="currentColor" strokeWidth="0.5"/>
+                <circle cx="80" cy="80" r="8" fill="none" stroke="currentColor" strokeWidth="0.5"/>
               </pattern>
             </defs>
             <rect width="100%" height="100%" fill="url(#islamic-pattern)" className="text-primary"/>
@@ -89,13 +95,14 @@ const Index = () => {
         <div className="container mx-auto px-4 py-20 md:py-28 lg:py-36 relative z-10">
           <div className="max-w-4xl mx-auto text-center space-y-8 md:space-y-10">
             <div className="space-y-6 md:space-y-8">
-              <h1 
-                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-emerald bg-clip-text text-transparent leading-[1.3] animate-fade-in [animation-delay:0.1s]" 
-                dir="rtl"
-                style={{ wordSpacing: '0.1em' }}
-              >
-                رحلة الهدى
-              </h1>
+              <div className="py-4 animate-fade-in [animation-delay:0.1s]">
+                <h1 
+                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-emerald bg-clip-text text-transparent leading-normal pb-2" 
+                  dir="rtl"
+                >
+                  رحلة الهدى
+                </h1>
+              </div>
               
               {/* Decorative divider */}
               <div className="flex items-center justify-center gap-4 animate-fade-in [animation-delay:0.2s]">
