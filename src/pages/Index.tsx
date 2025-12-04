@@ -73,7 +73,7 @@ const Index = () => {
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         {/* Islamic Geometric Pattern Background */}
-        <div className="absolute inset-0 opacity-[0.06]" aria-hidden="true">
+        <div className="absolute inset-0 opacity-[0.12]" aria-hidden="true">
           <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <pattern id="islamic-pattern" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
