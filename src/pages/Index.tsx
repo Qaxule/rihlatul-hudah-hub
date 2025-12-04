@@ -71,28 +71,47 @@ const Index = () => {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-20 md:py-28 lg:py-36">
-        <div className="max-w-4xl mx-auto text-center space-y-8 md:space-y-10">
-          <div className="space-y-6 md:space-y-8">
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold bg-gradient-emerald bg-clip-text text-transparent leading-tight tracking-tight animate-fade-in [animation-delay:0.1s]" dir="rtl">
-              رحلة الهدى
-            </h1>
-            
-            {/* Decorative divider */}
-            <div className="flex items-center justify-center gap-4 animate-fade-in [animation-delay:0.2s]">
-              <div className="h-px w-16 bg-gradient-to-r from-transparent to-primary/40"></div>
-              <div className="w-2 h-2 rounded-full bg-primary/60"></div>
-              <div className="h-px w-16 bg-gradient-to-l from-transparent to-primary/40"></div>
+      <section className="relative overflow-hidden">
+        {/* Islamic Geometric Pattern Background */}
+        <div className="absolute inset-0 opacity-[0.03]" aria-hidden="true">
+          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="islamic-pattern" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+                <path d="M30 0L60 30L30 60L0 30Z" fill="none" stroke="currentColor" strokeWidth="1"/>
+                <circle cx="30" cy="30" r="10" fill="none" stroke="currentColor" strokeWidth="1"/>
+                <path d="M30 20L40 30L30 40L20 30Z" fill="none" stroke="currentColor" strokeWidth="1"/>
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#islamic-pattern)" className="text-primary"/>
+          </svg>
+        </div>
+        
+        <div className="container mx-auto px-4 py-20 md:py-28 lg:py-36 relative z-10">
+          <div className="max-w-4xl mx-auto text-center space-y-8 md:space-y-10">
+            <div className="space-y-6 md:space-y-8">
+              <h1 
+                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-emerald bg-clip-text text-transparent leading-[1.3] animate-fade-in [animation-delay:0.1s]" 
+                dir="rtl"
+                style={{ wordSpacing: '0.1em' }}
+              >
+                رحلة الهدى
+              </h1>
+              
+              {/* Decorative divider */}
+              <div className="flex items-center justify-center gap-4 animate-fade-in [animation-delay:0.2s]">
+                <div className="h-px w-16 bg-gradient-to-r from-transparent to-primary/40"></div>
+                <div className="w-2 h-2 rounded-full bg-primary/60"></div>
+                <div className="h-px w-16 bg-gradient-to-l from-transparent to-primary/40"></div>
+              </div>
+              
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-foreground tracking-wide animate-fade-in [animation-delay:0.3s]">
+                Rihlatul Hudah
+              </h2>
+              <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed px-4 animate-fade-in [animation-delay:0.5s]">
+                Your comprehensive Islamic knowledge hub. Explore the Qur'an, Hadith, 
+                and spiritual guidance all in one place.
+              </p>
             </div>
-            
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-foreground tracking-wide animate-fade-in [animation-delay:0.3s]">
-              Rihlatul Hudah
-            </h2>
-            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed px-4 animate-fade-in [animation-delay:0.5s]">
-              Your comprehensive Islamic knowledge hub. Explore the Qur'an, Hadith, 
-              and spiritual guidance all in one place.
-            </p>
-          </div>
           
           <div className="flex flex-wrap justify-center gap-4 pt-4 animate-fade-in [animation-delay:0.7s]">
             {readingProgress ? <Button asChild size="lg" className="shadow-elevated hover:shadow-glow transition-all">
@@ -109,6 +128,7 @@ const Index = () => {
             <Button asChild variant="outline" size="lg" className="shadow-soft">
               <Link to="/guides">New to Islam?</Link>
             </Button>
+          </div>
           </div>
         </div>
       </section>
