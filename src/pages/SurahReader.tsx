@@ -5,7 +5,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, BookOpen, Bookmark, BookmarkCheck, ChevronDown, ChevronUp, Share2, Menu, WifiOff, Play, Pause } from "lucide-react";
+import { ChevronLeft, ChevronRight, BookOpen, Bookmark, BookmarkCheck, ChevronDown, ChevronUp, Share2, Menu, WifiOff, Play, Pause, ArrowUp } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -71,11 +71,25 @@ const SurahReader = () => {
     position: { x: number; y: number };
   }>({ isOpen: false, ayahNumber: null, position: { x: 0, y: 0 } });
   const [longPressAyah, setLongPressAyah] = useState<number | null>(null);
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const touchStart = useRef<{ x: number; y: number; time: number } | null>(null);
   const movedTooMuch = useRef<boolean>(false);
   const justOpened = useRef<boolean>(false);
   const ayahRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const { user } = useAuth();
+
+  // Track scroll position for scroll-to-top button
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 400);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Save reading position to localStorage whenever visible ayah changes
   useEffect(() => {
@@ -946,6 +960,22 @@ const SurahReader = () => {
           onClose={handleCloseAudioBar}
         />
       )}
+
+      {/* Scroll to Top Button */}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            onClick={scrollToTop}
+            className="fixed bottom-24 right-4 z-40 p-3 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl transition-shadow"
+            aria-label="Scroll to top"
+          >
+            <ArrowUp className="h-5 w-5" />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
