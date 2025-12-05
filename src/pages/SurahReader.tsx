@@ -667,7 +667,7 @@ const SurahReader = () => {
                   </SelectTrigger>
                   <SelectContent className="bg-background z-50">
                     <SelectItem value="ar.alafasy">Mishary Alafasy</SelectItem>
-                    <SelectItem value="ar.abdulbasit">Abdul Basit</SelectItem>
+                    <SelectItem value="ar.abdulsamad">Abdul Basit Abdul Samad</SelectItem>
                     <SelectItem value="ar.abdurrahmaansudais">Abdur-Rahman Al-Sudais</SelectItem>
                     <SelectItem value="ar.shaatree">Abu Bakr Al-Shatri</SelectItem>
                     <SelectItem value="ar.husary">Mahmoud Al-Husary</SelectItem>
