@@ -26,6 +26,7 @@ interface Ayah {
   number: number;
   text: string;
   numberInSurah: number;
+  audio?: string;
 }
 
 interface SurahData {
@@ -42,8 +43,11 @@ const SurahReader = () => {
   const { surahNumber } = useParams<{ surahNumber: string }>();
   const surahNum = parseInt(surahNumber || "1");
   
-  // Use offline caching hooks
-  const { data: arabicResult, loading: arabicLoading, isOffline: arabicOffline } = useOfflineQuranData(surahNum, "ar.alafasy");
+  // Reciter state needs to be declared before the hooks that use it
+  const [selectedReciter, setSelectedReciter] = useState<string>("ar.alafasy");
+  
+  // Use offline caching hooks - arabicResult uses the selected reciter for audio
+  const { data: arabicResult, loading: arabicLoading, isOffline: arabicOffline } = useOfflineQuranData(surahNum, selectedReciter);
   const { data: translationResult, loading: translationLoading, isOffline: translationOffline } = useOfflineQuranData(surahNum, "en.sahih");
   const { data: transliterationResult, loading: transliterationLoading, isOffline: transliterationOffline } = useOfflineQuranData(surahNum, "en.transliteration");
   
@@ -63,7 +67,6 @@ const SurahReader = () => {
   const [currentVisibleAyah, setCurrentVisibleAyah] = useState<number>(1);
   const [arabicOnlyMode, setArabicOnlyMode] = useState<boolean>(false);
   const [playingAyah, setPlayingAyah] = useState<number | null>(null);
-  const [selectedReciter, setSelectedReciter] = useState<string>("ar.alafasy");
   const [showAudioBar, setShowAudioBar] = useState<boolean>(false);
   const [actionMenuState, setActionMenuState] = useState<{
     isOpen: boolean;
@@ -769,8 +772,7 @@ const SurahReader = () => {
                         {currentSurahNum}:{ayah.numberInSurah}
                       </span>
                       <AudioPlayer 
-                        ayahNumber={ayah.number}
-                        reciter={selectedReciter}
+                        audioUrl={ayah.audio || `https://cdn.islamic.network/quran/audio/128/ar.alafasy/${ayah.number}.mp3`}
                         isPlaying={playingAyah === ayah.numberInSurah}
                         onPlay={() => handleAyahPlay(ayah.numberInSurah)}
                         onEnded={handleAyahEnded}

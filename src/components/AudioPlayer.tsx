@@ -3,8 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Play, Pause } from "lucide-react";
 
 interface AudioPlayerProps {
-  ayahNumber: number;
-  reciter: string;
+  audioUrl: string;
   isPlaying: boolean;
   onPlay?: () => void;
   onEnded?: () => void;
@@ -16,13 +15,8 @@ export interface AudioPlayerRef {
 }
 
 const AudioPlayer = forwardRef<AudioPlayerRef, AudioPlayerProps>(
-  ({ ayahNumber, reciter, isPlaying, onPlay, onEnded }, ref) => {
+  ({ audioUrl, isPlaying, onPlay, onEnded }, ref) => {
   const audioRef = useRef<HTMLAudioElement>(null);
-  
-  // Format: https://cdn.islamic.network/quran/audio/128/{reciter}/{global_ayah_number}.mp3
-  const audioUrl = `https://cdn.islamic.network/quran/audio/128/${reciter}/${ayahNumber}.mp3`;
-  
-  console.log("Audio URL:", audioUrl, "Reciter:", reciter, "Ayah:", ayahNumber);
 
   useImperativeHandle(ref, () => ({
     play: () => {
@@ -57,8 +51,8 @@ const AudioPlayer = forwardRef<AudioPlayerRef, AudioPlayerProps>(
     };
     
     const handleError = (e: Event) => {
-      const audio = e.target as HTMLAudioElement;
-      console.error("Audio error:", e, "URL:", audio?.src, "Error code:", audio?.error?.code, "Message:", audio?.error?.message);
+      const audioEl = e.target as HTMLAudioElement;
+      console.error("Audio error:", audioEl?.error?.code, audioEl?.error?.message, "URL:", audioUrl);
       onEnded?.();
     };
     
@@ -69,7 +63,7 @@ const AudioPlayer = forwardRef<AudioPlayerRef, AudioPlayerProps>(
       audio.removeEventListener("ended", handleEnded);
       audio.removeEventListener("error", handleError);
     };
-  }, [onEnded]);
+  }, [onEnded, audioUrl]);
 
   const togglePlay = () => {
     onPlay?.();
