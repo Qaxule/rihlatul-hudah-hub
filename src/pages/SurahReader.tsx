@@ -372,6 +372,7 @@ const SurahReader = () => {
     if (playingAyah === ayahNumberInSurah) {
       setPlayingAyah(null);
     } else {
+      setShowAudioBar(true);
       setPlayingAyah(ayahNumberInSurah);
     }
   };
