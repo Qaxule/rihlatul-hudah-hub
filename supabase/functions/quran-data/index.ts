@@ -29,7 +29,11 @@ serve(async (req) => {
     // Validate edition parameter (whitelist common editions)
     const allowedEditions = [
       "en.sahih", "en.transliteration", "en.asad", "en.pickthall", "en.yusufali",
-      "ar.alafasy", "ar.husary", "ar.minshawi", "ar.quran"
+      "ar.alafasy", "ar.husary", "ar.minshawi", "ar.quran",
+      // Audio reciters
+      "ar.abdurrahmaansudais", "ar.abdulsamad", "ar.shaatree", "ar.ahmedajamy",
+      "ar.hanirifai", "ar.husarymujawwad", "ar.hudhaify", "ar.ibrahimakhbar",
+      "ar.mahermuaiqly", "ar.muhammadayyoub", "ar.muhammadjibreel", "ar.saoodshuraym"
     ];
     if (!allowedEditions.includes(edition)) {
       throw new Error("Invalid edition parameter");
