@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-type Theme = "light" | "sepia" | "ocean" | "forest";
+type Theme = "light" | "ocean" | "forest";
 
 type ThemeProviderProps = {
   children: React.ReactNode;

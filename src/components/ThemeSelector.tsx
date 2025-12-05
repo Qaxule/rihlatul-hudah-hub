@@ -1,4 +1,4 @@
-import { Sun, Moon, FileText, Waves, Trees } from "lucide-react";
+import { Sun, Waves, Trees } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,7 +13,6 @@ const ThemeSelector = () => {
 
   const themes = [
     { value: "light", label: "Light", icon: Sun },
-    { value: "sepia", label: "Sepia", icon: FileText },
     { value: "ocean", label: "Ocean", icon: Waves },
     { value: "forest", label: "Forest", icon: Trees },
   ];
