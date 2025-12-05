@@ -21,6 +21,8 @@ const AudioPlayer = forwardRef<AudioPlayerRef, AudioPlayerProps>(
   
   // Format: https://cdn.islamic.network/quran/audio/128/{reciter}/{global_ayah_number}.mp3
   const audioUrl = `https://cdn.islamic.network/quran/audio/128/${reciter}/${ayahNumber}.mp3`;
+  
+  console.log("Audio URL:", audioUrl, "Reciter:", reciter, "Ayah:", ayahNumber);
 
   useImperativeHandle(ref, () => ({
     play: () => {
@@ -55,7 +57,8 @@ const AudioPlayer = forwardRef<AudioPlayerRef, AudioPlayerProps>(
     };
     
     const handleError = (e: Event) => {
-      console.error("Audio error:", e);
+      const audio = e.target as HTMLAudioElement;
+      console.error("Audio error:", e, "URL:", audio?.src, "Error code:", audio?.error?.code, "Message:", audio?.error?.message);
       onEnded?.();
     };
     
