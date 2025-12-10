@@ -21,3 +21,6 @@ verify_jwt = false
 
 [functions.ayat-of-the-day]
 verify_jwt = false
+
+[functions.pesapal-payment]
+verify_jwt = false
