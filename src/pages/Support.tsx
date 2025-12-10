@@ -5,18 +5,86 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Heart, Coffee, DollarSign, CreditCard, Wallet, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-const DONATION_AMOUNTS = [
-  { value: 5000, label: "UGX 5,000", description: "Covers server costs for 1 day" },
-  { value: 10000, label: "UGX 10,000", description: "Adds new audio recitations" },
-  { value: 25000, label: "UGX 25,000", description: "Develops new features" },
-  { value: 50000, label: "UGX 50,000", description: "Major platform improvements" },
+type CurrencyCode = "UGX" | "KES" | "USD" | "EUR" | "AED";
+
+interface CurrencyConfig {
+  code: CurrencyCode;
+  name: string;
+  symbol: string;
+  minAmount: number;
+  amounts: { value: number; description: string }[];
+}
+
+const CURRENCIES: CurrencyConfig[] = [
+  {
+    code: "UGX",
+    name: "Ugandan Shilling",
+    symbol: "UGX",
+    minAmount: 1000,
+    amounts: [
+      { value: 5000, description: "Covers server costs for 1 day" },
+      { value: 10000, description: "Adds new audio recitations" },
+      { value: 25000, description: "Develops new features" },
+      { value: 50000, description: "Major platform improvements" },
+    ],
+  },
+  {
+    code: "KES",
+    name: "Kenyan Shilling",
+    symbol: "KES",
+    minAmount: 100,
+    amounts: [
+      { value: 500, description: "Covers server costs for 1 day" },
+      { value: 1000, description: "Adds new audio recitations" },
+      { value: 2500, description: "Develops new features" },
+      { value: 5000, description: "Major platform improvements" },
+    ],
+  },
+  {
+    code: "USD",
+    name: "US Dollar",
+    symbol: "$",
+    minAmount: 1,
+    amounts: [
+      { value: 5, description: "Covers server costs for 1 day" },
+      { value: 10, description: "Adds new audio recitations" },
+      { value: 25, description: "Develops new features" },
+      { value: 50, description: "Major platform improvements" },
+    ],
+  },
+  {
+    code: "EUR",
+    name: "Euro",
+    symbol: "€",
+    minAmount: 1,
+    amounts: [
+      { value: 5, description: "Covers server costs for 1 day" },
+      { value: 10, description: "Adds new audio recitations" },
+      { value: 25, description: "Develops new features" },
+      { value: 50, description: "Major platform improvements" },
+    ],
+  },
+  {
+    code: "AED",
+    name: "UAE Dirham",
+    symbol: "AED",
+    minAmount: 5,
+    amounts: [
+      { value: 20, description: "Covers server costs for 1 day" },
+      { value: 50, description: "Adds new audio recitations" },
+      { value: 100, description: "Develops new features" },
+      { value: 200, description: "Major platform improvements" },
+    ],
+  },
 ];
 
 const Support = () => {
+  const [selectedCurrency, setSelectedCurrency] = useState<CurrencyCode>("UGX");
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
   const [customAmount, setCustomAmount] = useState("");
   const [donorName, setDonorName] = useState("");
@@ -24,11 +92,26 @@ const Support = () => {
   const [donorPhone, setDonorPhone] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
 
+  const currentCurrency = CURRENCIES.find(c => c.code === selectedCurrency) || CURRENCIES[0];
+
+  const handleCurrencyChange = (code: CurrencyCode) => {
+    setSelectedCurrency(code);
+    setSelectedAmount(null);
+    setCustomAmount("");
+  };
+
+  const formatAmount = (amount: number) => {
+    if (currentCurrency.symbol === "$" || currentCurrency.symbol === "€") {
+      return `${currentCurrency.symbol}${amount.toLocaleString()}`;
+    }
+    return `${currentCurrency.code} ${amount.toLocaleString()}`;
+  };
+
   const handleDonate = async () => {
     const amount = selectedAmount || Number(customAmount);
     
-    if (!amount || amount < 1000) {
-      toast.error("Please enter a valid donation amount (minimum UGX 1,000)");
+    if (!amount || amount < currentCurrency.minAmount) {
+      toast.error(`Please enter a valid donation amount (minimum ${formatAmount(currentCurrency.minAmount)})`);
       return;
     }
 
@@ -42,8 +125,8 @@ const Support = () => {
         body: {
           action: 'initiate-payment',
           amount,
-          currency: 'UGX',
-          description: `Donation to Rihlatul Hudah - UGX ${amount}`,
+          currency: selectedCurrency,
+          description: `Donation to Rihlatul Hudah - ${formatAmount(amount)}`,
           callbackUrl,
           ipnUrl,
           donorName: donorName || undefined,
@@ -132,11 +215,28 @@ const Support = () => {
             </CardHeader>
             <CardContent className="space-y-6">
               
+              {/* Currency Selection */}
+              <div className="space-y-2">
+                <Label className="text-base font-semibold">Select Currency</Label>
+                <Select value={selectedCurrency} onValueChange={(value) => handleCurrencyChange(value as CurrencyCode)}>
+                  <SelectTrigger className="w-full md:w-64">
+                    <SelectValue placeholder="Select currency" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background border">
+                    {CURRENCIES.map((currency) => (
+                      <SelectItem key={currency.code} value={currency.code}>
+                        {currency.code} - {currency.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
               {/* Amount Selection */}
               <div className="space-y-3">
                 <Label className="text-base font-semibold">Select Amount</Label>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {DONATION_AMOUNTS.map((amt) => (
+                  {currentCurrency.amounts.map((amt) => (
                     <button
                       key={amt.value}
                       onClick={() => {
@@ -149,7 +249,7 @@ const Support = () => {
                           : "border-border hover:border-primary/50"
                       }`}
                     >
-                      <div className="font-bold text-foreground">{amt.label}</div>
+                      <div className="font-bold text-foreground">{formatAmount(amt.value)}</div>
                       <div className="text-xs text-muted-foreground mt-1">{amt.description}</div>
                     </button>
                   ))}
@@ -158,7 +258,7 @@ const Support = () => {
 
               {/* Custom Amount */}
               <div className="space-y-2">
-                <Label htmlFor="customAmount">Or enter custom amount (UGX)</Label>
+                <Label htmlFor="customAmount">Or enter custom amount ({currentCurrency.code})</Label>
                 <Input
                   id="customAmount"
                   type="number"
@@ -168,7 +268,7 @@ const Support = () => {
                     setCustomAmount(e.target.value);
                     setSelectedAmount(null);
                   }}
-                  min={1000}
+                  min={currentCurrency.minAmount}
                 />
               </div>
 
@@ -215,7 +315,7 @@ const Support = () => {
                 size="lg"
                 className="w-full text-lg py-6"
                 onClick={handleDonate}
-                disabled={isProcessing || getFinalAmount() < 1000}
+                disabled={isProcessing || getFinalAmount() < currentCurrency.minAmount}
               >
                 {isProcessing ? (
                   <>
@@ -225,7 +325,7 @@ const Support = () => {
                 ) : (
                   <>
                     <Heart className="w-5 h-5 mr-2" />
-                    Donate {getFinalAmount() > 0 ? `UGX ${getFinalAmount().toLocaleString()}` : ""}
+                    Donate {getFinalAmount() > 0 ? formatAmount(getFinalAmount()) : ""}
                   </>
                 )}
               </Button>
