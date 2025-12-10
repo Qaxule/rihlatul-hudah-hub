@@ -1,10 +1,75 @@
+import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Heart, Coffee, DollarSign, CreditCard, Wallet } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Heart, Coffee, DollarSign, CreditCard, Wallet, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+
+const DONATION_AMOUNTS = [
+  { value: 500, label: "KES 500", description: "Covers server costs for 1 day" },
+  { value: 1000, label: "KES 1,000", description: "Adds new audio recitations" },
+  { value: 2500, label: "KES 2,500", description: "Develops new features" },
+  { value: 5000, label: "KES 5,000", description: "Major platform improvements" },
+];
 
 const Support = () => {
+  const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
+  const [customAmount, setCustomAmount] = useState("");
+  const [donorName, setDonorName] = useState("");
+  const [donorEmail, setDonorEmail] = useState("");
+  const [donorPhone, setDonorPhone] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const handleDonate = async () => {
+    const amount = selectedAmount || Number(customAmount);
+    
+    if (!amount || amount < 10) {
+      toast.error("Please enter a valid donation amount (minimum KES 10)");
+      return;
+    }
+
+    setIsProcessing(true);
+
+    try {
+      const callbackUrl = `${window.location.origin}/support?payment=complete`;
+      const ipnUrl = `${window.location.origin}/support?ipn=true`;
+
+      const { data, error } = await supabase.functions.invoke('pesapal-payment', {
+        body: {
+          action: 'initiate-payment',
+          amount,
+          currency: 'KES',
+          description: `Donation to Rihlatul Hudah - KES ${amount}`,
+          callbackUrl,
+          ipnUrl,
+          donorName: donorName || undefined,
+          donorEmail: donorEmail || undefined,
+          donorPhone: donorPhone || undefined,
+        },
+      });
+
+      if (error) throw error;
+
+      if (data?.success && data?.redirect_url) {
+        toast.success("Redirecting to PesaPal...");
+        window.location.href = data.redirect_url;
+      } else {
+        throw new Error(data?.error || 'Failed to initiate payment');
+      }
+    } catch (error) {
+      console.error('Payment error:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to process donation');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const getFinalAmount = () => selectedAmount || Number(customAmount) || 0;
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-subtle">
       <Navigation />
@@ -54,16 +119,130 @@ const Support = () => {
             </CardContent>
           </Card>
 
-          {/* Donation Options */}
+          {/* PesaPal Donation Form */}
+          <Card className="border-primary/30">
+            <CardHeader>
+              <CardTitle className="text-2xl flex items-center gap-2">
+                <CreditCard className="w-6 h-6 text-primary" />
+                Make a Donation
+              </CardTitle>
+              <CardDescription>
+                Secure payment powered by PesaPal - Mobile Money, Cards & Bank Transfer
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              
+              {/* Amount Selection */}
+              <div className="space-y-3">
+                <Label className="text-base font-semibold">Select Amount</Label>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {DONATION_AMOUNTS.map((amt) => (
+                    <button
+                      key={amt.value}
+                      onClick={() => {
+                        setSelectedAmount(amt.value);
+                        setCustomAmount("");
+                      }}
+                      className={`p-4 rounded-lg border-2 transition-all text-left ${
+                        selectedAmount === amt.value
+                          ? "border-primary bg-primary/10"
+                          : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      <div className="font-bold text-foreground">{amt.label}</div>
+                      <div className="text-xs text-muted-foreground mt-1">{amt.description}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Custom Amount */}
+              <div className="space-y-2">
+                <Label htmlFor="customAmount">Or enter custom amount (KES)</Label>
+                <Input
+                  id="customAmount"
+                  type="number"
+                  placeholder="Enter amount"
+                  value={customAmount}
+                  onChange={(e) => {
+                    setCustomAmount(e.target.value);
+                    setSelectedAmount(null);
+                  }}
+                  min={10}
+                />
+              </div>
+
+              {/* Donor Details (Optional) */}
+              <div className="space-y-4 pt-4 border-t">
+                <p className="text-sm text-muted-foreground">
+                  Optional: Provide your details for a receipt
+                </p>
+                <div className="grid md:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="donorName">Name</Label>
+                    <Input
+                      id="donorName"
+                      placeholder="Your name"
+                      value={donorName}
+                      onChange={(e) => setDonorName(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="donorEmail">Email</Label>
+                    <Input
+                      id="donorEmail"
+                      type="email"
+                      placeholder="your@email.com"
+                      value={donorEmail}
+                      onChange={(e) => setDonorEmail(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="donorPhone">Phone</Label>
+                    <Input
+                      id="donorPhone"
+                      type="tel"
+                      placeholder="+254..."
+                      value={donorPhone}
+                      onChange={(e) => setDonorPhone(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Donate Button */}
+              <Button
+                size="lg"
+                className="w-full text-lg py-6"
+                onClick={handleDonate}
+                disabled={isProcessing || getFinalAmount() < 10}
+              >
+                {isProcessing ? (
+                  <>
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <Heart className="w-5 h-5 mr-2" />
+                    Donate {getFinalAmount() > 0 ? `KES ${getFinalAmount().toLocaleString()}` : ""}
+                  </>
+                )}
+              </Button>
+
+              <p className="text-xs text-muted-foreground text-center">
+                Payments processed securely via PesaPal. Supports M-Pesa, Airtel Money, Cards & Bank Transfer.
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Other Donation Options */}
           <Card>
             <CardHeader>
               <CardTitle className="text-2xl flex items-center gap-2">
                 <DollarSign className="w-6 h-6 text-primary" />
-                Ways to Support
+                Other Ways to Support
               </CardTitle>
-              <CardDescription>
-                Choose the method that works best for you
-              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               
@@ -139,32 +318,6 @@ const Support = () => {
                 </div>
               </div>
 
-            </CardContent>
-          </Card>
-
-          {/* Impact Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-2xl">Your Impact</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4 text-muted-foreground">
-              <p>
-                Every contribution, no matter how small, makes a difference. Your support helps:
-              </p>
-              <div className="grid md:grid-cols-3 gap-4">
-                <div className="p-4 bg-primary/5 rounded-lg">
-                  <h4 className="font-semibold text-foreground mb-2">$10 USD</h4>
-                  <p className="text-sm">Covers server costs for 1 day</p>
-                </div>
-                <div className="p-4 bg-primary/5 rounded-lg">
-                  <h4 className="font-semibold text-foreground mb-2">$50 USD</h4>
-                  <p className="text-sm">Adds new audio recitations</p>
-                </div>
-                <div className="p-4 bg-primary/5 rounded-lg">
-                  <h4 className="font-semibold text-foreground mb-2">$100 USD</h4>
-                  <p className="text-sm">Develops new features for 1 month</p>
-                </div>
-              </div>
             </CardContent>
           </Card>
 
