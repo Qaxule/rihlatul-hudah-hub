@@ -10,10 +10,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const DONATION_AMOUNTS = [
-  { value: 500, label: "KES 500", description: "Covers server costs for 1 day" },
-  { value: 1000, label: "KES 1,000", description: "Adds new audio recitations" },
-  { value: 2500, label: "KES 2,500", description: "Develops new features" },
-  { value: 5000, label: "KES 5,000", description: "Major platform improvements" },
+  { value: 5000, label: "UGX 5,000", description: "Covers server costs for 1 day" },
+  { value: 10000, label: "UGX 10,000", description: "Adds new audio recitations" },
+  { value: 25000, label: "UGX 25,000", description: "Develops new features" },
+  { value: 50000, label: "UGX 50,000", description: "Major platform improvements" },
 ];
 
 const Support = () => {
@@ -27,8 +27,8 @@ const Support = () => {
   const handleDonate = async () => {
     const amount = selectedAmount || Number(customAmount);
     
-    if (!amount || amount < 10) {
-      toast.error("Please enter a valid donation amount (minimum KES 10)");
+    if (!amount || amount < 1000) {
+      toast.error("Please enter a valid donation amount (minimum UGX 1,000)");
       return;
     }
 
@@ -42,8 +42,8 @@ const Support = () => {
         body: {
           action: 'initiate-payment',
           amount,
-          currency: 'KES',
-          description: `Donation to Rihlatul Hudah - KES ${amount}`,
+          currency: 'UGX',
+          description: `Donation to Rihlatul Hudah - UGX ${amount}`,
           callbackUrl,
           ipnUrl,
           donorName: donorName || undefined,
@@ -158,7 +158,7 @@ const Support = () => {
 
               {/* Custom Amount */}
               <div className="space-y-2">
-                <Label htmlFor="customAmount">Or enter custom amount (KES)</Label>
+                <Label htmlFor="customAmount">Or enter custom amount (UGX)</Label>
                 <Input
                   id="customAmount"
                   type="number"
@@ -168,7 +168,7 @@ const Support = () => {
                     setCustomAmount(e.target.value);
                     setSelectedAmount(null);
                   }}
-                  min={10}
+                  min={1000}
                 />
               </div>
 
@@ -202,7 +202,7 @@ const Support = () => {
                     <Input
                       id="donorPhone"
                       type="tel"
-                      placeholder="+254..."
+                      placeholder="+256..."
                       value={donorPhone}
                       onChange={(e) => setDonorPhone(e.target.value)}
                     />
@@ -215,7 +215,7 @@ const Support = () => {
                 size="lg"
                 className="w-full text-lg py-6"
                 onClick={handleDonate}
-                disabled={isProcessing || getFinalAmount() < 10}
+                disabled={isProcessing || getFinalAmount() < 1000}
               >
                 {isProcessing ? (
                   <>
@@ -225,7 +225,7 @@ const Support = () => {
                 ) : (
                   <>
                     <Heart className="w-5 h-5 mr-2" />
-                    Donate {getFinalAmount() > 0 ? `KES ${getFinalAmount().toLocaleString()}` : ""}
+                    Donate {getFinalAmount() > 0 ? `UGX ${getFinalAmount().toLocaleString()}` : ""}
                   </>
                 )}
               </Button>
