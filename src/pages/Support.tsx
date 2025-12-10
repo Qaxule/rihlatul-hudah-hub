@@ -17,7 +17,7 @@ interface CurrencyConfig {
   name: string;
   symbol: string;
   minAmount: number;
-  amounts: { value: number; description: string }[];
+  amounts: number[];
 }
 
 const CURRENCIES: CurrencyConfig[] = [
@@ -26,60 +26,35 @@ const CURRENCIES: CurrencyConfig[] = [
     name: "Ugandan Shilling",
     symbol: "UGX",
     minAmount: 1000,
-    amounts: [
-      { value: 5000, description: "Covers server costs for 1 day" },
-      { value: 10000, description: "Adds new audio recitations" },
-      { value: 25000, description: "Develops new features" },
-      { value: 50000, description: "Major platform improvements" },
-    ],
+    amounts: [5000, 10000, 25000, 50000],
   },
   {
     code: "KES",
     name: "Kenyan Shilling",
     symbol: "KES",
     minAmount: 100,
-    amounts: [
-      { value: 500, description: "Covers server costs for 1 day" },
-      { value: 1000, description: "Adds new audio recitations" },
-      { value: 2500, description: "Develops new features" },
-      { value: 5000, description: "Major platform improvements" },
-    ],
+    amounts: [500, 1000, 2500, 5000],
   },
   {
     code: "USD",
     name: "US Dollar",
     symbol: "$",
     minAmount: 1,
-    amounts: [
-      { value: 5, description: "Covers server costs for 1 day" },
-      { value: 10, description: "Adds new audio recitations" },
-      { value: 25, description: "Develops new features" },
-      { value: 50, description: "Major platform improvements" },
-    ],
+    amounts: [5, 10, 25, 50],
   },
   {
     code: "EUR",
     name: "Euro",
     symbol: "€",
     minAmount: 1,
-    amounts: [
-      { value: 5, description: "Covers server costs for 1 day" },
-      { value: 10, description: "Adds new audio recitations" },
-      { value: 25, description: "Develops new features" },
-      { value: 50, description: "Major platform improvements" },
-    ],
+    amounts: [5, 10, 25, 50],
   },
   {
     code: "AED",
     name: "UAE Dirham",
     symbol: "AED",
     minAmount: 5,
-    amounts: [
-      { value: 20, description: "Covers server costs for 1 day" },
-      { value: 50, description: "Adds new audio recitations" },
-      { value: 100, description: "Develops new features" },
-      { value: 200, description: "Major platform improvements" },
-    ],
+    amounts: [20, 50, 100, 200],
   },
 ];
 
@@ -238,19 +213,18 @@ const Support = () => {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {currentCurrency.amounts.map((amt) => (
                     <button
-                      key={amt.value}
+                      key={amt}
                       onClick={() => {
-                        setSelectedAmount(amt.value);
+                        setSelectedAmount(amt);
                         setCustomAmount("");
                       }}
-                      className={`p-4 rounded-lg border-2 transition-all text-left ${
-                        selectedAmount === amt.value
+                      className={`p-4 rounded-lg border-2 transition-all text-center ${
+                        selectedAmount === amt
                           ? "border-primary bg-primary/10"
                           : "border-border hover:border-primary/50"
                       }`}
                     >
-                      <div className="font-bold text-foreground">{formatAmount(amt.value)}</div>
-                      <div className="text-xs text-muted-foreground mt-1">{amt.description}</div>
+                      <div className="font-bold text-foreground">{formatAmount(amt)}</div>
                     </button>
                   ))}
                 </div>
