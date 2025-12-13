@@ -71,7 +71,7 @@ const AudioPlayer = forwardRef<AudioPlayerRef, AudioPlayerProps>(
 
     return (
       <div className="inline-flex items-center">
-        <audio ref={audioRef} src={audioUrl} preload="metadata" />
+        <audio ref={audioRef} src={audioUrl} preload="none" />
         <Button
           variant="ghost"
           size="icon"
