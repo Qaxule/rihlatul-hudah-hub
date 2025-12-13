@@ -106,18 +106,28 @@ async function submitOrder(
     body: JSON.stringify(orderRequest),
   });
 
+  const data = await response.json();
+  console.log('PesaPal order response:', JSON.stringify(data));
+
   if (!response.ok) {
-    const errorText = await response.text();
-    console.error('Order submission error:', errorText);
-    throw new Error(`Failed to submit order: ${errorText}`);
+    console.error('Order submission error:', JSON.stringify(data));
+    throw new Error(`Failed to submit order: ${data.error?.message || data.message || JSON.stringify(data)}`);
   }
 
-  const data = await response.json();
-  console.log('Order submitted:', data.order_tracking_id);
+  // Handle different response structures from PesaPal API
+  const redirectUrl = data.redirect_url || data.redirectUrl || data.payment_url;
+  const trackingId = data.order_tracking_id || data.orderTrackingId || data.tracking_id || data.merchant_reference;
+  
+  console.log('Order submitted successfully:', { redirectUrl, trackingId });
+  
+  if (!redirectUrl) {
+    console.error('No redirect URL in response:', JSON.stringify(data));
+    throw new Error('PesaPal did not return a payment URL');
+  }
   
   return {
-    redirect_url: data.redirect_url,
-    order_tracking_id: data.order_tracking_id,
+    redirect_url: redirectUrl,
+    order_tracking_id: trackingId,
   };
 }
 
