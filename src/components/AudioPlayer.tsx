@@ -7,6 +7,7 @@ interface AudioPlayerProps {
   isPlaying: boolean;
   onPlay?: () => void;
   onEnded?: () => void;
+  onBufferingChange?: (isBuffering: boolean) => void;
 }
 
 export interface AudioPlayerRef {
@@ -15,9 +16,14 @@ export interface AudioPlayerRef {
 }
 
 const AudioPlayer = forwardRef<AudioPlayerRef, AudioPlayerProps>(
-  ({ audioUrl, isPlaying, onPlay, onEnded }, ref) => {
+  ({ audioUrl, isPlaying, onPlay, onEnded, onBufferingChange }, ref) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isBuffering, setIsBuffering] = useState(false);
+
+  // Notify parent of buffering state changes
+  useEffect(() => {
+    onBufferingChange?.(isBuffering);
+  }, [isBuffering, onBufferingChange]);
 
   useImperativeHandle(ref, () => ({
     play: () => {
