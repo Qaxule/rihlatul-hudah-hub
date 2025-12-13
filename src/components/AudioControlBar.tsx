@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { Play, Pause, SkipForward, SkipBack, X } from "lucide-react";
+import { Play, Pause, SkipForward, SkipBack, X, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 interface AudioControlBarProps {
   isPlaying: boolean;
+  isBuffering?: boolean;
   currentAyah: number;
   totalAyahs: number;
   surahName: string;
@@ -15,6 +16,7 @@ interface AudioControlBarProps {
 
 const AudioControlBar = ({
   isPlaying,
+  isBuffering = false,
   currentAyah,
   totalAyahs,
   surahName,
@@ -38,7 +40,7 @@ const AudioControlBar = ({
             variant="ghost"
             size="icon"
             onClick={onPrevious}
-            disabled={currentAyah === 1}
+            disabled={currentAyah === 1 || isBuffering}
             className="h-9 w-9"
           >
             <SkipBack className="h-4 w-4" />
@@ -48,9 +50,12 @@ const AudioControlBar = ({
             variant="default"
             size="icon"
             onClick={onPlayPause}
+            disabled={isBuffering}
             className="h-10 w-10"
           >
-            {isPlaying ? (
+            {isBuffering ? (
+              <Loader2 className="h-5 w-5 animate-spin" />
+            ) : isPlaying ? (
               <Pause className="h-5 w-5" />
             ) : (
               <Play className="h-5 w-5" />
@@ -61,7 +66,7 @@ const AudioControlBar = ({
             variant="ghost"
             size="icon"
             onClick={onNext}
-            disabled={currentAyah === totalAyahs}
+            disabled={currentAyah === totalAyahs || isBuffering}
             className="h-9 w-9"
           >
             <SkipForward className="h-4 w-4" />

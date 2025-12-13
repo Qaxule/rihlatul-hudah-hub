@@ -67,6 +67,7 @@ const SurahReader = () => {
   const [currentVisibleAyah, setCurrentVisibleAyah] = useState<number>(1);
   const [arabicOnlyMode, setArabicOnlyMode] = useState<boolean>(false);
   const [playingAyah, setPlayingAyah] = useState<number | null>(null);
+  const [isAudioBuffering, setIsAudioBuffering] = useState<boolean>(false);
   const [showAudioBar, setShowAudioBar] = useState<boolean>(false);
   const [actionMenuState, setActionMenuState] = useState<{
     isOpen: boolean;
@@ -776,6 +777,11 @@ const SurahReader = () => {
                         isPlaying={playingAyah === ayah.numberInSurah}
                         onPlay={() => handleAyahPlay(ayah.numberInSurah)}
                         onEnded={handleAyahEnded}
+                        onBufferingChange={(buffering) => {
+                          if (playingAyah === ayah.numberInSurah) {
+                            setIsAudioBuffering(buffering);
+                          }
+                        }}
                       />
                     </div>
                     <div className="flex items-center gap-2">
@@ -954,6 +960,7 @@ const SurahReader = () => {
       {showAudioBar && arabicData && (
         <AudioControlBar
           isPlaying={playingAyah !== null}
+          isBuffering={isAudioBuffering}
           currentAyah={playingAyah || 1}
           totalAyahs={arabicData.numberOfAyahs}
           surahName={arabicData.englishName}
