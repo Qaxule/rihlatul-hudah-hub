@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Bookmark, LogIn, LogOut, User } from "lucide-react";
+import { Menu, X, Bookmark, LogIn, LogOut, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ThemeSelector from "./ThemeSelector";
 import { useAuth } from "@/contexts/AuthContext";
@@ -56,6 +56,12 @@ const Navigation = () => {
                 </Link>
               ))}
             </div>
+            <Link to="/support">
+              <Button variant="default" size="sm" className="bg-primary hover:bg-primary/90">
+                <Heart className="h-4 w-4 mr-2" />
+                Donate
+              </Button>
+            </Link>
             <ThemeSelector />
             {user ? (
               <>
@@ -108,6 +114,14 @@ const Navigation = () => {
                 {item.label}
               </Link>
             ))}
+            <Link
+              to="/support"
+              onClick={() => setIsOpen(false)}
+              className="block px-4 py-2 rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90"
+            >
+              <Heart className="h-4 w-4 inline mr-2" />
+              Donate
+            </Link>
             {user ? (
               <>
                 <Link
