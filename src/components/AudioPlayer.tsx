@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, forwardRef, useImperativeHandle } from "react";
 import { Button } from "@/components/ui/button";
-import { Play, Pause } from "lucide-react";
+import { Play, Pause, Loader2 } from "lucide-react";
 
 interface AudioPlayerProps {
   audioUrl: string;
@@ -17,6 +17,7 @@ export interface AudioPlayerRef {
 const AudioPlayer = forwardRef<AudioPlayerRef, AudioPlayerProps>(
   ({ audioUrl, isPlaying, onPlay, onEnded }, ref) => {
   const audioRef = useRef<HTMLAudioElement>(null);
+  const [isBuffering, setIsBuffering] = useState(false);
 
   useImperativeHandle(ref, () => ({
     play: () => {
@@ -36,9 +37,11 @@ const AudioPlayer = forwardRef<AudioPlayerRef, AudioPlayerProps>(
     if (!audio) return;
 
     if (isPlaying) {
+      setIsBuffering(true);
       audio.play().catch(console.error);
     } else {
       audio.pause();
+      setIsBuffering(false);
     }
   }, [isPlaying]);
 
@@ -47,23 +50,45 @@ const AudioPlayer = forwardRef<AudioPlayerRef, AudioPlayerProps>(
     if (!audio) return;
 
     const handleEnded = () => {
+      setIsBuffering(false);
       onEnded?.();
     };
     
     const handleError = (e: Event) => {
       const audioEl = e.target as HTMLAudioElement;
       console.error("Audio error:", audioEl?.error?.code, audioEl?.error?.message, "URL:", audioUrl);
+      setIsBuffering(false);
       onEnded?.();
+    };
+
+    const handleCanPlay = () => {
+      setIsBuffering(false);
+    };
+
+    const handleWaiting = () => {
+      if (isPlaying) {
+        setIsBuffering(true);
+      }
+    };
+
+    const handlePlaying = () => {
+      setIsBuffering(false);
     };
     
     audio.addEventListener("ended", handleEnded);
     audio.addEventListener("error", handleError);
+    audio.addEventListener("canplay", handleCanPlay);
+    audio.addEventListener("waiting", handleWaiting);
+    audio.addEventListener("playing", handlePlaying);
     
     return () => {
       audio.removeEventListener("ended", handleEnded);
       audio.removeEventListener("error", handleError);
+      audio.removeEventListener("canplay", handleCanPlay);
+      audio.removeEventListener("waiting", handleWaiting);
+      audio.removeEventListener("playing", handlePlaying);
     };
-  }, [onEnded, audioUrl]);
+  }, [onEnded, audioUrl, isPlaying]);
 
   const togglePlay = () => {
     onPlay?.();
@@ -77,8 +102,11 @@ const AudioPlayer = forwardRef<AudioPlayerRef, AudioPlayerProps>(
           size="icon"
           onClick={togglePlay}
           className="h-8 w-8"
+          disabled={isBuffering}
         >
-          {isPlaying ? (
+          {isBuffering ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : isPlaying ? (
             <Pause className="w-4 h-4" />
           ) : (
             <Play className="w-4 h-4" />
