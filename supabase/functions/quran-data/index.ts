@@ -48,13 +48,19 @@ serve(async (req) => {
       url = "https://api.alquran.cloud/v1/surah";
     }
 
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: {
+        "Accept": "application/json",
+        "Accept-Encoding": "identity"
+      }
+    });
     
     if (!response.ok) {
       throw new Error(`AlQuran API error: ${response.status}`);
     }
 
-    const data = await response.json();
+    const text = await response.text();
+    const data = JSON.parse(text);
 
     return new Response(JSON.stringify(data), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
