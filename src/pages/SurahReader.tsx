@@ -364,10 +364,10 @@ const SurahReader = () => {
         behavior: 'smooth', 
         block: 'center' 
       });
-      // Highlight the ayah briefly
-      ayahElement.classList.add('ring-2', 'ring-primary');
+      // Highlight the ayah briefly with a subtle background pulse
+      ayahElement.classList.add('bg-primary/10');
       setTimeout(() => {
-        ayahElement.classList.remove('ring-2', 'ring-primary');
+        ayahElement.classList.remove('bg-primary/10');
       }, 2000);
     }
   };
