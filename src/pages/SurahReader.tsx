@@ -776,9 +776,7 @@ const SurahReader = () => {
                       ? "bg-card shadow-xl shadow-primary/10 px-4 -mx-4 rounded-lg"
                       : highlightedAyah === ayah.numberInSurah
                         ? "bg-primary/10"
-                        : playingAyah === ayah.numberInSurah
-                          ? "bg-primary/5"
-                          : ""
+                        : ""
                   }`}
                   ref={(el) => (ayahRefs.current[ayah.numberInSurah] = el)}
                   data-ayah={ayah.numberInSurah}
