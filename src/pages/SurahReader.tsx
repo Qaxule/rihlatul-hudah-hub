@@ -39,6 +39,25 @@ interface SurahData {
   ayahs: Ayah[];
 }
 
+// Map reciter IDs to everyayah.com folder names
+const RECITER_FOLDERS: Record<string, string> = {
+  "ar.alafasy": "Alafasy_128kbps",
+  "ar.abdulsamad": "Abdul_Basit_Murattal_64kbps",
+  "ar.abdurrahmaansudais": "Abdurrahmaan_As-Sudais_192kbps",
+  "ar.shaatree": "Abu_Bakr_Ash-Shaatree_128kbps",
+  "ar.husary": "Husary_128kbps",
+  "ar.minshawi": "Minshawy_Murattal_128kbps",
+  "ar.muhammadayyoub": "Muhammad_Ayyoub_128kbps",
+  "ar.muhammadjibreel": "Muhammad_Jibreel_64kbps",
+};
+
+const getAudioUrl = (surahNum: number, ayahNum: number, reciterId: string): string => {
+  const folder = RECITER_FOLDERS[reciterId] || "Alafasy_128kbps";
+  const surahPadded = surahNum.toString().padStart(3, "0");
+  const ayahPadded = ayahNum.toString().padStart(3, "0");
+  return `https://everyayah.com/data/${folder}/${surahPadded}${ayahPadded}.mp3`;
+};
+
 const SurahReader = () => {
   const { surahNumber } = useParams<{ surahNumber: string }>();
   const surahNum = parseInt(surahNumber || "1");
@@ -776,7 +795,7 @@ const SurahReader = () => {
                         {currentSurahNum}:{ayah.numberInSurah}
                       </span>
                       <AudioPlayer 
-                        audioUrl={ayah.audio || `https://cdn.islamic.network/quran/audio/128/ar.alafasy/${ayah.number}.mp3`}
+                        audioUrl={getAudioUrl(currentSurahNum, ayah.numberInSurah, selectedReciter)}
                         isPlaying={playingAyah === ayah.numberInSurah}
                         onPlay={() => handleAyahPlay(ayah.numberInSurah)}
                         onEnded={handleAyahEnded}
