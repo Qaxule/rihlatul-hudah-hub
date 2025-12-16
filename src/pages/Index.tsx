@@ -182,8 +182,8 @@ const Index = () => {
         <div className="container mx-auto px-4 pt-12 pb-8 md:pt-20 md:pb-12 relative z-10">
           <div className="max-w-2xl mx-auto text-center space-y-6">
             {/* Logo/Brand */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-foreground tracking-tight animate-fade-in">
-              Rihlatul Hudah
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif text-foreground tracking-tight animate-fade-in">
+              Your Journey of Faith
             </h1>
             
             {/* Search Bar with Results */}
