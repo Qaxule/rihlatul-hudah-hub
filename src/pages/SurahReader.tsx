@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, BookOpen, Bookmark, BookmarkCheck, ChevronDown, ChevronUp, Share2, Menu, WifiOff, Play, Pause, ArrowUp } from "lucide-react";
 import { toast } from "sonner";
@@ -705,16 +705,14 @@ const SurahReader = () => {
 
           {/* Bismillah */}
           {currentSurahNum !== 1 && currentSurahNum !== 9 && (
-            <Card className="mb-6 shadow-soft">
-              <CardContent className="py-8 text-center">
-                <p className="text-3xl text-foreground" dir="rtl">
-                  بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
-                </p>
-                <p className="text-sm text-muted-foreground mt-2">
-                  In the name of Allah, the Most Gracious, the Most Merciful
-                </p>
-              </CardContent>
-            </Card>
+            <div className="mb-8 py-8 text-center border-b border-border/50">
+              <p className="text-3xl md:text-4xl text-foreground leading-relaxed" dir="rtl">
+                بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+              </p>
+              <p className="text-sm text-muted-foreground mt-3">
+                In the name of Allah, the Most Gracious, the Most Merciful
+              </p>
+            </div>
           )}
 
           {/* Backdrop blur overlay */}
@@ -729,15 +727,15 @@ const SurahReader = () => {
             />
           )}
 
-          {/* Ayahs */}
-          <div className="space-y-6">
+          {/* Ayahs - Continuous Reading Layout */}
+          <div className="divide-y divide-border/40">
             {arabicData.ayahs.map((ayah, index) => (
               <motion.div
                 key={ayah.number}
                 animate={
                   longPressAyah === ayah.numberInSurah
                     ? {
-                        scale: 1.05,
+                        scale: 1.02,
                         zIndex: 50,
                       }
                     : {
@@ -752,11 +750,13 @@ const SurahReader = () => {
                 }}
                 className="relative"
               >
-                <Card
-                  className={`shadow-soft transition-shadow select-none ${
+                <div
+                  className={`py-6 md:py-8 select-none transition-all rounded-lg ${
                     longPressAyah === ayah.numberInSurah
-                      ? "shadow-2xl shadow-primary/20"
-                      : ""
+                      ? "bg-card shadow-xl shadow-primary/10 px-4 -mx-4"
+                      : playingAyah === ayah.numberInSurah
+                        ? "bg-primary/5"
+                        : ""
                   }`}
                   ref={(el) => (ayahRefs.current[ayah.numberInSurah] = el)}
                   data-ayah={ayah.numberInSurah}
@@ -766,10 +766,10 @@ const SurahReader = () => {
                   onContextMenu={(e) => handleContextMenu(e, ayah.numberInSurah)}
                   style={{ WebkitUserSelect: 'none', userSelect: 'none', WebkitTouchCallout: 'none' }}
                 >
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-muted-foreground">
+                  {/* Ayah Header - Subtle */}
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs font-medium text-muted-foreground/70 tabular-nums">
                         {currentSurahNum}:{ayah.numberInSurah}
                       </span>
                       <AudioPlayer 
@@ -784,12 +784,12 @@ const SurahReader = () => {
                         }}
                       />
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
                       <Button
                         variant="ghost"
                         size="icon"
                         onClick={() => handleShareAyah(ayah.numberInSurah)}
-                        className="h-8 w-8"
+                        className="h-8 w-8 text-muted-foreground hover:text-foreground"
                         title="Share ayah"
                       >
                         <Share2 className="w-4 h-4" />
@@ -803,28 +803,30 @@ const SurahReader = () => {
                         {bookmarks.has(ayah.numberInSurah) ? (
                           <BookmarkCheck className="w-4 h-4 text-primary" />
                         ) : (
-                          <Bookmark className="w-4 h-4" />
+                          <Bookmark className="w-4 h-4 text-muted-foreground hover:text-foreground" />
                         )}
                       </Button>
                     </div>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {/* Arabic Text */}
-                  <p className="text-3xl leading-loose text-right text-foreground" dir="rtl">
+                  </div>
+
+                  {/* Arabic Text - Primary & Prominent */}
+                  <p className="text-2xl md:text-3xl lg:text-4xl leading-[2] md:leading-[2.2] text-right text-foreground font-arabic" dir="rtl">
                     {ayah.text}
+                    <span className="inline-block text-primary/60 text-lg md:text-xl mx-2 font-sans">
+                      ﴿{ayah.numberInSurah}﴾
+                    </span>
                   </p>
 
-                  {/* Transliteration */}
+                  {/* Transliteration - Smaller */}
                   {!arabicOnlyMode && transliterationData?.ayahs[index] && (
-                    <p className="text-lg text-muted-foreground italic border-t pt-4">
+                    <p className="text-base md:text-lg text-muted-foreground/80 italic mt-4 leading-relaxed">
                       {transliterationData.ayahs[index].text}
                     </p>
                   )}
 
-                  {/* Translation */}
+                  {/* Translation - Secondary */}
                   {!arabicOnlyMode && translationData?.ayahs[index] && (
-                    <p className="text-base text-foreground border-t pt-4">
+                    <p className="text-sm md:text-base text-foreground/80 mt-3 leading-relaxed">
                       {translationData.ayahs[index].text}
                     </p>
                   )}
@@ -834,72 +836,71 @@ const SurahReader = () => {
                     <Collapsible
                       open={openTafsirs.has(ayah.numberInSurah)}
                       onOpenChange={(isOpen) => handleTafsirToggle(ayah.numberInSurah, isOpen)}
-                      className="border-t pt-4"
+                      className="mt-4 pt-4 border-t border-border/30"
                     >
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-2">
-                      <CollapsibleTrigger asChild>
-                        <Button variant="ghost" className="justify-start p-0 h-auto hover:bg-transparent w-fit">
-                          <span className="text-sm font-semibold text-primary">View Tafsir (Commentary)</span>
-                          {openTafsirs.has(ayah.numberInSurah) ? (
-                            <ChevronUp className="h-4 w-4 ml-2" />
-                          ) : (
-                            <ChevronDown className="h-4 w-4 ml-2" />
-                          )}
-                        </Button>
-                      </CollapsibleTrigger>
-                      {openTafsirs.has(ayah.numberInSurah) && (
-                        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                          <Select value={selectedTafsir} onValueChange={setSelectedTafsir}>
-                            <SelectTrigger className="w-[160px] sm:w-[200px] h-8">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="1">Ibn Kathir</SelectItem>
-                              <SelectItem value="2">Maarif Ul Quran</SelectItem>
-                              <SelectItem value="3">Tazkirul Quran</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          {selectedTafsir === "1" && (
-                            <div className="flex items-center gap-2">
-                              <Switch
-                                id="abridged-mode"
-                                checked={isAbridged}
-                                onCheckedChange={setIsAbridged}
-                              />
-                              <Label htmlFor="abridged-mode" className="text-xs text-muted-foreground cursor-pointer whitespace-nowrap">
-                                Abridged
-                              </Label>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                    <CollapsibleContent className="pt-2">
-                      {loadingTafsir.has(ayah.numberInSurah) ? (
-                        <div className="space-y-2 py-4">
-                          <Skeleton className="h-4 w-full" />
-                          <Skeleton className="h-4 w-11/12" />
-                          <Skeleton className="h-4 w-5/6" />
-                        </div>
-                      ) : (
-                        <div className="bg-muted/50 rounded-lg p-4">
-                          <p className="text-sm text-muted-foreground mb-2 font-semibold">
-                            {selectedTafsir === "1" 
-                              ? `Tafsir Ibn Kathir${isAbridged ? " (Abridged)" : " (Full)"}` 
-                              : selectedTafsir === "2" 
-                                ? "Maarif Ul Quran" 
-                                : "Tazkirul Quran"}
-                          </p>
-                          <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                            {tafsirData[`${ayah.numberInSurah}-${selectedTafsir}-${selectedTafsir === "1" ? isAbridged : "full"}`] || "Click to load tafsir..."}
-                          </p>
-                        </div>
-                      )}
-                    </CollapsibleContent>
-                  </Collapsible>
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-2">
+                        <CollapsibleTrigger asChild>
+                          <Button variant="ghost" className="justify-start p-0 h-auto hover:bg-transparent w-fit">
+                            <span className="text-sm font-medium text-primary/80 hover:text-primary">View Tafsir</span>
+                            {openTafsirs.has(ayah.numberInSurah) ? (
+                              <ChevronUp className="h-4 w-4 ml-2" />
+                            ) : (
+                              <ChevronDown className="h-4 w-4 ml-2" />
+                            )}
+                          </Button>
+                        </CollapsibleTrigger>
+                        {openTafsirs.has(ayah.numberInSurah) && (
+                          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                            <Select value={selectedTafsir} onValueChange={setSelectedTafsir}>
+                              <SelectTrigger className="w-[160px] sm:w-[200px] h-8 bg-background">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="bg-background">
+                                <SelectItem value="1">Ibn Kathir</SelectItem>
+                                <SelectItem value="2">Maarif Ul Quran</SelectItem>
+                                <SelectItem value="3">Tazkirul Quran</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            {selectedTafsir === "1" && (
+                              <div className="flex items-center gap-2">
+                                <Switch
+                                  id={`abridged-mode-${ayah.numberInSurah}`}
+                                  checked={isAbridged}
+                                  onCheckedChange={setIsAbridged}
+                                />
+                                <Label htmlFor={`abridged-mode-${ayah.numberInSurah}`} className="text-xs text-muted-foreground cursor-pointer whitespace-nowrap">
+                                  Abridged
+                                </Label>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      <CollapsibleContent className="pt-2">
+                        {loadingTafsir.has(ayah.numberInSurah) ? (
+                          <div className="space-y-2 py-4">
+                            <Skeleton className="h-4 w-full" />
+                            <Skeleton className="h-4 w-11/12" />
+                            <Skeleton className="h-4 w-5/6" />
+                          </div>
+                        ) : (
+                          <div className="bg-muted/30 rounded-lg p-4">
+                            <p className="text-xs text-muted-foreground mb-2 font-medium uppercase tracking-wide">
+                              {selectedTafsir === "1" 
+                                ? `Ibn Kathir${isAbridged ? " (Abridged)" : ""}` 
+                                : selectedTafsir === "2" 
+                                  ? "Maarif Ul Quran" 
+                                  : "Tazkirul Quran"}
+                            </p>
+                            <p className="text-sm leading-relaxed whitespace-pre-wrap text-foreground/80">
+                              {tafsirData[`${ayah.numberInSurah}-${selectedTafsir}-${selectedTafsir === "1" ? isAbridged : "full"}`] || "Click to load tafsir..."}
+                            </p>
+                          </div>
+                        )}
+                      </CollapsibleContent>
+                    </Collapsible>
                   )}
-                </CardContent>
-              </Card>
+                </div>
               </motion.div>
             ))}
           </div>
