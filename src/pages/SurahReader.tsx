@@ -39,23 +39,15 @@ interface SurahData {
   ayahs: Ayah[];
 }
 
-// Map reciter IDs to everyayah.com folder names
-const RECITER_FOLDERS: Record<string, string> = {
-  "ar.alafasy": "Alafasy_128kbps",
-  "ar.abdulsamad": "Abdul_Basit_Murattal_64kbps",
-  "ar.abdurrahmaansudais": "Abdurrahmaan_As-Sudais_192kbps",
-  "ar.shaatree": "Abu_Bakr_Ash-Shaatree_128kbps",
-  "ar.husary": "Husary_128kbps",
-  "ar.minshawi": "Minshawy_Murattal_128kbps",
-  "ar.muhammadayyoub": "Muhammad_Ayyoub_128kbps",
-  "ar.muhammadjibreel": "Muhammad_Jibreel_64kbps",
-};
-
-const getAudioUrl = (surahNum: number, ayahNum: number, reciterId: string): string => {
-  const folder = RECITER_FOLDERS[reciterId] || "Alafasy_128kbps";
-  const surahPadded = surahNum.toString().padStart(3, "0");
-  const ayahPadded = ayahNum.toString().padStart(3, "0");
-  return `https://everyayah.com/data/${folder}/${surahPadded}${ayahPadded}.mp3`;
+// Helper to get audio URL - uses API response if available, fallback to CDN
+const getAudioUrl = (ayah: Ayah | undefined, surahNum: number, ayahNum: number, reciterId: string): string => {
+  // Use the audio URL from API response if available
+  if (ayah?.audio) {
+    return ayah.audio;
+  }
+  // Fallback to Islamic Network CDN
+  const bitrate = reciterId.includes('sudais') ? '192' : reciterId.includes('abdulsamad') || reciterId.includes('jibreel') ? '64' : '128';
+  return `https://cdn.islamic.network/quran/audio/${bitrate}/${reciterId}/${ayah?.number || 1}.mp3`;
 };
 
 const SurahReader = () => {
@@ -786,7 +778,12 @@ const SurahReader = () => {
                         {currentSurahNum}:{ayah.numberInSurah}
                       </span>
                       <AudioPlayer 
-                        audioUrl={getAudioUrl(currentSurahNum, ayah.numberInSurah, selectedReciter)}
+                        audioUrl={getAudioUrl(ayah, currentSurahNum, ayah.numberInSurah, selectedReciter)}
+                        preloadUrl={
+                          ayah.numberInSurah < arabicData.numberOfAyahs
+                            ? getAudioUrl(arabicData.ayahs[index + 1], currentSurahNum, ayah.numberInSurah + 1, selectedReciter)
+                            : undefined
+                        }
                         isPlaying={playingAyah === ayah.numberInSurah}
                         onPlay={() => handleAyahPlay(ayah.numberInSurah)}
                         onEnded={handleAyahEnded}
