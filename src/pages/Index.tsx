@@ -183,7 +183,7 @@ const Index = () => {
           <div className="max-w-2xl mx-auto text-center space-y-6">
             {/* Logo/Brand */}
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif text-foreground tracking-tight animate-fade-in">
-              Your Journey of Faith
+              A Journey to Islamic Guidance
             </h1>
             
             {/* Search Bar with Results */}
