@@ -19,7 +19,6 @@ export interface AudioPlayerRef {
 const AudioPlayer = forwardRef<AudioPlayerRef, AudioPlayerProps>(
   ({ audioUrl, preloadUrl, isPlaying, onPlay, onEnded, onBufferingChange }, ref) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const preloadRef = useRef<HTMLAudioElement | null>(null);
   const [isBuffering, setIsBuffering] = useState(false);
   const [hasError, setHasError] = useState(false);
 
@@ -41,122 +40,87 @@ const AudioPlayer = forwardRef<AudioPlayerRef, AudioPlayerProps>(
     },
   }));
 
-  // Create audio element dynamically
+  // Handle play/pause with fresh audio element each time
   useEffect(() => {
     if (!audioUrl) return;
 
-    const audio = new Audio();
-    audio.preload = "auto"; // Changed from "none" to "auto" for faster loading
-    audioRef.current = audio;
-
-    const handleEnded = () => {
-      setIsBuffering(false);
-      onEnded?.();
-    };
-    
-    const handleError = () => {
-      console.error("Audio error for URL:", audioUrl);
-      setIsBuffering(false);
-      setHasError(true);
-      // Try to continue to next ayah even on error
-      onEnded?.();
-    };
-
-    const handleCanPlay = () => {
-      setIsBuffering(false);
-      setHasError(false);
-    };
-
-    const handleWaiting = () => {
-      if (isPlaying) {
-        setIsBuffering(true);
+    // Create new audio element when playing starts
+    if (isPlaying) {
+      // Clean up any existing audio
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
       }
-    };
 
-    const handlePlaying = () => {
-      setIsBuffering(false);
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+      
+      setIsBuffering(true);
       setHasError(false);
-    };
 
-    const handleLoadStart = () => {
-      if (isPlaying) {
-        setIsBuffering(true);
+      const handleEnded = () => {
+        setIsBuffering(false);
+        onEnded?.();
+      };
+      
+      const handleError = () => {
+        console.error("Audio error for URL:", audioUrl);
+        setIsBuffering(false);
+        setHasError(true);
+        // Continue to next ayah on error
+        setTimeout(() => onEnded?.(), 500);
+      };
+
+      const handleCanPlayThrough = () => {
+        setIsBuffering(false);
+        setHasError(false);
+      };
+
+      const handlePlaying = () => {
+        setIsBuffering(false);
+      };
+      
+      audio.addEventListener("ended", handleEnded);
+      audio.addEventListener("error", handleError);
+      audio.addEventListener("canplaythrough", handleCanPlayThrough);
+      audio.addEventListener("playing", handlePlaying);
+      
+      audio.play().catch((err) => {
+        console.error("Play error:", err);
+        setIsBuffering(false);
+        setHasError(true);
+      });
+
+      return () => {
+        audio.pause();
+        audio.removeEventListener("ended", handleEnded);
+        audio.removeEventListener("error", handleError);
+        audio.removeEventListener("canplaythrough", handleCanPlayThrough);
+        audio.removeEventListener("playing", handlePlaying);
+      };
+    } else {
+      // Stop playing
+      if (audioRef.current) {
+        audioRef.current.pause();
       }
-    };
-    
-    audio.addEventListener("ended", handleEnded);
-    audio.addEventListener("error", handleError);
-    audio.addEventListener("canplay", handleCanPlay);
-    audio.addEventListener("waiting", handleWaiting);
-    audio.addEventListener("playing", handlePlaying);
-    audio.addEventListener("loadstart", handleLoadStart);
-    
-    // Pre-load the audio source
-    audio.src = audioUrl;
-    audio.load();
-    
-    return () => {
-      audio.pause();
-      audio.removeEventListener("ended", handleEnded);
-      audio.removeEventListener("error", handleError);
-      audio.removeEventListener("canplay", handleCanPlay);
-      audio.removeEventListener("waiting", handleWaiting);
-      audio.removeEventListener("playing", handlePlaying);
-      audio.removeEventListener("loadstart", handleLoadStart);
-      audioRef.current = null;
-    };
-  }, [audioUrl]);
+      setIsBuffering(false);
+    }
+  }, [isPlaying, audioUrl, onEnded]);
 
   // Preload next audio when current starts playing
   useEffect(() => {
     if (isPlaying && preloadUrl) {
-      const preloadAudio = new Audio();
-      preloadAudio.preload = "auto";
-      preloadAudio.src = preloadUrl;
-      preloadAudio.load();
-      preloadRef.current = preloadAudio;
+      const link = document.createElement('link');
+      link.rel = 'prefetch';
+      link.href = preloadUrl;
+      link.as = 'audio';
+      document.head.appendChild(link);
       
       return () => {
-        preloadRef.current = null;
+        document.head.removeChild(link);
       };
     }
   }, [isPlaying, preloadUrl]);
-
-  // Handle play/pause
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio || !audioUrl) return;
-
-    if (isPlaying) {
-      setHasError(false);
-      // Check if audio is ready
-      if (audio.readyState >= 3) {
-        // HAVE_FUTURE_DATA or better - play immediately
-        setIsBuffering(false);
-        audio.play().catch((err) => {
-          console.error("Play error:", err);
-          setIsBuffering(false);
-          setHasError(true);
-        });
-      } else {
-        // Need to wait for audio to load
-        setIsBuffering(true);
-        const onCanPlay = () => {
-          setIsBuffering(false);
-          audio.play().catch((err) => {
-            console.error("Play error:", err);
-            setIsBuffering(false);
-            setHasError(true);
-          });
-          audio.removeEventListener("canplaythrough", onCanPlay);
-        };
-        audio.addEventListener("canplaythrough", onCanPlay);
-      }
-    } else {
-      audio.pause();
-      setIsBuffering(false);
-    }
-  }, [isPlaying, audioUrl]);
 
   const togglePlay = () => {
     onPlay?.();
@@ -169,7 +133,6 @@ const AudioPlayer = forwardRef<AudioPlayerRef, AudioPlayerProps>(
         size="icon"
         onClick={togglePlay}
         className={`h-8 w-8 ${hasError ? 'text-destructive' : ''}`}
-        disabled={isBuffering}
         title={hasError ? "Audio unavailable" : isPlaying ? "Pause" : "Play"}
       >
         {isBuffering ? (
