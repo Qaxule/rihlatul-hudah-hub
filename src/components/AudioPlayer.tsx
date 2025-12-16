@@ -4,6 +4,7 @@ import { Play, Pause, Loader2 } from "lucide-react";
 
 interface AudioPlayerProps {
   audioUrl: string;
+  preloadUrl?: string;
   isPlaying: boolean;
   onPlay?: () => void;
   onEnded?: () => void;
@@ -16,8 +17,9 @@ export interface AudioPlayerRef {
 }
 
 const AudioPlayer = forwardRef<AudioPlayerRef, AudioPlayerProps>(
-  ({ audioUrl, isPlaying, onPlay, onEnded, onBufferingChange }, ref) => {
+  ({ audioUrl, preloadUrl, isPlaying, onPlay, onEnded, onBufferingChange }, ref) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const preloadRef = useRef<HTMLAudioElement | null>(null);
   const [isBuffering, setIsBuffering] = useState(false);
   const [hasError, setHasError] = useState(false);
 
@@ -39,12 +41,12 @@ const AudioPlayer = forwardRef<AudioPlayerRef, AudioPlayerProps>(
     },
   }));
 
-  // Create audio element dynamically to avoid CORS issues
+  // Create audio element dynamically
   useEffect(() => {
     if (!audioUrl) return;
 
     const audio = new Audio();
-    audio.preload = "none";
+    audio.preload = "auto"; // Changed from "none" to "auto" for faster loading
     audioRef.current = audio;
 
     const handleEnded = () => {
@@ -89,6 +91,10 @@ const AudioPlayer = forwardRef<AudioPlayerRef, AudioPlayerProps>(
     audio.addEventListener("playing", handlePlaying);
     audio.addEventListener("loadstart", handleLoadStart);
     
+    // Pre-load the audio source
+    audio.src = audioUrl;
+    audio.load();
+    
     return () => {
       audio.pause();
       audio.removeEventListener("ended", handleEnded);
@@ -101,23 +107,51 @@ const AudioPlayer = forwardRef<AudioPlayerRef, AudioPlayerProps>(
     };
   }, [audioUrl]);
 
+  // Preload next audio when current starts playing
+  useEffect(() => {
+    if (isPlaying && preloadUrl) {
+      const preloadAudio = new Audio();
+      preloadAudio.preload = "auto";
+      preloadAudio.src = preloadUrl;
+      preloadAudio.load();
+      preloadRef.current = preloadAudio;
+      
+      return () => {
+        preloadRef.current = null;
+      };
+    }
+  }, [isPlaying, preloadUrl]);
+
   // Handle play/pause
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio || !audioUrl) return;
 
     if (isPlaying) {
-      setIsBuffering(true);
       setHasError(false);
-      // Set source and play
-      if (audio.src !== audioUrl) {
-        audio.src = audioUrl;
-      }
-      audio.play().catch((err) => {
-        console.error("Play error:", err);
+      // Check if audio is ready
+      if (audio.readyState >= 3) {
+        // HAVE_FUTURE_DATA or better - play immediately
         setIsBuffering(false);
-        setHasError(true);
-      });
+        audio.play().catch((err) => {
+          console.error("Play error:", err);
+          setIsBuffering(false);
+          setHasError(true);
+        });
+      } else {
+        // Need to wait for audio to load
+        setIsBuffering(true);
+        const onCanPlay = () => {
+          setIsBuffering(false);
+          audio.play().catch((err) => {
+            console.error("Play error:", err);
+            setIsBuffering(false);
+            setHasError(true);
+          });
+          audio.removeEventListener("canplaythrough", onCanPlay);
+        };
+        audio.addEventListener("canplaythrough", onCanPlay);
+      }
     } else {
       audio.pause();
       setIsBuffering(false);
