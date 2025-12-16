@@ -6,9 +6,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { 
   Book, Heart, Calendar, ArrowRight, Compass, BookOpen, Gem, 
-  Search, ChevronRight, Bookmark, GraduationCap, HandHeart
+  Search, ChevronRight, Bookmark, GraduationCap, HandHeart, Loader2, X
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/contexts/AuthContext";
@@ -33,11 +33,23 @@ interface ReadingProgress {
   ayah_number: number;
 }
 
+interface SearchResult {
+  surahNumber: number;
+  ayahNumber: number;
+  arabicText: string;
+  translation: string;
+  surahName: string;
+}
+
 const Index = () => {
   const [ayatOfTheDay, setAyatOfTheDay] = useState<AyatOfTheDay | null>(null);
   const [loading, setLoading] = useState(true);
   const [readingProgress, setReadingProgress] = useState<ReadingProgress | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -47,6 +59,46 @@ const Index = () => {
       fetchReadingProgress();
     }
   }, [user]);
+
+  // Click outside to close search results
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setShowResults(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Debounced search
+  useEffect(() => {
+    if (searchQuery.trim().length < 2) {
+      setSearchResults([]);
+      setShowResults(false);
+      return;
+    }
+
+    const timeoutId = setTimeout(async () => {
+      setIsSearching(true);
+      try {
+        const { data, error } = await supabase.functions.invoke('quran-search', {
+          body: { query: searchQuery.trim() }
+        });
+        
+        if (error) throw error;
+        setSearchResults(data.results || []);
+        setShowResults(true);
+      } catch (error) {
+        console.error('Search error:', error);
+        setSearchResults([]);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 400);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery]);
 
   const fetchReadingProgress = async () => {
     if (!user) return;
@@ -76,11 +128,16 @@ const Index = () => {
     }
   };
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/quran?search=${encodeURIComponent(searchQuery.trim())}`);
-    }
+  const handleResultClick = (result: SearchResult) => {
+    setShowResults(false);
+    setSearchQuery("");
+    navigate(`/surah/${result.surahNumber}#ayah-${result.ayahNumber}`);
+  };
+
+  const clearSearch = () => {
+    setSearchQuery("");
+    setSearchResults([]);
+    setShowResults(false);
   };
 
   const quickLinks = [
@@ -107,7 +164,7 @@ const Index = () => {
     <div className="min-h-screen bg-background flex flex-col">
       <Navigation />
       
-      {/* Hero Section - Quran.com inspired */}
+      {/* Hero Section */}
       <section className="relative overflow-hidden">
         {/* Subtle Islamic Pattern Background */}
         <div className="absolute inset-0 opacity-[0.06]" aria-hidden="true">
@@ -129,8 +186,8 @@ const Index = () => {
               Rihlatul Hudah
             </h1>
             
-            {/* Search Bar */}
-            <form onSubmit={handleSearch} className="relative max-w-xl mx-auto animate-fade-in [animation-delay:0.2s]">
+            {/* Search Bar with Results */}
+            <div ref={searchRef} className="relative max-w-xl mx-auto animate-fade-in [animation-delay:0.2s]">
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
@@ -138,10 +195,68 @@ const Index = () => {
                   placeholder="Search the Qur'an..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full h-14 pl-12 pr-4 text-base rounded-full border-2 border-border bg-card shadow-soft focus:border-primary focus:ring-primary"
+                  onFocus={() => searchResults.length > 0 && setShowResults(true)}
+                  className="w-full h-14 pl-12 pr-12 text-base rounded-full border-2 border-border bg-card shadow-soft focus:border-primary focus:ring-primary"
                 />
+                {searchQuery && (
+                  <button
+                    onClick={clearSearch}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {isSearching ? (
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                    ) : (
+                      <X className="h-5 w-5" />
+                    )}
+                  </button>
+                )}
               </div>
-            </form>
+
+              {/* Search Results Dropdown */}
+              {showResults && searchResults.length > 0 && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-elevated max-h-[400px] overflow-y-auto z-50">
+                  <div className="p-2">
+                    <p className="text-xs text-muted-foreground px-3 py-2">
+                      Found {searchResults.length} result{searchResults.length !== 1 ? 's' : ''}
+                    </p>
+                    {searchResults.map((result, index) => (
+                      <button
+                        key={`${result.surahNumber}-${result.ayahNumber}-${index}`}
+                        onClick={() => handleResultClick(result)}
+                        className="w-full text-left p-3 hover:bg-muted/50 rounded-lg transition-colors"
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                            <span className="text-primary text-xs font-semibold">{result.surahNumber}</span>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-foreground">
+                              {result.surahName} {result.surahNumber}:{result.ayahNumber}
+                            </p>
+                            <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+                              {result.translation}
+                            </p>
+                            <p className="text-sm font-arabic text-foreground/70 line-clamp-1 mt-1 text-right" dir="rtl">
+                              {result.arabicText}
+                            </p>
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* No Results Message */}
+              {showResults && searchQuery.length >= 2 && !isSearching && searchResults.length === 0 && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-elevated z-50">
+                  <div className="p-6 text-center">
+                    <p className="text-muted-foreground">No results found for "{searchQuery}"</p>
+                    <p className="text-sm text-muted-foreground mt-1">Try searching for a different word or phrase</p>
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* Quick Links */}
             <div className="flex items-center justify-center gap-3 animate-fade-in [animation-delay:0.3s]">
