@@ -95,7 +95,7 @@ const SurahReader = () => {
   }>({ isOpen: false, ayahNumber: null, position: { x: 0, y: 0 } });
   const [longPressAyah, setLongPressAyah] = useState<number | null>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const [highlightedAyah, setHighlightedAyah] = useState<number | null>(null);
+  
   const touchStart = useRef<{ x: number; y: number; time: number } | null>(null);
   const movedTooMuch = useRef<boolean>(false);
   const justOpened = useRef<boolean>(false);
@@ -384,11 +384,6 @@ const SurahReader = () => {
         behavior: 'smooth', 
         block: 'center' 
       });
-      // Highlight the ayah briefly using state
-      setHighlightedAyah(ayahNumber);
-      setTimeout(() => {
-        setHighlightedAyah(null);
-      }, 2000);
     }
   };
 
@@ -774,9 +769,7 @@ const SurahReader = () => {
                   className={`py-6 md:py-8 select-none transition-colors duration-500 outline-none ${
                     longPressAyah === ayah.numberInSurah
                       ? "bg-card shadow-xl shadow-primary/10 px-4 -mx-4 rounded-lg"
-                      : highlightedAyah === ayah.numberInSurah
-                        ? "bg-primary/10"
-                        : ""
+                      : ""
                   }`}
                   ref={(el) => (ayahRefs.current[ayah.numberInSurah] = el)}
                   data-ayah={ayah.numberInSurah}
