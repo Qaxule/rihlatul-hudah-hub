@@ -18,31 +18,26 @@ async function fetchAndParse(url: string): Promise<any> {
     throw new Error(`API error: ${response.status}`);
   }
 
-  const contentEncoding = response.headers.get("content-encoding");
+  // Always read as arrayBuffer first to handle both gzip and plain text
+  const arrayBuffer = await response.arrayBuffer();
+  const bytes = new Uint8Array(arrayBuffer);
   
-  if (contentEncoding === "gzip") {
-    // Handle gzip compressed response
-    const compressedBody = await response.arrayBuffer();
-    const decompressedBody = gunzipSync(new Uint8Array(compressedBody));
-    const decompressedString = new TextDecoder().decode(decompressedBody);
-    return JSON.parse(decompressedString);
-  }
+  // Check for gzip magic bytes (0x1f 0x8b)
+  const isGzip = bytes.length >= 2 && bytes[0] === 0x1f && bytes[1] === 0x8b;
   
-  // Try regular text parsing
-  const text = await response.text();
+  let text: string;
   
-  // Check if it looks like gzip (starts with magic bytes)
-  if (text.charCodeAt(0) === 0x1f && text.charCodeAt(1) === 0x8b) {
-    // It's gzip but wasn't labeled - try to decompress
-    const encoder = new TextEncoder();
-    const compressedBytes = encoder.encode(text);
+  if (isGzip) {
+    console.log("Detected gzip response, decompressing...");
     try {
-      const decompressedBody = gunzipSync(new Uint8Array(compressedBytes));
-      const decompressedString = new TextDecoder().decode(decompressedBody);
-      return JSON.parse(decompressedString);
-    } catch {
-      // Fall through to regular parsing
+      const decompressed = gunzipSync(bytes);
+      text = new TextDecoder().decode(decompressed);
+    } catch (e) {
+      console.error("Gunzip failed:", e);
+      throw new Error("Failed to decompress gzip response");
     }
+  } else {
+    text = new TextDecoder().decode(bytes);
   }
   
   return JSON.parse(text);
