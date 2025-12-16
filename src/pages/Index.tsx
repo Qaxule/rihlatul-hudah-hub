@@ -49,7 +49,9 @@ const Index = () => {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
   const searchRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -65,11 +67,17 @@ const Index = () => {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
         setShowResults(false);
+        setSelectedIndex(-1);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Reset selected index when results change
+  useEffect(() => {
+    setSelectedIndex(-1);
+  }, [searchResults]);
 
   // Debounced search
   useEffect(() => {
@@ -95,7 +103,7 @@ const Index = () => {
       } finally {
         setIsSearching(false);
       }
-    }, 400);
+    }, 300);
 
     return () => clearTimeout(timeoutId);
   }, [searchQuery]);
@@ -131,6 +139,7 @@ const Index = () => {
   const handleResultClick = (result: SearchResult) => {
     setShowResults(false);
     setSearchQuery("");
+    setSelectedIndex(-1);
     navigate(`/surah/${result.surahNumber}#ayah-${result.ayahNumber}`);
   };
 
@@ -138,6 +147,52 @@ const Index = () => {
     setSearchQuery("");
     setSearchResults([]);
     setShowResults(false);
+    setSelectedIndex(-1);
+    inputRef.current?.focus();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!showResults || searchResults.length === 0) {
+      if (e.key === 'Escape') {
+        clearSearch();
+      }
+      return;
+    }
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setSelectedIndex(prev => 
+          prev < searchResults.length - 1 ? prev + 1 : 0
+        );
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setSelectedIndex(prev => 
+          prev > 0 ? prev - 1 : searchResults.length - 1
+        );
+        break;
+      case 'Enter':
+        e.preventDefault();
+        if (selectedIndex >= 0 && selectedIndex < searchResults.length) {
+          handleResultClick(searchResults[selectedIndex]);
+        }
+        break;
+      case 'Escape':
+        e.preventDefault();
+        setShowResults(false);
+        setSelectedIndex(-1);
+        break;
+    }
+  };
+
+  const highlightMatch = (text: string, query: string) => {
+    if (!query.trim()) return text;
+    const regex = new RegExp(`(${query.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    const parts = text.split(regex);
+    return parts.map((part, i) => 
+      regex.test(part) ? <mark key={i} className="bg-primary/20 text-foreground rounded px-0.5">{part}</mark> : part
+    );
   };
 
   const quickLinks = [
@@ -191,11 +246,13 @@ const Index = () => {
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
+                  ref={inputRef}
                   type="text"
                   placeholder="Search the Qur'an..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => searchResults.length > 0 && setShowResults(true)}
+                  onKeyDown={handleKeyDown}
                   className="w-full h-14 pl-12 pr-12 text-base rounded-full border-2 border-border bg-card shadow-soft focus:border-primary focus:ring-primary"
                 />
                 {searchQuery && (
@@ -216,17 +273,29 @@ const Index = () => {
               {showResults && searchResults.length > 0 && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-elevated max-h-[400px] overflow-y-auto z-50">
                   <div className="p-2">
-                    <p className="text-xs text-muted-foreground px-3 py-2">
-                      Found {searchResults.length} result{searchResults.length !== 1 ? 's' : ''}
-                    </p>
+                    <div className="flex items-center justify-between px-3 py-2">
+                      <p className="text-xs text-muted-foreground">
+                        Found {searchResults.length} result{searchResults.length !== 1 ? 's' : ''}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        ↑↓ to navigate • Enter to select
+                      </p>
+                    </div>
                     {searchResults.map((result, index) => (
                       <button
                         key={`${result.surahNumber}-${result.ayahNumber}-${index}`}
                         onClick={() => handleResultClick(result)}
-                        className="w-full text-left p-3 hover:bg-muted/50 rounded-lg transition-colors"
+                        onMouseEnter={() => setSelectedIndex(index)}
+                        className={`w-full text-left p-3 rounded-lg transition-colors ${
+                          selectedIndex === index 
+                            ? 'bg-primary/10 border border-primary/20' 
+                            : 'hover:bg-muted/50'
+                        }`}
                       >
                         <div className="flex items-start gap-3">
-                          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                          <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
+                            selectedIndex === index ? 'bg-primary/20' : 'bg-primary/10'
+                          }`}>
                             <span className="text-primary text-xs font-semibold">{result.surahNumber}</span>
                           </div>
                           <div className="flex-1 min-w-0">
@@ -234,7 +303,7 @@ const Index = () => {
                               {result.surahName} {result.surahNumber}:{result.ayahNumber}
                             </p>
                             <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
-                              {result.translation}
+                              {highlightMatch(result.translation, searchQuery)}
                             </p>
                             <p className="text-sm font-arabic text-foreground/70 line-clamp-1 mt-1 text-right" dir="rtl">
                               {result.arabicText}
@@ -251,6 +320,7 @@ const Index = () => {
               {showResults && searchQuery.length >= 2 && !isSearching && searchResults.length === 0 && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-elevated z-50">
                   <div className="p-6 text-center">
+                    <Search className="h-8 w-8 text-muted-foreground mx-auto mb-2 opacity-50" />
                     <p className="text-muted-foreground">No results found for "{searchQuery}"</p>
                     <p className="text-sm text-muted-foreground mt-1">Try searching for a different word or phrase</p>
                   </div>
