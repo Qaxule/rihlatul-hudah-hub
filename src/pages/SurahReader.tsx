@@ -76,6 +76,7 @@ const SurahReader = () => {
   }>({ isOpen: false, ayahNumber: null, position: { x: 0, y: 0 } });
   const [longPressAyah, setLongPressAyah] = useState<number | null>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [highlightedAyah, setHighlightedAyah] = useState<number | null>(null);
   const touchStart = useRef<{ x: number; y: number; time: number } | null>(null);
   const movedTooMuch = useRef<boolean>(false);
   const justOpened = useRef<boolean>(false);
@@ -364,10 +365,10 @@ const SurahReader = () => {
         behavior: 'smooth', 
         block: 'center' 
       });
-      // Highlight the ayah briefly with a subtle background pulse
-      ayahElement.classList.add('bg-primary/10');
+      // Highlight the ayah briefly using state
+      setHighlightedAyah(ayahNumber);
       setTimeout(() => {
-        ayahElement.classList.remove('bg-primary/10');
+        setHighlightedAyah(null);
       }, 2000);
     }
   };
@@ -751,12 +752,14 @@ const SurahReader = () => {
                 className="relative"
               >
                 <div
-                  className={`py-6 md:py-8 select-none transition-all rounded-lg ${
+                  className={`py-6 md:py-8 select-none transition-colors duration-500 outline-none ${
                     longPressAyah === ayah.numberInSurah
-                      ? "bg-card shadow-xl shadow-primary/10 px-4 -mx-4"
-                      : playingAyah === ayah.numberInSurah
-                        ? "bg-primary/5"
-                        : ""
+                      ? "bg-card shadow-xl shadow-primary/10 px-4 -mx-4 rounded-lg"
+                      : highlightedAyah === ayah.numberInSurah
+                        ? "bg-primary/10"
+                        : playingAyah === ayah.numberInSurah
+                          ? "bg-primary/5"
+                          : ""
                   }`}
                   ref={(el) => (ayahRefs.current[ayah.numberInSurah] = el)}
                   data-ayah={ayah.numberInSurah}
@@ -764,7 +767,7 @@ const SurahReader = () => {
                   onTouchEnd={(e) => handleTouchEnd(e, ayah.numberInSurah)}
                   onTouchMove={handleTouchMove}
                   onContextMenu={(e) => handleContextMenu(e, ayah.numberInSurah)}
-                  style={{ WebkitUserSelect: 'none', userSelect: 'none', WebkitTouchCallout: 'none' }}
+                  style={{ WebkitUserSelect: 'none', userSelect: 'none', WebkitTouchCallout: 'none', outline: 'none' }}
                 >
                   {/* Ayah Header - Subtle */}
                   <div className="flex items-center justify-between mb-4">
