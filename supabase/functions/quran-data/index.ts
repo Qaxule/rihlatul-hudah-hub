@@ -5,6 +5,46 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+async function fetchWithRetry(url: string, retries = 3): Promise<Response> {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const response = await fetch(url, {
+        headers: {
+          "User-Agent": "Rihlatul-Hudah/1.0",
+          "Accept": "application/json",
+        }
+      });
+      
+      if (response.ok) {
+        return response;
+      }
+      
+      if (i < retries - 1) {
+        await new Promise(r => setTimeout(r, 1000 * (i + 1)));
+      }
+    } catch (error) {
+      if (i === retries - 1) throw error;
+      await new Promise(r => setTimeout(r, 1000 * (i + 1)));
+    }
+  }
+  throw new Error("Failed after retries");
+}
+
+async function getResponseText(response: Response): Promise<string> {
+  const contentEncoding = response.headers.get("content-encoding");
+  
+  if (contentEncoding === "gzip" || contentEncoding === "deflate") {
+    // Handle compressed response
+    const arrayBuffer = await response.arrayBuffer();
+    const decompressedStream = new Response(arrayBuffer).body!
+      .pipeThrough(new DecompressionStream(contentEncoding as "gzip" | "deflate"));
+    const decompressedResponse = new Response(decompressedStream);
+    return await decompressedResponse.text();
+  }
+  
+  return await response.text();
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -48,19 +88,22 @@ serve(async (req) => {
       url = "https://api.alquran.cloud/v1/surah";
     }
 
-    const response = await fetch(url, {
-      headers: {
-        "Accept": "application/json",
-        "Accept-Encoding": "identity"
-      }
-    });
+    const response = await fetchWithRetry(url);
     
     if (!response.ok) {
       throw new Error(`AlQuran API error: ${response.status}`);
     }
 
-    const text = await response.text();
-    const data = JSON.parse(text);
+    const text = await getResponseText(response);
+    
+    // Validate JSON before parsing
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (parseError) {
+      console.error("Failed to parse response:", text.substring(0, 100));
+      throw new Error("Invalid JSON response from API");
+    }
 
     return new Response(JSON.stringify(data), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
