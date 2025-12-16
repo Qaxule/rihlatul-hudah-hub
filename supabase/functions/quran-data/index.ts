@@ -6,41 +6,78 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-async function fetchAndParse(url: string): Promise<any> {
-  const response = await fetch(url, {
-    headers: {
-      "User-Agent": "Rihlatul-Hudah/1.0",
-      "Accept": "application/json",
-    }
-  });
+// Zstandard magic bytes
+const ZSTD_MAGIC = [0x28, 0xb5, 0x2f, 0xfd];
+const GZIP_MAGIC = [0x1f, 0x8b];
 
-  if (!response.ok) {
-    throw new Error(`API error: ${response.status}`);
-  }
-
-  // Always read as arrayBuffer first to handle both gzip and plain text
-  const arrayBuffer = await response.arrayBuffer();
-  const bytes = new Uint8Array(arrayBuffer);
+async function fetchAndParse(url: string, retries = 3): Promise<any> {
+  let lastError: Error | null = null;
   
-  // Check for gzip magic bytes (0x1f 0x8b)
-  const isGzip = bytes.length >= 2 && bytes[0] === 0x1f && bytes[1] === 0x8b;
-  
-  let text: string;
-  
-  if (isGzip) {
-    console.log("Detected gzip response, decompressing...");
+  for (let attempt = 0; attempt < retries; attempt++) {
     try {
-      const decompressed = gunzipSync(bytes);
-      text = new TextDecoder().decode(decompressed);
-    } catch (e) {
-      console.error("Gunzip failed:", e);
-      throw new Error("Failed to decompress gzip response");
+      // Add cache-busting parameter to avoid cached compressed responses
+      const cacheBuster = `_=${Date.now()}_${attempt}`;
+      const urlWithCacheBuster = url.includes('?') ? `${url}&${cacheBuster}` : `${url}?${cacheBuster}`;
+      
+      const response = await fetch(urlWithCacheBuster, {
+        headers: {
+          "User-Agent": "Rihlatul-Hudah/1.0",
+          "Accept": "application/json",
+          "Accept-Encoding": "identity",
+          "Cache-Control": "no-cache, no-store",
+          "Pragma": "no-cache",
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      const contentEncoding = response.headers.get("content-encoding");
+      console.log(`Attempt ${attempt + 1}: Content-Encoding: ${contentEncoding}`);
+
+      // If no encoding or identity, parse directly as text
+      if (!contentEncoding || contentEncoding === "identity") {
+        const text = await response.text();
+        console.log(`Success: Got uncompressed response (${text.length} chars)`);
+        return JSON.parse(text);
+      }
+
+      // Handle compressed responses - read as arrayBuffer
+      const arrayBuffer = await response.arrayBuffer();
+      const bytes = new Uint8Array(arrayBuffer);
+      
+      console.log(`Attempt ${attempt + 1}: Got ${contentEncoding} compressed response (${bytes.length} bytes)`);
+
+      // Check for gzip
+      if (contentEncoding === "gzip" || (bytes[0] === GZIP_MAGIC[0] && bytes[1] === GZIP_MAGIC[1])) {
+        console.log("Decompressing gzip...");
+        const decompressed = gunzipSync(bytes);
+        return JSON.parse(new TextDecoder().decode(decompressed));
+      }
+
+      // Check for zstd - not supported, need to retry
+      if (contentEncoding === "zstd" || (bytes[0] === ZSTD_MAGIC[0] && bytes[1] === ZSTD_MAGIC[1])) {
+        lastError = new Error("Server returned zstd compressed data");
+        console.log(`Attempt ${attempt + 1}: Got zstd, will retry...`);
+        // Wait a bit before retrying
+        await new Promise(r => setTimeout(r, 100 * (attempt + 1)));
+        continue;
+      }
+
+      // Try to decode as text
+      const text = new TextDecoder().decode(bytes);
+      return JSON.parse(text);
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
+      console.error(`Attempt ${attempt + 1} failed:`, lastError.message);
+      if (attempt < retries - 1) {
+        await new Promise(r => setTimeout(r, 100 * (attempt + 1)));
+      }
     }
-  } else {
-    text = new TextDecoder().decode(bytes);
   }
   
-  return JSON.parse(text);
+  throw lastError || new Error("Failed to fetch after retries");
 }
 
 serve(async (req) => {
