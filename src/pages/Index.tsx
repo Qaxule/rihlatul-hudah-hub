@@ -418,7 +418,7 @@ const Index = () => {
       <section className="container mx-auto px-4 py-8 pb-16">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-xl font-semibold text-foreground mb-4">Quick Access</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
             {features.map((feature) => (
               <Link key={feature.title} to={feature.href}>
                 <Card className="h-full hover:shadow-soft hover:border-primary/20 transition-all group">
