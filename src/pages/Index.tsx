@@ -220,7 +220,7 @@ const Index = () => {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
+      <section className="relative">
         {/* Subtle Islamic Pattern Background */}
         <div className="absolute inset-0 opacity-[0.06]" aria-hidden="true">
           <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
