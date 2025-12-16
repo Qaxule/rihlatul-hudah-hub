@@ -1,48 +1,51 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { gunzipSync } from "node:zlib";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-async function fetchWithRetry(url: string, retries = 3): Promise<Response> {
-  for (let i = 0; i < retries; i++) {
-    try {
-      const response = await fetch(url, {
-        headers: {
-          "User-Agent": "Rihlatul-Hudah/1.0",
-          "Accept": "application/json",
-        }
-      });
-      
-      if (response.ok) {
-        return response;
-      }
-      
-      if (i < retries - 1) {
-        await new Promise(r => setTimeout(r, 1000 * (i + 1)));
-      }
-    } catch (error) {
-      if (i === retries - 1) throw error;
-      await new Promise(r => setTimeout(r, 1000 * (i + 1)));
+async function fetchAndParse(url: string): Promise<any> {
+  const response = await fetch(url, {
+    headers: {
+      "User-Agent": "Rihlatul-Hudah/1.0",
+      "Accept": "application/json",
     }
-  }
-  throw new Error("Failed after retries");
-}
+  });
 
-async function getResponseText(response: Response): Promise<string> {
+  if (!response.ok) {
+    throw new Error(`API error: ${response.status}`);
+  }
+
   const contentEncoding = response.headers.get("content-encoding");
   
-  if (contentEncoding === "gzip" || contentEncoding === "deflate") {
-    // Handle compressed response
-    const arrayBuffer = await response.arrayBuffer();
-    const decompressedStream = new Response(arrayBuffer).body!
-      .pipeThrough(new DecompressionStream(contentEncoding as "gzip" | "deflate"));
-    const decompressedResponse = new Response(decompressedStream);
-    return await decompressedResponse.text();
+  if (contentEncoding === "gzip") {
+    // Handle gzip compressed response
+    const compressedBody = await response.arrayBuffer();
+    const decompressedBody = gunzipSync(new Uint8Array(compressedBody));
+    const decompressedString = new TextDecoder().decode(decompressedBody);
+    return JSON.parse(decompressedString);
   }
   
-  return await response.text();
+  // Try regular text parsing
+  const text = await response.text();
+  
+  // Check if it looks like gzip (starts with magic bytes)
+  if (text.charCodeAt(0) === 0x1f && text.charCodeAt(1) === 0x8b) {
+    // It's gzip but wasn't labeled - try to decompress
+    const encoder = new TextEncoder();
+    const compressedBytes = encoder.encode(text);
+    try {
+      const decompressedBody = gunzipSync(new Uint8Array(compressedBytes));
+      const decompressedString = new TextDecoder().decode(decompressedBody);
+      return JSON.parse(decompressedString);
+    } catch {
+      // Fall through to regular parsing
+    }
+  }
+  
+  return JSON.parse(text);
 }
 
 serve(async (req) => {
@@ -88,22 +91,7 @@ serve(async (req) => {
       url = "https://api.alquran.cloud/v1/surah";
     }
 
-    const response = await fetchWithRetry(url);
-    
-    if (!response.ok) {
-      throw new Error(`AlQuran API error: ${response.status}`);
-    }
-
-    const text = await getResponseText(response);
-    
-    // Validate JSON before parsing
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch (parseError) {
-      console.error("Failed to parse response:", text.substring(0, 100));
-      throw new Error("Invalid JSON response from API");
-    }
+    const data = await fetchAndParse(url);
 
     return new Response(JSON.stringify(data), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
