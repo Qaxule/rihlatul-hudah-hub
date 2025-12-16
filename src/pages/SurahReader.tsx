@@ -815,9 +815,6 @@ const SurahReader = () => {
                   {/* Arabic Text - Primary & Prominent */}
                   <p className="text-2xl md:text-3xl lg:text-4xl leading-[2] md:leading-[2.2] text-right text-foreground font-arabic" dir="rtl">
                     {ayah.text}
-                    <span className="inline-block text-primary/60 text-lg md:text-xl mx-2 font-sans">
-                      ﴿{ayah.numberInSurah}﴾
-                    </span>
                   </p>
 
                   {/* Transliteration - Smaller */}
