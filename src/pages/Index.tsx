@@ -312,7 +312,7 @@ const Index = () => {
             </Link>
 
             {/* Action Cards */}
-            <div className="space-y-4">
+            <div className="space-y-5">
               <Link to="/learning">
                 <Card className="hover:shadow-soft transition-all group">
                   <CardContent className="p-4 flex items-center justify-between">
