@@ -381,36 +381,28 @@ const Index = () => {
               </Card>
             </Link>
 
-            {/* Action Cards */}
-            <div className="space-y-5">
-              <Link to="/learning">
-                <Card className="hover:shadow-soft transition-all group">
-                  <CardContent className="p-4 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <GraduationCap className="h-5 w-5 text-primary" />
-                      <div>
-                        <p className="font-medium text-foreground">Learn Islam</p>
-                        <p className="text-sm text-muted-foreground">Structured lessons for all levels</p>
-                      </div>
-                    </div>
-                    <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                  </CardContent>
-                </Card>
+            {/* Action Links - Flat List */}
+            <div className="divide-y divide-border rounded-lg border border-border bg-card overflow-hidden">
+              <Link to="/learning" className="flex items-center justify-between p-4 hover:bg-secondary/50 transition-colors group">
+                <div className="flex items-center gap-3">
+                  <GraduationCap className="h-5 w-5 text-primary" />
+                  <div>
+                    <p className="font-medium text-foreground">Learn Islam</p>
+                    <p className="text-sm text-muted-foreground">Structured lessons for all levels</p>
+                  </div>
+                </div>
+                <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
               </Link>
 
-              <Link to="/support">
-                <Card className="hover:shadow-soft transition-all group">
-                  <CardContent className="p-4 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <HandHeart className="h-5 w-5 text-primary" />
-                      <div>
-                        <p className="font-medium text-foreground">Support the Project</p>
-                        <p className="text-sm text-muted-foreground">Help us grow and improve</p>
-                      </div>
-                    </div>
-                    <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                  </CardContent>
-                </Card>
+              <Link to="/support" className="flex items-center justify-between p-4 hover:bg-secondary/50 transition-colors group">
+                <div className="flex items-center gap-3">
+                  <HandHeart className="h-5 w-5 text-primary" />
+                  <div>
+                    <p className="font-medium text-foreground">Support the Project</p>
+                    <p className="text-sm text-muted-foreground">Help us grow and improve</p>
+                  </div>
+                </div>
+                <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
               </Link>
             </div>
           </div>
