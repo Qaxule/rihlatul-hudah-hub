@@ -17,8 +17,9 @@ export interface AudioPlayerRef {
 
 const AudioPlayer = forwardRef<AudioPlayerRef, AudioPlayerProps>(
   ({ audioUrl, isPlaying, onPlay, onEnded, onBufferingChange }, ref) => {
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isBuffering, setIsBuffering] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   // Notify parent of buffering state changes
   useEffect(() => {
@@ -28,7 +29,7 @@ const AudioPlayer = forwardRef<AudioPlayerRef, AudioPlayerProps>(
   useImperativeHandle(ref, () => ({
     play: () => {
       if (audioRef.current) {
-        audioRef.current.play();
+        audioRef.current.play().catch(console.error);
       }
     },
     pause: () => {
@@ -38,37 +39,30 @@ const AudioPlayer = forwardRef<AudioPlayerRef, AudioPlayerProps>(
     },
   }));
 
+  // Create audio element dynamically to avoid CORS issues
   useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
+    if (!audioUrl) return;
 
-    if (isPlaying) {
-      setIsBuffering(true);
-      audio.play().catch(console.error);
-    } else {
-      audio.pause();
-      setIsBuffering(false);
-    }
-  }, [isPlaying]);
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
+    const audio = new Audio();
+    audio.preload = "none";
+    audioRef.current = audio;
 
     const handleEnded = () => {
       setIsBuffering(false);
       onEnded?.();
     };
     
-    const handleError = (e: Event) => {
-      const audioEl = e.target as HTMLAudioElement;
-      console.error("Audio error:", audioEl?.error?.code, audioEl?.error?.message, "URL:", audioUrl);
+    const handleError = () => {
+      console.error("Audio error for URL:", audioUrl);
       setIsBuffering(false);
+      setHasError(true);
+      // Try to continue to next ayah even on error
       onEnded?.();
     };
 
     const handleCanPlay = () => {
       setIsBuffering(false);
+      setHasError(false);
     };
 
     const handleWaiting = () => {
@@ -79,6 +73,13 @@ const AudioPlayer = forwardRef<AudioPlayerRef, AudioPlayerProps>(
 
     const handlePlaying = () => {
       setIsBuffering(false);
+      setHasError(false);
+    };
+
+    const handleLoadStart = () => {
+      if (isPlaying) {
+        setIsBuffering(true);
+      }
     };
     
     audio.addEventListener("ended", handleEnded);
@@ -86,41 +87,68 @@ const AudioPlayer = forwardRef<AudioPlayerRef, AudioPlayerProps>(
     audio.addEventListener("canplay", handleCanPlay);
     audio.addEventListener("waiting", handleWaiting);
     audio.addEventListener("playing", handlePlaying);
+    audio.addEventListener("loadstart", handleLoadStart);
     
     return () => {
+      audio.pause();
       audio.removeEventListener("ended", handleEnded);
       audio.removeEventListener("error", handleError);
       audio.removeEventListener("canplay", handleCanPlay);
       audio.removeEventListener("waiting", handleWaiting);
       audio.removeEventListener("playing", handlePlaying);
+      audio.removeEventListener("loadstart", handleLoadStart);
+      audioRef.current = null;
     };
-  }, [onEnded, audioUrl, isPlaying]);
+  }, [audioUrl]);
+
+  // Handle play/pause
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio || !audioUrl) return;
+
+    if (isPlaying) {
+      setIsBuffering(true);
+      setHasError(false);
+      // Set source and play
+      if (audio.src !== audioUrl) {
+        audio.src = audioUrl;
+      }
+      audio.play().catch((err) => {
+        console.error("Play error:", err);
+        setIsBuffering(false);
+        setHasError(true);
+      });
+    } else {
+      audio.pause();
+      setIsBuffering(false);
+    }
+  }, [isPlaying, audioUrl]);
 
   const togglePlay = () => {
     onPlay?.();
   };
 
-    return (
-      <div className="inline-flex items-center">
-        <audio ref={audioRef} src={audioUrl} preload="none" crossOrigin="anonymous" />
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={togglePlay}
-          className="h-8 w-8"
-          disabled={isBuffering}
-        >
-          {isBuffering ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : isPlaying ? (
-            <Pause className="w-4 h-4" />
-          ) : (
-            <Play className="w-4 h-4" />
-          )}
-        </Button>
-      </div>
-    );
-  }
+  return (
+    <div className="inline-flex items-center">
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={togglePlay}
+        className={`h-8 w-8 ${hasError ? 'text-destructive' : ''}`}
+        disabled={isBuffering}
+        title={hasError ? "Audio unavailable" : isPlaying ? "Pause" : "Play"}
+      >
+        {isBuffering ? (
+          <Loader2 className="w-4 h-4 animate-spin" />
+        ) : isPlaying ? (
+          <Pause className="w-4 h-4" />
+        ) : (
+          <Play className="w-4 h-4" />
+        )}
+      </Button>
+    </div>
+  );
+}
 );
 
 AudioPlayer.displayName = "AudioPlayer";
