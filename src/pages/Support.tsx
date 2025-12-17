@@ -15,6 +15,7 @@ interface CurrencyConfig {
   name: string;
   symbol: string;
   minAmount: number;
+  maxAmount: number;
   amounts: number[];
 }
 const CURRENCIES: CurrencyConfig[] = [{
@@ -22,31 +23,36 @@ const CURRENCIES: CurrencyConfig[] = [{
   name: "Ugandan Shilling",
   symbol: "UGX",
   minAmount: 1000,
-  amounts: [5000, 10000, 25000, 50000]
+  maxAmount: 25000,
+  amounts: [5000, 10000, 15000, 25000]
 }, {
   code: "KES",
   name: "Kenyan Shilling",
   symbol: "KES",
   minAmount: 100,
-  amounts: [500, 1000, 2500, 5000]
+  maxAmount: 2500,
+  amounts: [500, 1000, 1500, 2500]
 }, {
   code: "USD",
   name: "US Dollar",
   symbol: "$",
   minAmount: 1,
-  amounts: [5, 10, 25, 50]
+  maxAmount: 7,
+  amounts: [2, 3, 5, 7]
 }, {
   code: "EUR",
   name: "Euro",
   symbol: "€",
   minAmount: 1,
-  amounts: [5, 10, 25, 50]
+  maxAmount: 6,
+  amounts: [2, 3, 5, 6]
 }, {
   code: "AED",
   name: "UAE Dirham",
   symbol: "AED",
   minAmount: 5,
-  amounts: [20, 50, 100, 200]
+  maxAmount: 25,
+  amounts: [10, 15, 20, 25]
 }];
 const Support = () => {
   const [selectedCurrency, setSelectedCurrency] = useState<CurrencyCode>("UGX");
@@ -72,6 +78,10 @@ const Support = () => {
     const amount = selectedAmount || Number(customAmount);
     if (!amount || amount < currentCurrency.minAmount) {
       toast.error(`Please enter a valid donation amount (minimum ${formatAmount(currentCurrency.minAmount)})`);
+      return;
+    }
+    if (amount > currentCurrency.maxAmount) {
+      toast.error(`Maximum donation amount is ${formatAmount(currentCurrency.maxAmount)} due to payment processor limits`);
       return;
     }
     setIsProcessing(true);
@@ -201,10 +211,10 @@ const Support = () => {
               {/* Custom Amount */}
               <div className="space-y-2">
                 <Label htmlFor="customAmount">Or enter custom amount ({currentCurrency.code})</Label>
-                <Input id="customAmount" type="number" placeholder="Enter amount" value={customAmount} onChange={e => {
+                <Input id="customAmount" type="number" placeholder={`Enter between ${currentCurrency.minAmount.toLocaleString()} - ${currentCurrency.maxAmount.toLocaleString()}`} value={customAmount} onChange={e => {
                 setCustomAmount(e.target.value);
                 setSelectedAmount(null);
-              }} min={currentCurrency.minAmount} />
+              }} min={currentCurrency.minAmount} max={currentCurrency.maxAmount} />
               </div>
 
               {/* Donor Details (Optional) */}
@@ -285,19 +295,19 @@ const Support = () => {
                 <div className="bg-muted/50 p-4 rounded space-y-2 text-sm">
                   <div className="grid grid-cols-2 gap-2">
                     <span className="font-semibold">Bank Name:</span>
-                    <span className="text-muted-foreground">SALAAM BANK LIMITED</span>
+                    <span className="text-muted-foreground">SALAAM BANK UGANDA LIMITED</span>
                     
                     <span className="font-semibold">Account Name:</span>
-                    <span className="text-muted-foreground">Rihlatul Hudah Foundation</span>
+                    <span className="text-muted-foreground">KASULE ABDUL RAHMAN</span>
                     
                     <span className="font-semibold">Account Number:</span>
-                    <span className="text-muted-foreground">123-456-7890</span>
+                    <span className="text-muted-foreground">1410007056</span>
                     
-                    <span className="font-semibold">SWIFT/BIC:</span>
-                    <span className="text-muted-foreground">ISDBSA00XXX</span>
+                    <span className="font-semibold">SWIFT Code:</span>
+                    <span className="text-muted-foreground">TOPFUGKA</span>
                     
-                    <span className="font-semibold">IBAN:</span>
-                    <span className="text-muted-foreground">SA00 1234 5678 9012 3456 7890</span>
+                    <span className="font-semibold">Bank Address:</span>
+                    <span className="text-muted-foreground">KAMPALA ROAD, PLOT 53 FLOOR 1, KAMPALA</span>
                   </div>
                 </div>
               </div>
@@ -311,18 +321,26 @@ const Support = () => {
                     <p className="text-sm text-muted-foreground">Support us with Bitcoin or Ethereum</p>
                   </div>
                 </div>
-                <div className="bg-muted/50 p-4 rounded space-y-3 text-sm">
-                  <div>
-                    <p className="font-semibold mb-1">Bitcoin (BTC)</p>
+                <div className="bg-muted/50 p-4 rounded space-y-4 text-sm">
+                  <div className="space-y-2">
+                    <p className="font-semibold">Bitcoin (BTC)</p>
                     <p className="text-muted-foreground font-mono text-xs break-all">
-                      bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh
+                      3BuomtEZ8GK9vfGFWAdgWSmrdxDLSPGUoN
                     </p>
+                    <div className="text-xs space-y-1 text-amber-600 dark:text-amber-400">
+                      <p className="font-medium">⚠️ Do not send Bitcoin Cash (BCH) to this address</p>
+                      <p>This address can only receive Bitcoin on the Bitcoin network. Don't send Bitcoin on any other network or it may be lost.</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-semibold mb-1">Ethereum (ETH)</p>
+                  <div className="space-y-2 pt-2 border-t border-border">
+                    <p className="font-semibold">Ethereum (ETH)</p>
                     <p className="text-muted-foreground font-mono text-xs break-all">
-                      0x71C7656EC7ab88b098defB751B7401B5f6d8976F
+                      0xF68E255e69898c04a274B25FE6E63bb7e8fBd758
                     </p>
+                    <div className="text-xs space-y-1 text-amber-600 dark:text-amber-400">
+                      <p className="font-medium">⚠️ Do not send any ERC-20s, NFTs or WETH to this address</p>
+                      <p>This address can only receive Ethereum on the Ethereum network. Don't send Ethereum on any other network or it may be lost.</p>
+                    </div>
                   </div>
                 </div>
               </div>
