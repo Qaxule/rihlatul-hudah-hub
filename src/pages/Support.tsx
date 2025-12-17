@@ -9,9 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Heart, Coffee, DollarSign, CreditCard, Wallet, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-
 type CurrencyCode = "UGX" | "KES" | "USD" | "EUR" | "AED";
-
 interface CurrencyConfig {
   code: CurrencyCode;
   name: string;
@@ -19,45 +17,37 @@ interface CurrencyConfig {
   minAmount: number;
   amounts: number[];
 }
-
-const CURRENCIES: CurrencyConfig[] = [
-  {
-    code: "UGX",
-    name: "Ugandan Shilling",
-    symbol: "UGX",
-    minAmount: 1000,
-    amounts: [5000, 10000, 25000, 50000],
-  },
-  {
-    code: "KES",
-    name: "Kenyan Shilling",
-    symbol: "KES",
-    minAmount: 100,
-    amounts: [500, 1000, 2500, 5000],
-  },
-  {
-    code: "USD",
-    name: "US Dollar",
-    symbol: "$",
-    minAmount: 1,
-    amounts: [5, 10, 25, 50],
-  },
-  {
-    code: "EUR",
-    name: "Euro",
-    symbol: "€",
-    minAmount: 1,
-    amounts: [5, 10, 25, 50],
-  },
-  {
-    code: "AED",
-    name: "UAE Dirham",
-    symbol: "AED",
-    minAmount: 5,
-    amounts: [20, 50, 100, 200],
-  },
-];
-
+const CURRENCIES: CurrencyConfig[] = [{
+  code: "UGX",
+  name: "Ugandan Shilling",
+  symbol: "UGX",
+  minAmount: 1000,
+  amounts: [5000, 10000, 25000, 50000]
+}, {
+  code: "KES",
+  name: "Kenyan Shilling",
+  symbol: "KES",
+  minAmount: 100,
+  amounts: [500, 1000, 2500, 5000]
+}, {
+  code: "USD",
+  name: "US Dollar",
+  symbol: "$",
+  minAmount: 1,
+  amounts: [5, 10, 25, 50]
+}, {
+  code: "EUR",
+  name: "Euro",
+  symbol: "€",
+  minAmount: 1,
+  amounts: [5, 10, 25, 50]
+}, {
+  code: "AED",
+  name: "UAE Dirham",
+  symbol: "AED",
+  minAmount: 5,
+  amounts: [20, 50, 100, 200]
+}];
 const Support = () => {
   const [selectedCurrency, setSelectedCurrency] = useState<CurrencyCode>("UGX");
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
@@ -66,37 +56,32 @@ const Support = () => {
   const [donorEmail, setDonorEmail] = useState("");
   const [donorPhone, setDonorPhone] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
-
   const currentCurrency = CURRENCIES.find(c => c.code === selectedCurrency) || CURRENCIES[0];
-
   const handleCurrencyChange = (code: CurrencyCode) => {
     setSelectedCurrency(code);
     setSelectedAmount(null);
     setCustomAmount("");
   };
-
   const formatAmount = (amount: number) => {
     if (currentCurrency.symbol === "$" || currentCurrency.symbol === "€") {
       return `${currentCurrency.symbol}${amount.toLocaleString()}`;
     }
     return `${currentCurrency.code} ${amount.toLocaleString()}`;
   };
-
   const handleDonate = async () => {
     const amount = selectedAmount || Number(customAmount);
-    
     if (!amount || amount < currentCurrency.minAmount) {
       toast.error(`Please enter a valid donation amount (minimum ${formatAmount(currentCurrency.minAmount)})`);
       return;
     }
-
     setIsProcessing(true);
-
     try {
       const callbackUrl = `${window.location.origin}/support?payment=complete`;
       const ipnUrl = `${window.location.origin}/support?ipn=true`;
-
-      const { data, error } = await supabase.functions.invoke('pesapal-payment', {
+      const {
+        data,
+        error
+      } = await supabase.functions.invoke('pesapal-payment', {
         body: {
           action: 'initiate-payment',
           amount,
@@ -106,12 +91,10 @@ const Support = () => {
           ipnUrl,
           donorName: donorName || undefined,
           donorEmail: donorEmail || undefined,
-          donorPhone: donorPhone || undefined,
-        },
+          donorPhone: donorPhone || undefined
+        }
       });
-
       if (error) throw error;
-
       if (data?.success && data?.redirect_url) {
         toast.success("Redirecting to PesaPal...");
         window.location.href = data.redirect_url;
@@ -125,11 +108,8 @@ const Support = () => {
       setIsProcessing(false);
     }
   };
-
   const getFinalAmount = () => selectedAmount || Number(customAmount) || 0;
-
-  return (
-    <div className="min-h-screen flex flex-col bg-gradient-subtle">
+  return <div className="min-h-screen flex flex-col bg-gradient-subtle">
       <Navigation />
       
       <main className="flex-1 container mx-auto px-4 py-8 mt-16">
@@ -193,16 +173,14 @@ const Support = () => {
               {/* Currency Selection */}
               <div className="space-y-2">
                 <Label className="text-base font-semibold">Select Currency</Label>
-                <Select value={selectedCurrency} onValueChange={(value) => handleCurrencyChange(value as CurrencyCode)}>
+                <Select value={selectedCurrency} onValueChange={value => handleCurrencyChange(value as CurrencyCode)}>
                   <SelectTrigger className="w-full md:w-64">
                     <SelectValue placeholder="Select currency" />
                   </SelectTrigger>
                   <SelectContent className="bg-background border">
-                    {CURRENCIES.map((currency) => (
-                      <SelectItem key={currency.code} value={currency.code}>
+                    {CURRENCIES.map(currency => <SelectItem key={currency.code} value={currency.code}>
                         {currency.code} - {currency.name}
-                      </SelectItem>
-                    ))}
+                      </SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
@@ -211,39 +189,22 @@ const Support = () => {
               <div className="space-y-3">
                 <Label className="text-base font-semibold">Select Amount</Label>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {currentCurrency.amounts.map((amt) => (
-                    <button
-                      key={amt}
-                      onClick={() => {
-                        setSelectedAmount(amt);
-                        setCustomAmount("");
-                      }}
-                      className={`p-4 rounded-lg border-2 transition-all text-center ${
-                        selectedAmount === amt
-                          ? "border-primary bg-primary/10"
-                          : "border-border hover:border-primary/50"
-                      }`}
-                    >
+                  {currentCurrency.amounts.map(amt => <button key={amt} onClick={() => {
+                  setSelectedAmount(amt);
+                  setCustomAmount("");
+                }} className={`p-4 rounded-lg border-2 transition-all text-center ${selectedAmount === amt ? "border-primary bg-primary/10" : "border-border hover:border-primary/50"}`}>
                       <div className="font-bold text-foreground">{formatAmount(amt)}</div>
-                    </button>
-                  ))}
+                    </button>)}
                 </div>
               </div>
 
               {/* Custom Amount */}
               <div className="space-y-2">
                 <Label htmlFor="customAmount">Or enter custom amount ({currentCurrency.code})</Label>
-                <Input
-                  id="customAmount"
-                  type="number"
-                  placeholder="Enter amount"
-                  value={customAmount}
-                  onChange={(e) => {
-                    setCustomAmount(e.target.value);
-                    setSelectedAmount(null);
-                  }}
-                  min={currentCurrency.minAmount}
-                />
+                <Input id="customAmount" type="number" placeholder="Enter amount" value={customAmount} onChange={e => {
+                setCustomAmount(e.target.value);
+                setSelectedAmount(null);
+              }} min={currentCurrency.minAmount} />
               </div>
 
               {/* Donor Details (Optional) */}
@@ -254,54 +215,28 @@ const Support = () => {
                 <div className="grid md:grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="donorName">Name</Label>
-                    <Input
-                      id="donorName"
-                      placeholder="Your name"
-                      value={donorName}
-                      onChange={(e) => setDonorName(e.target.value)}
-                    />
+                    <Input id="donorName" placeholder="Your name" value={donorName} onChange={e => setDonorName(e.target.value)} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="donorEmail">Email</Label>
-                    <Input
-                      id="donorEmail"
-                      type="email"
-                      placeholder="your@email.com"
-                      value={donorEmail}
-                      onChange={(e) => setDonorEmail(e.target.value)}
-                    />
+                    <Input id="donorEmail" type="email" placeholder="your@email.com" value={donorEmail} onChange={e => setDonorEmail(e.target.value)} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="donorPhone">Phone</Label>
-                    <Input
-                      id="donorPhone"
-                      type="tel"
-                      placeholder="+256..."
-                      value={donorPhone}
-                      onChange={(e) => setDonorPhone(e.target.value)}
-                    />
+                    <Input id="donorPhone" type="tel" placeholder="+256..." value={donorPhone} onChange={e => setDonorPhone(e.target.value)} />
                   </div>
                 </div>
               </div>
 
               {/* Donate Button */}
-              <Button
-                size="lg"
-                className="w-full text-lg py-6"
-                onClick={handleDonate}
-                disabled={isProcessing || getFinalAmount() < currentCurrency.minAmount}
-              >
-                {isProcessing ? (
-                  <>
+              <Button size="lg" className="w-full text-lg py-6" onClick={handleDonate} disabled={isProcessing || getFinalAmount() < currentCurrency.minAmount}>
+                {isProcessing ? <>
                     <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                     Processing...
-                  </>
-                ) : (
-                  <>
+                  </> : <>
                     <Heart className="w-5 h-5 mr-2" />
                     Donate {getFinalAmount() > 0 ? formatAmount(getFinalAmount()) : ""}
-                  </>
-                )}
+                  </>}
               </Button>
 
               <p className="text-xs text-muted-foreground text-center">
@@ -350,7 +285,7 @@ const Support = () => {
                 <div className="bg-muted/50 p-4 rounded space-y-2 text-sm">
                   <div className="grid grid-cols-2 gap-2">
                     <span className="font-semibold">Bank Name:</span>
-                    <span className="text-muted-foreground">Islamic Development Bank</span>
+                    <span className="text-muted-foreground">SALAAM BANK LIMITED</span>
                     
                     <span className="font-semibold">Account Name:</span>
                     <span className="text-muted-foreground">Rihlatul Hudah Foundation</span>
@@ -426,8 +361,6 @@ const Support = () => {
       </main>
       
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Support;
