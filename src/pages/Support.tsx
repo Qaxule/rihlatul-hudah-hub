@@ -6,38 +6,46 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Heart, Coffee, DollarSign, CreditCard, Wallet, Loader2 } from "lucide-react";
+import { Heart, Coffee, DollarSign, CreditCard, Wallet, Loader2, Copy, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+
 type CurrencyCode = "UGX" | "KES" | "USD" | "EUR" | "AED";
+
 interface CurrencyConfig {
   code: CurrencyCode;
   name: string;
   symbol: string;
   minAmount: number;
   maxAmount: number;
+  maxUgxEquivalent: string;
   amounts: number[];
 }
+
+// All max amounts based on 25,000 UGX limit
 const CURRENCIES: CurrencyConfig[] = [{
   code: "UGX",
   name: "Ugandan Shilling",
   symbol: "UGX",
   minAmount: 1000,
   maxAmount: 25000,
+  maxUgxEquivalent: "25,000 UGX",
   amounts: [5000, 10000, 15000, 25000]
 }, {
   code: "KES",
   name: "Kenyan Shilling",
   symbol: "KES",
   minAmount: 100,
-  maxAmount: 2500,
-  amounts: [500, 1000, 1500, 2500]
+  maxAmount: 700,
+  maxUgxEquivalent: "~25,000 UGX",
+  amounts: [200, 400, 500, 700]
 }, {
   code: "USD",
   name: "US Dollar",
   symbol: "$",
   minAmount: 1,
   maxAmount: 7,
+  maxUgxEquivalent: "~25,000 UGX",
   amounts: [2, 3, 5, 7]
 }, {
   code: "EUR",
@@ -45,6 +53,7 @@ const CURRENCIES: CurrencyConfig[] = [{
   symbol: "€",
   minAmount: 1,
   maxAmount: 6,
+  maxUgxEquivalent: "~25,000 UGX",
   amounts: [2, 3, 5, 6]
 }, {
   code: "AED",
@@ -52,8 +61,26 @@ const CURRENCIES: CurrencyConfig[] = [{
   symbol: "AED",
   minAmount: 5,
   maxAmount: 25,
+  maxUgxEquivalent: "~25,000 UGX",
   amounts: [10, 15, 20, 25]
 }];
+
+const CopyButton = ({ text, label }: { text: string; label: string }) => {
+  const [copied, setCopied] = useState(false);
+  
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    toast.success(`${label} copied to clipboard`);
+    setTimeout(() => setCopied(false), 2000);
+  };
+  
+  return (
+    <Button variant="ghost" size="sm" onClick={handleCopy} className="h-7 px-2">
+      {copied ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5" />}
+    </Button>
+  );
+};
 const Support = () => {
   const [selectedCurrency, setSelectedCurrency] = useState<CurrencyCode>("UGX");
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
@@ -211,7 +238,7 @@ const Support = () => {
               {/* Custom Amount */}
               <div className="space-y-2">
                 <Label htmlFor="customAmount">Or enter custom amount ({currentCurrency.code})</Label>
-                <Input id="customAmount" type="number" placeholder={`Enter between ${currentCurrency.minAmount.toLocaleString()} - ${currentCurrency.maxAmount.toLocaleString()}`} value={customAmount} onChange={e => {
+                <Input id="customAmount" type="number" placeholder={`Enter between ${currentCurrency.minAmount.toLocaleString()} - ${currentCurrency.maxAmount.toLocaleString()} (max ${currentCurrency.maxUgxEquivalent})`} value={customAmount} onChange={e => {
                 setCustomAmount(e.target.value);
                 setSelectedAmount(null);
               }} min={currentCurrency.minAmount} max={currentCurrency.maxAmount} />
@@ -274,13 +301,14 @@ const Support = () => {
                     <p className="text-sm text-muted-foreground">Quick and secure one-time donation</p>
                   </div>
                 </div>
-                <Button className="w-full" size="lg" variant="outline">
+                <Button className="w-full" size="lg" variant="outline" onClick={() => window.open('https://paypal.me/marshallqaxule', '_blank')}>
                   <CreditCard className="w-4 h-4 mr-2" />
                   Donate via PayPal
                 </Button>
-                <p className="text-xs text-muted-foreground text-center">
-                  PayPal Email: donations@rihlatul-hudah.org
-                </p>
+                <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
+                  <span>PayPal Email: marshallqaxule@gmail.com</span>
+                  <CopyButton text="marshallqaxule@gmail.com" label="PayPal email" />
+                </div>
               </div>
 
               {/* Bank Transfer */}
@@ -293,21 +321,26 @@ const Support = () => {
                   </div>
                 </div>
                 <div className="bg-muted/50 p-4 rounded space-y-2 text-sm">
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-[auto_1fr_auto] gap-x-2 gap-y-2 items-center">
                     <span className="font-semibold">Bank Name:</span>
                     <span className="text-muted-foreground">SALAAM BANK UGANDA LIMITED</span>
+                    <CopyButton text="SALAAM BANK UGANDA LIMITED" label="Bank name" />
                     
                     <span className="font-semibold">Account Name:</span>
                     <span className="text-muted-foreground">KASULE ABDUL RAHMAN</span>
+                    <CopyButton text="KASULE ABDUL RAHMAN" label="Account name" />
                     
                     <span className="font-semibold">Account Number:</span>
                     <span className="text-muted-foreground">1410007056</span>
+                    <CopyButton text="1410007056" label="Account number" />
                     
                     <span className="font-semibold">SWIFT Code:</span>
                     <span className="text-muted-foreground">TOPFUGKA</span>
+                    <CopyButton text="TOPFUGKA" label="SWIFT code" />
                     
                     <span className="font-semibold">Bank Address:</span>
                     <span className="text-muted-foreground">KAMPALA ROAD, PLOT 53 FLOOR 1, KAMPALA</span>
+                    <CopyButton text="KAMPALA ROAD, PLOT 53 FLOOR 1, KAMPALA" label="Bank address" />
                   </div>
                 </div>
               </div>
@@ -324,9 +357,12 @@ const Support = () => {
                 <div className="bg-muted/50 p-4 rounded space-y-4 text-sm">
                   <div className="space-y-2">
                     <p className="font-semibold">Bitcoin (BTC)</p>
-                    <p className="text-muted-foreground font-mono text-xs break-all">
-                      3BuomtEZ8GK9vfGFWAdgWSmrdxDLSPGUoN
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-muted-foreground font-mono text-xs break-all flex-1">
+                        3BuomtEZ8GK9vfGFWAdgWSmrdxDLSPGUoN
+                      </p>
+                      <CopyButton text="3BuomtEZ8GK9vfGFWAdgWSmrdxDLSPGUoN" label="Bitcoin address" />
+                    </div>
                     <div className="text-xs space-y-1 text-amber-600 dark:text-amber-400">
                       <p className="font-medium">⚠️ Do not send Bitcoin Cash (BCH) to this address</p>
                       <p>This address can only receive Bitcoin on the Bitcoin network. Don't send Bitcoin on any other network or it may be lost.</p>
@@ -334,9 +370,12 @@ const Support = () => {
                   </div>
                   <div className="space-y-2 pt-2 border-t border-border">
                     <p className="font-semibold">Ethereum (ETH)</p>
-                    <p className="text-muted-foreground font-mono text-xs break-all">
-                      0xF68E255e69898c04a274B25FE6E63bb7e8fBd758
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-muted-foreground font-mono text-xs break-all flex-1">
+                        0xF68E255e69898c04a274B25FE6E63bb7e8fBd758
+                      </p>
+                      <CopyButton text="0xF68E255e69898c04a274B25FE6E63bb7e8fBd758" label="Ethereum address" />
+                    </div>
                     <div className="text-xs space-y-1 text-amber-600 dark:text-amber-400">
                       <p className="font-medium">⚠️ Do not send any ERC-20s, NFTs or WETH to this address</p>
                       <p>This address can only receive Ethereum on the Ethereum network. Don't send Ethereum on any other network or it may be lost.</p>
