@@ -394,6 +394,17 @@ const Index = () => {
                 <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
               </Link>
 
+              <Link to="/yasarna" className="flex items-center justify-between p-4 hover:bg-secondary/50 transition-colors group">
+                <div className="flex items-center gap-3">
+                  <BookOpen className="h-5 w-5 text-primary" />
+                  <div>
+                    <p className="font-medium text-foreground">Yasarna</p>
+                    <p className="text-sm text-muted-foreground">Learn to read Arabic with ease</p>
+                  </div>
+                </div>
+                <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+              </Link>
+
               <Link to="/support" className="flex items-center justify-between p-4 hover:bg-secondary/50 transition-colors group">
                 <div className="flex items-center gap-3">
                   <HandHeart className="h-5 w-5 text-primary" />
