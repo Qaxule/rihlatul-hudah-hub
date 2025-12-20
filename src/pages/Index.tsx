@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { getSurahInfo } from "@/data/quranMetadata";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -364,14 +365,18 @@ const Index = () => {
               <Card className="h-full hover:shadow-elevated transition-all group border-2 border-transparent hover:border-primary/20">
                 <CardContent className="p-6 flex flex-col justify-between h-full min-h-[180px]">
                   <div>
-                    <p className="text-4xl font-arabic text-foreground mb-2" dir="rtl">
-                      {readingProgress ? "مواصلة القراءة" : "الفَاتِحَة"}
+                    <p className="text-2xl font-semibold text-foreground mb-1">
+                      {readingProgress ? "Continue Reading" : "Start Reading"}
                     </p>
                     <p className="text-lg font-medium text-foreground">
-                      {readingProgress ? `Continue from Surah ${readingProgress.surah_number}` : "1. Al-Fatihah"}
+                      {readingProgress 
+                        ? `${readingProgress.surah_number}. ${getSurahInfo(readingProgress.surah_number)?.englishName || `Surah ${readingProgress.surah_number}`}` 
+                        : "1. Al-Fatihah"}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {readingProgress ? `Ayah ${readingProgress.ayah_number}` : "The Opener"}
+                      {readingProgress 
+                        ? `Ayah ${readingProgress.ayah_number} • ${getSurahInfo(readingProgress.surah_number)?.englishNameTranslation || ""}` 
+                        : "The Opener"}
                     </p>
                   </div>
                   <Button className="w-fit mt-4 group-hover:bg-primary/90">
