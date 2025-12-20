@@ -6,8 +6,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { 
   Book, Heart, Calendar, ArrowRight, Compass, BookOpen, Gem, 
-  Search, ChevronRight, Bookmark, GraduationCap, HandHeart, Loader2, X
+  Search, ChevronRight, Bookmark, GraduationCap, HandHeart, Loader2, X,
+  Filter, ChevronDown
 } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { surahList, juzList } from "@/data/quranMetadata";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { getSurahInfo } from "@/data/quranMetadata";
@@ -40,6 +49,13 @@ interface SearchResult {
   arabicText: string;
   translation: string;
   surahName: string;
+  revelationType?: string;
+}
+
+interface SearchFilters {
+  surah?: number;
+  juz?: number;
+  revelationType?: string;
 }
 
 const Index = () => {
@@ -51,6 +67,8 @@ const Index = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [showFilters, setShowFilters] = useState(false);
+  const [searchFilters, setSearchFilters] = useState<SearchFilters>({});
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
@@ -92,7 +110,10 @@ const Index = () => {
       setIsSearching(true);
       try {
         const { data, error } = await supabase.functions.invoke('quran-search', {
-          body: { query: searchQuery.trim() }
+          body: { 
+            query: searchQuery.trim(),
+            filters: searchFilters
+          }
         });
         
         if (error) throw error;
@@ -107,7 +128,15 @@ const Index = () => {
     }, 300);
 
     return () => clearTimeout(timeoutId);
-  }, [searchQuery]);
+  }, [searchQuery, searchFilters]);
+
+  const clearFilters = () => {
+    setSearchFilters({});
+  };
+
+  const hasActiveFilters = Object.keys(searchFilters).some(
+    key => searchFilters[key as keyof SearchFilters] !== undefined
+  );
 
   const fetchReadingProgress = async () => {
     if (!user) return;
@@ -249,26 +278,127 @@ const Index = () => {
                 <Input
                   ref={inputRef}
                   type="text"
-                  placeholder="Search the Qur'an..."
+                  placeholder="Search the Qur'an in English or Arabic..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => searchResults.length > 0 && setShowResults(true)}
                   onKeyDown={handleKeyDown}
-                  className="w-full h-14 pl-12 pr-12 text-base rounded-full border-2 border-border bg-card shadow-soft focus:border-primary focus:ring-primary"
+                  className="w-full h-14 pl-12 pr-24 text-base rounded-full border-2 border-border bg-card shadow-soft focus:border-primary focus:ring-primary"
                 />
-                {searchQuery && (
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                  {searchQuery && (
+                    <button
+                      onClick={clearSearch}
+                      className="text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {isSearching ? (
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                      ) : (
+                        <X className="h-5 w-5" />
+                      )}
+                    </button>
+                  )}
                   <button
-                    onClick={clearSearch}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    onClick={() => setShowFilters(!showFilters)}
+                    className={`p-1.5 rounded-full transition-colors ${
+                      hasActiveFilters 
+                        ? 'bg-primary text-primary-foreground' 
+                        : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                    }`}
+                    title="Search filters"
                   >
-                    {isSearching ? (
-                      <Loader2 className="h-5 w-5 animate-spin" />
-                    ) : (
-                      <X className="h-5 w-5" />
-                    )}
+                    <Filter className="h-4 w-4" />
                   </button>
-                )}
+                </div>
               </div>
+
+              {/* Filters Panel */}
+              {showFilters && (
+                <div className="mt-3 p-4 bg-card border border-border rounded-xl shadow-elevated z-50">
+                  <div className="flex items-center justify-between mb-3">
+                    <p className="text-sm font-medium text-foreground">Search Filters</p>
+                    {hasActiveFilters && (
+                      <button
+                        onClick={clearFilters}
+                        className="text-xs text-primary hover:underline"
+                      >
+                        Clear all
+                      </button>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                      <label className="text-xs text-muted-foreground mb-1 block">Surah</label>
+                      <Select
+                        value={searchFilters.surah?.toString() || "all"}
+                        onValueChange={(value) => 
+                          setSearchFilters(prev => ({
+                            ...prev,
+                            surah: value === "all" ? undefined : parseInt(value)
+                          }))
+                        }
+                      >
+                        <SelectTrigger className="w-full bg-background">
+                          <SelectValue placeholder="All Surahs" />
+                        </SelectTrigger>
+                        <SelectContent className="max-h-[300px] bg-popover">
+                          <SelectItem value="all">All Surahs</SelectItem>
+                          {surahList.map((surah) => (
+                            <SelectItem key={surah.number} value={surah.number.toString()}>
+                              {surah.number}. {surah.englishName}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <label className="text-xs text-muted-foreground mb-1 block">Juz</label>
+                      <Select
+                        value={searchFilters.juz?.toString() || "all"}
+                        onValueChange={(value) => 
+                          setSearchFilters(prev => ({
+                            ...prev,
+                            juz: value === "all" ? undefined : parseInt(value)
+                          }))
+                        }
+                      >
+                        <SelectTrigger className="w-full bg-background">
+                          <SelectValue placeholder="All Juz" />
+                        </SelectTrigger>
+                        <SelectContent className="max-h-[300px] bg-popover">
+                          <SelectItem value="all">All Juz</SelectItem>
+                          {juzList.map((juz) => (
+                            <SelectItem key={juz.number} value={juz.number.toString()}>
+                              Juz {juz.number}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <label className="text-xs text-muted-foreground mb-1 block">Revelation</label>
+                      <Select
+                        value={searchFilters.revelationType || "all"}
+                        onValueChange={(value) => 
+                          setSearchFilters(prev => ({
+                            ...prev,
+                            revelationType: value === "all" ? undefined : value
+                          }))
+                        }
+                      >
+                        <SelectTrigger className="w-full bg-background">
+                          <SelectValue placeholder="All Types" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-popover">
+                          <SelectItem value="all">All Types</SelectItem>
+                          <SelectItem value="Meccan">Meccan</SelectItem>
+                          <SelectItem value="Medinan">Medinan</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Search Results Dropdown */}
               {showResults && searchResults.length > 0 && (
