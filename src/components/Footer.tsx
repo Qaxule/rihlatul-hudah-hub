@@ -1,13 +1,28 @@
 import { Link } from "react-router-dom";
 import { Mail, FileText, Shield, DollarSign } from "lucide-react";
+
 const Footer = () => {
-  return <footer className="bg-muted/30 border-t border-border mt-auto">
+  const allPages = [
+    { path: "/", label: "Home" },
+    { path: "/quran", label: "Qur'an" },
+    { path: "/hadith", label: "Hadith" },
+    { path: "/duas", label: "Duas" },
+    { path: "/names", label: "99 Names of Allah" },
+    { path: "/prayer-times", label: "Prayer Times" },
+    { path: "/dhikr", label: "Dhikr" },
+    { path: "/learning", label: "Learning" },
+    { path: "/yasarna", label: "Yasarna" },
+    { path: "/calendar", label: "Islamic Calendar" },
+    { path: "/guides", label: "Guides" },
+  ];
+
+  return (
+    <footer className="bg-muted/30 border-t border-border mt-auto">
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* About Section */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
-              
               About Rihlatul Hudah
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
@@ -16,40 +31,36 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Quick Links */}
+          {/* All Pages - Split into two columns */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-foreground">Quick Links</h3>
+            <h3 className="text-lg font-semibold text-foreground">Explore</h3>
             <ul className="space-y-2">
-              <li>
-                <Link to="/quran" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Qur'an
-                </Link>
-              </li>
-              <li>
-                <Link to="/hadith" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Hadith
-                </Link>
-              </li>
-              <li>
-                <Link to="/names" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  99 Names of Allah
-                </Link>
-              </li>
-              <li>
-                <Link to="/duas" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Duas
-                </Link>
-              </li>
-              <li>
-                <Link to="/learning" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Learning Resources
-                </Link>
-              </li>
-              <li>
-                <Link to="/prayer-times" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Prayer Times
-                </Link>
-              </li>
+              {allPages.slice(0, 6).map((page) => (
+                <li key={page.path}>
+                  <Link 
+                    to={page.path} 
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    {page.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-foreground">More</h3>
+            <ul className="space-y-2">
+              {allPages.slice(6).map((page) => (
+                <li key={page.path}>
+                  <Link 
+                    to={page.path} 
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    {page.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -102,15 +113,17 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-border">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-muted-foreground text-center md:text-left">
+            <p className="text-sm text-muted-foreground">
               © {new Date().getFullYear()} Rihlatul Hudah. All rights reserved.
             </p>
-            <p className="text-sm text-muted-foreground flex items-center gap-2">
-              May Allah accept our effort and forgive our shortcomings.                                                                    
+            <p className="text-sm text-muted-foreground">
+              Made with ❤️ for the Ummah
             </p>
           </div>
         </div>
       </div>
-    </footer>;
+    </footer>
+  );
 };
+
 export default Footer;
