@@ -158,6 +158,32 @@ function parseSurahNumber(query: string): number | null {
   return null;
 }
 
+// Check if query is an ayah reference like "2:255", "2.255", "2-255"
+function parseAyahReference(query: string): { surah: number; ayah: number } | null {
+  const trimmed = query.trim();
+  
+  // Match patterns like "2:255", "2.255", "2-255", "surah 2 ayah 255", "2 verse 255"
+  const patterns = [
+    /^(\d{1,3})[:.\-](\d{1,3})$/,                           // "2:255", "2.255", "2-255"
+    /^surah?\s*(\d{1,3})\s*(?:ayah?|verse)\s*(\d{1,3})$/i,  // "surah 2 ayah 255"
+    /^(\d{1,3})\s+(?:ayah?|verse)\s*(\d{1,3})$/i,           // "2 ayah 255", "2 verse 255"
+    /^s(\d{1,3})[:.\-]?a(\d{1,3})$/i,                       // "s2a255", "s2:a255"
+  ];
+  
+  for (const pattern of patterns) {
+    const match = trimmed.match(pattern);
+    if (match) {
+      const surah = parseInt(match[1], 10);
+      const ayah = parseInt(match[2], 10);
+      if (surah >= 1 && surah <= 114 && ayah >= 1) {
+        return { surah, ayah };
+      }
+    }
+  }
+  
+  return null;
+}
+
 async function fetchAndParse(url: string, retries = 3): Promise<any> {
   for (let attempt = 0; attempt < retries; attempt++) {
     try {
@@ -268,16 +294,40 @@ serve(async (req) => {
       );
     }
 
+    const ayahRef = parseAyahReference(trimmedQuery);
     const surahNumber = parseSurahNumber(trimmedQuery);
     const isArabicSearch = containsArabic(trimmedQuery);
-    console.log(`Searching Quran for: ${trimmedQuery} (Surah#: ${surahNumber}, Arabic: ${isArabicSearch})`);
+    console.log(`Searching Quran for: ${trimmedQuery} (AyahRef: ${JSON.stringify(ayahRef)}, Surah#: ${surahNumber}, Arabic: ${isArabicSearch})`);
     console.log(`Filters:`, filters);
 
     const results: any[] = [];
     const seenAyahs = new Set<string>();
 
+    // Handle ayah reference search (e.g., "2:255")
+    if (ayahRef !== null) {
+      console.log(`Fetching ayah ${ayahRef.surah}:${ayahRef.ayah}`);
+      
+      const ayahData = await fetchAndParse(
+        `https://api.alquran.cloud/v1/ayah/${ayahRef.surah}:${ayahRef.ayah}/editions/ar.alafasy,en.sahih`
+      );
+
+      if (ayahData?.data && Array.isArray(ayahData.data) && ayahData.data.length >= 2) {
+        const arabicAyah = ayahData.data[0];
+        const englishAyah = ayahData.data[1];
+        const meta = surahMetadata[ayahRef.surah];
+        
+        results.push({
+          surahNumber: ayahRef.surah,
+          ayahNumber: ayahRef.ayah,
+          arabicText: arabicAyah.text,
+          translation: englishAyah.text,
+          surahName: arabicAyah.surah?.englishName || `Surah ${ayahRef.surah}`,
+          revelationType: meta?.revelationType || "Unknown",
+        });
+      }
+    }
     // Handle surah number search
-    if (surahNumber !== null) {
+    else if (surahNumber !== null) {
       console.log(`Fetching surah ${surahNumber} ayahs`);
       
       // Fetch the first 10 ayahs of the surah
