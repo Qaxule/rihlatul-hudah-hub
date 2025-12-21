@@ -117,7 +117,7 @@ const Footer = () => {
               © {new Date().getFullYear()} Rihlatul Hudah. All rights reserved.
             </p>
             <p className="text-sm text-muted-foreground">
-              Made with ❤️ for the Ummah
+              May Allah accept all our efforts and forgive our shortcomings. 🤲🏻🫡
             </p>
           </div>
         </div>
