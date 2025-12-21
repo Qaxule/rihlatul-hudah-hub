@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar as CalendarIcon, Star, ChevronLeft, ChevronRight, Moon } from "lucide-react";
+import { Calendar as CalendarIcon, Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 // Hijri month names
@@ -12,28 +12,6 @@ const hijriMonths = [
   "Ramadan", "Shawwal", "Dhul Qi'dah", "Dhul Hijjah"
 ];
 
-// Moon phase based on Hijri day (1-30)
-function getMoonPhase(hijriDay: number): { phase: string; icon: string; fill: number } {
-  if (hijriDay <= 2) {
-    return { phase: "New Moon", icon: "🌑", fill: 0 };
-  } else if (hijriDay <= 6) {
-    return { phase: "Waxing Crescent", icon: "🌒", fill: 15 };
-  } else if (hijriDay <= 9) {
-    return { phase: "First Quarter", icon: "🌓", fill: 50 };
-  } else if (hijriDay <= 13) {
-    return { phase: "Waxing Gibbous", icon: "🌔", fill: 75 };
-  } else if (hijriDay <= 16) {
-    return { phase: "Full Moon", icon: "🌕", fill: 100 };
-  } else if (hijriDay <= 20) {
-    return { phase: "Waning Gibbous", icon: "🌖", fill: 75 };
-  } else if (hijriDay <= 23) {
-    return { phase: "Last Quarter", icon: "🌗", fill: 50 };
-  } else if (hijriDay <= 27) {
-    return { phase: "Waning Crescent", icon: "🌘", fill: 15 };
-  } else {
-    return { phase: "New Moon", icon: "🌑", fill: 0 };
-  }
-}
 
 // Convert Gregorian date to Hijri date using improved Kuwaiti algorithm
 function gregorianToHijri(date: Date): { day: number; month: number; year: number; monthName: string } {
@@ -139,7 +117,6 @@ const Calendar = () => {
   // Calculate today's Hijri date dynamically
   const todayHijri = useMemo(() => gregorianToHijri(new Date()), []);
   const hijriDate = `${todayHijri.day} ${todayHijri.monthName} ${todayHijri.year}`;
-  const todayMoonPhase = useMemo(() => getMoonPhase(todayHijri.day), [todayHijri.day]);
   
   const gregorianDate = new Date().toLocaleDateString("en-US", {
     weekday: "long",
@@ -252,16 +229,9 @@ const Calendar = () => {
               <CardTitle className="text-2xl">Today's Date</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-center gap-4">
-                <span className="text-5xl">{todayMoonPhase.icon}</span>
-                <div>
-                  <p className="text-3xl font-bold text-primary mb-1">{hijriDate}</p>
-                  <p className="text-sm text-muted-foreground">Hijri Calendar</p>
-                </div>
-              </div>
-              <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                <Moon className="h-4 w-4" />
-                <span>{todayMoonPhase.phase}</span>
+              <div>
+                <p className="text-3xl font-bold text-primary mb-1">{hijriDate}</p>
+                <p className="text-sm text-muted-foreground">Hijri Calendar</p>
               </div>
               <div className="pt-4 border-t">
                 <p className="text-xl">{gregorianDate}</p>
@@ -308,12 +278,8 @@ const Calendar = () => {
                     {day && (
                       <div className="relative">
                         <div className="text-sm">{day}</div>
-                        <div className="text-xs text-muted-foreground flex items-center justify-center gap-0.5">
-                          <span>{hijriDatesForMonth[day]}</span>
-                          {/* Show moon phase icon for key lunar days */}
-                          {[1, 7, 14, 15, 21, 28, 29, 30].includes(hijriDatesForMonth[day]) && (
-                            <span className="text-[10px]">{getMoonPhase(hijriDatesForMonth[day]).icon}</span>
-                          )}
+                        <div className="text-xs text-muted-foreground">
+                          {hijriDatesForMonth[day]}
                         </div>
                       </div>
                     )}
