@@ -100,21 +100,24 @@ function gregorianToHijri(date: Date): { day: number; month: number; year: numbe
   }
   
   // Fine-tune adjustment to match observed calendar (Umm al-Qura)
-  // The tabular calendar can be 1-2 days off from observed
-  // Adjustment: Based on user feedback that Dec 21 should be 1 Rajab
+  // Adjustment: Based on user feedback that Dec 21, 2024 should be 1 Rajab 1446
   let adjustedDay = dayOfMonth;
   let adjustedMonth = hijriMonth;
   let adjustedYear = hijriYear;
   
-  // Add 2 days adjustment to align with observed calendar
-  adjustedDay += 2;
-  if (adjustedDay > monthDays[adjustedMonth - 1]) {
-    adjustedDay -= monthDays[adjustedMonth - 1];
-    adjustedMonth++;
-    if (adjustedMonth > 12) {
-      adjustedMonth = 1;
-      adjustedYear++;
+  // Subtract 4 days to align with observed calendar
+  adjustedDay -= 4;
+  if (adjustedDay < 1) {
+    adjustedMonth--;
+    if (adjustedMonth < 1) {
+      adjustedMonth = 12;
+      adjustedYear--;
     }
+    // Get days in previous month
+    const prevMonthDays = adjustedMonth === 12 
+      ? (leapYears.includes(yearInCycle) ? 30 : 29) 
+      : monthDays[adjustedMonth - 1];
+    adjustedDay += prevMonthDays;
   }
   
   return {
