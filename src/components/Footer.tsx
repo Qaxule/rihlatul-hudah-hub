@@ -112,12 +112,12 @@ const Footer = () => {
 
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-border">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} Rihlatul Hudah. All rights reserved.
-            </p>
+          <div className="flex flex-col items-center gap-4 text-center">
             <p className="text-sm text-muted-foreground">
               May Allah accept all our efforts and forgive our shortcomings. 🤲🏻🫡
+            </p>
+            <p className="text-sm text-muted-foreground">
+              © {new Date().getFullYear()} Rihlatul Hudah. All rights reserved.
             </p>
           </div>
         </div>
