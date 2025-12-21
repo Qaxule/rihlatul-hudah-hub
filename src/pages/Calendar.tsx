@@ -100,13 +100,13 @@ function gregorianToHijri(date: Date): { day: number; month: number; year: numbe
   }
   
   // Fine-tune adjustment to match observed calendar (Umm al-Qura)
-  // Adjustment: Based on user feedback that Dec 21, 2024 should be 1 Rajab 1446
+  // Adjustment: Dec 21, 2024 = 1 Rajab 1446
   let adjustedDay = dayOfMonth;
   let adjustedMonth = hijriMonth;
   let adjustedYear = hijriYear;
   
-  // Subtract 4 days to align with observed calendar
-  adjustedDay -= 4;
+  // Subtract 2 days to align with observed calendar
+  adjustedDay -= 2;
   if (adjustedDay < 1) {
     adjustedMonth--;
     if (adjustedMonth < 1) {
