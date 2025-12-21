@@ -188,6 +188,24 @@ const Calendar = () => {
 
   const upcomingEvents = [
     {
+      name: "Isra and Mi'raj",
+      hijriDate: "27 Rajab 1446",
+      gregorianDate: "January 27, 2025",
+      description: "The Night Journey and Ascension",
+    },
+    {
+      name: "Shab-e-Barat",
+      hijriDate: "15 Sha'ban 1446",
+      gregorianDate: "February 14, 2025",
+      description: "Night of Forgiveness",
+    },
+    {
+      name: "Start of Ramadan",
+      hijriDate: "1 Ramadan 1446",
+      gregorianDate: "March 1, 2025",
+      description: "Beginning of the holy month of fasting",
+    },
+    {
       name: "Laylat al-Qadr",
       hijriDate: "27 Ramadan 1446",
       gregorianDate: "March 27, 2025",
@@ -202,13 +220,13 @@ const Calendar = () => {
     {
       name: "Day of Arafah",
       hijriDate: "9 Dhul Hijjah 1446",
-      gregorianDate: "June 5, 2025",
+      gregorianDate: "June 6, 2025",
       description: "Most important day of Hajj",
     },
     {
       name: "Eid al-Adha",
       hijriDate: "10 Dhul Hijjah 1446",
-      gregorianDate: "June 6, 2025",
+      gregorianDate: "June 7, 2025",
       description: "Festival of Sacrifice",
     },
   ];
