@@ -7,6 +7,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import ScrollToTop from "./components/ScrollToTop";
 import Index from "./pages/Index";
 import Quran from "./pages/Quran";
+import Popular from "./pages/Popular";
 import SurahReader from "./pages/SurahReader";
 import Hadith from "./pages/Hadith";
 import Duas from "./pages/Duas";
@@ -41,6 +42,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/quran" element={<Quran />} />
+            <Route path="/popular" element={<Popular />} />
             <Route path="/surah/:surahNumber" element={<SurahReader />} />
             <Route path="/hadith" element={<Hadith />} />
             <Route path="/duas" element={<Duas />} />
