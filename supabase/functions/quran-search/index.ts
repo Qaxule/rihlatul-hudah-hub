@@ -133,6 +133,31 @@ function containsArabic(text: string): boolean {
   return /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/.test(text);
 }
 
+// Check if query is a surah number (1-114)
+function parseSurahNumber(query: string): number | null {
+  // Match patterns like "1", "114", "surah 1", "surah 114", "sura 2", "chapter 3"
+  const patterns = [
+    /^(\d{1,3})$/,                          // Just a number: "1", "114"
+    /^surah?\s*(\d{1,3})$/i,                // "surah 1", "sura 114"
+    /^chapter\s*(\d{1,3})$/i,               // "chapter 1"
+    /^s(\d{1,3})$/i,                        // "s1", "S114"
+  ];
+  
+  const trimmed = query.trim();
+  
+  for (const pattern of patterns) {
+    const match = trimmed.match(pattern);
+    if (match) {
+      const num = parseInt(match[1], 10);
+      if (num >= 1 && num <= 114) {
+        return num;
+      }
+    }
+  }
+  
+  return null;
+}
+
 async function fetchAndParse(url: string, retries = 3): Promise<any> {
   for (let attempt = 0; attempt < retries; attempt++) {
     try {
@@ -243,14 +268,47 @@ serve(async (req) => {
       );
     }
 
+    const surahNumber = parseSurahNumber(trimmedQuery);
     const isArabicSearch = containsArabic(trimmedQuery);
-    console.log(`Searching Quran for: ${trimmedQuery} (Arabic: ${isArabicSearch})`);
+    console.log(`Searching Quran for: ${trimmedQuery} (Surah#: ${surahNumber}, Arabic: ${isArabicSearch})`);
     console.log(`Filters:`, filters);
 
     const results: any[] = [];
     const seenAyahs = new Set<string>();
 
-    if (isArabicSearch) {
+    // Handle surah number search
+    if (surahNumber !== null) {
+      console.log(`Fetching surah ${surahNumber} ayahs`);
+      
+      // Fetch the first 10 ayahs of the surah
+      const surahData = await fetchAndParse(
+        `https://api.alquran.cloud/v1/surah/${surahNumber}/editions/ar.alafasy,en.sahih`
+      );
+
+      if (surahData?.data && Array.isArray(surahData.data) && surahData.data.length >= 2) {
+        const arabicEdition = surahData.data[0];
+        const englishEdition = surahData.data[1];
+        const surahName = arabicEdition.englishName;
+        const meta = surahMetadata[surahNumber];
+        
+        // Get first 10 ayahs (or less if surah is shorter)
+        const ayahCount = Math.min(10, arabicEdition.ayahs?.length || 0);
+        
+        for (let i = 0; i < ayahCount; i++) {
+          const arabicAyah = arabicEdition.ayahs[i];
+          const englishAyah = englishEdition.ayahs[i];
+          
+          results.push({
+            surahNumber: surahNumber,
+            ayahNumber: arabicAyah.numberInSurah,
+            arabicText: arabicAyah.text,
+            translation: englishAyah.text,
+            surahName: surahName,
+            revelationType: meta?.revelationType || "Unknown",
+          });
+        }
+      }
+    } else if (isArabicSearch) {
       // Search in Arabic text
       const arabicData = await fetchAndParse(
         `https://api.alquran.cloud/v1/search/${encodeURIComponent(trimmedQuery)}/all/ar.alafasy`
