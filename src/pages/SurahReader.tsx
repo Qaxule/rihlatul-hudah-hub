@@ -20,7 +20,6 @@ import { useOfflineQuranData } from "@/hooks/useOfflineQuranData";
 import { offlineCache, CACHE_CONFIG, STORES } from "@/lib/offlineCache";
 import AudioPlayer from "@/components/AudioPlayer";
 import AudioControlBar from "@/components/AudioControlBar";
-import { AyahActionMenu } from "@/components/AyahActionMenu";
 
 interface Ayah {
   number: number;
@@ -89,17 +88,8 @@ const SurahReader = () => {
   const [playingAyah, setPlayingAyah] = useState<number | null>(null);
   const [isAudioBuffering, setIsAudioBuffering] = useState<boolean>(false);
   const [showAudioBar, setShowAudioBar] = useState<boolean>(false);
-  const [actionMenuState, setActionMenuState] = useState<{
-    isOpen: boolean;
-    ayahNumber: number | null;
-    position: { x: number; y: number };
-  }>({ isOpen: false, ayahNumber: null, position: { x: 0, y: 0 } });
-  const [longPressAyah, setLongPressAyah] = useState<number | null>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
   
-  const touchStart = useRef<{ x: number; y: number; time: number } | null>(null);
-  const movedTooMuch = useRef<boolean>(false);
-  const justOpened = useRef<boolean>(false);
   const ayahRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const { user } = useAuth();
 
@@ -498,107 +488,6 @@ const SurahReader = () => {
     }
   };
 
-  // Long press handlers
-  const handleTouchStart = (e: React.TouchEvent, ayahNumber: number) => {
-    const touch = e.touches[0];
-    touchStart.current = { x: touch.clientX, y: touch.clientY, time: Date.now() };
-    movedTooMuch.current = false;
-    setLongPressAyah(ayahNumber);
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent, ayahNumber: number) => {
-    if (!touchStart.current) {
-      setLongPressAyah(null);
-      return;
-    }
-
-    const duration = Date.now() - touchStart.current.time;
-
-    if (duration >= 450 && !movedTooMuch.current) {
-      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-      const menuX = rect.left + rect.width / 2;
-      const menuY = rect.top - 10;
-
-      setActionMenuState({
-        isOpen: true,
-        ayahNumber,
-        position: { x: menuX, y: menuY },
-      });
-      
-      // Mark that we just opened the menu
-      justOpened.current = true;
-      setTimeout(() => {
-        justOpened.current = false;
-      }, 300);
-    } else {
-      // If it wasn't a successful long press, close immediately
-      setLongPressAyah(null);
-    }
-
-    touchStart.current = null;
-    movedTooMuch.current = false;
-  };
-
-  const handleBackdropClick = () => {
-    if (!justOpened.current) {
-      setLongPressAyah(null);
-      setActionMenuState({ isOpen: false, ayahNumber: null, position: { x: 0, y: 0 } });
-    }
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!touchStart.current || movedTooMuch.current) return;
-
-    const touch = e.touches[0];
-    const deltaX = Math.abs(touch.clientX - touchStart.current.x);
-    const deltaY = Math.abs(touch.clientY - touchStart.current.y);
-
-    // If moved more than 25px, cancel long press trigger
-    if (deltaX > 25 || deltaY > 25) {
-      movedTooMuch.current = true;
-      setLongPressAyah(null);
-    }
-  };
-
-  const handleContextMenu = (e: React.MouseEvent, ayahNumber: number) => {
-    e.preventDefault();
-    setActionMenuState({
-      isOpen: true,
-      ayahNumber,
-      position: { x: e.clientX, y: e.clientY - 10 },
-    });
-  };
-
-  const handleCopyAyah = () => {
-    if (actionMenuState.ayahNumber === null) return;
-    const ayah = arabicData?.ayahs.find(a => a.numberInSurah === actionMenuState.ayahNumber);
-    if (ayah) {
-      navigator.clipboard.writeText(ayah.text);
-      toast.success("Arabic text copied to clipboard");
-    }
-  };
-
-  const handleCopyTranslation = () => {
-    if (actionMenuState.ayahNumber === null) return;
-    const index = arabicData?.ayahs.findIndex(a => a.numberInSurah === actionMenuState.ayahNumber);
-    if (index !== undefined && index >= 0 && translationData?.ayahs[index]) {
-      navigator.clipboard.writeText(translationData.ayahs[index].text);
-      toast.success("Translation copied to clipboard");
-    }
-  };
-
-  const handleMenuBookmark = () => {
-    if (actionMenuState.ayahNumber !== null) {
-      toggleBookmark(actionMenuState.ayahNumber);
-    }
-  };
-
-  const handleMenuShare = () => {
-    if (actionMenuState.ayahNumber !== null) {
-      handleShareAyah(actionMenuState.ayahNumber);
-    }
-  };
-
   const currentSurahNum = parseInt(surahNumber || "1");
   const prevSurah = currentSurahNum > 1 ? currentSurahNum - 1 : null;
   const nextSurah = currentSurahNum < 114 ? currentSurahNum + 1 : null;
@@ -731,55 +620,15 @@ const SurahReader = () => {
             </div>
           )}
 
-          {/* Backdrop blur overlay */}
-          {longPressAyah !== null && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="fixed inset-0 z-40 bg-background/60 backdrop-blur-sm"
-              onClick={handleBackdropClick}
-            />
-          )}
-
           {/* Ayahs - Continuous Reading Layout */}
           <div className="divide-y divide-border/40">
             {arabicData.ayahs.map((ayah, index) => (
-              <motion.div
+              <div
                 key={ayah.number}
-                animate={
-                  longPressAyah === ayah.numberInSurah
-                    ? {
-                        scale: 1.02,
-                        zIndex: 50,
-                      }
-                    : {
-                        scale: 1,
-                        zIndex: 1,
-                      }
-                }
-                transition={{
-                  type: "spring",
-                  stiffness: 300,
-                  damping: 25,
-                }}
-                className="relative"
+                className="py-6 md:py-8"
+                ref={(el) => (ayahRefs.current[ayah.numberInSurah] = el)}
+                data-ayah={ayah.numberInSurah}
               >
-                <div
-                  className={`py-6 md:py-8 select-none transition-colors duration-500 outline-none ${
-                    longPressAyah === ayah.numberInSurah
-                      ? "bg-card shadow-xl shadow-primary/10 px-4 -mx-4 rounded-lg"
-                      : ""
-                  }`}
-                  ref={(el) => (ayahRefs.current[ayah.numberInSurah] = el)}
-                  data-ayah={ayah.numberInSurah}
-                  onTouchStart={(e) => handleTouchStart(e, ayah.numberInSurah)}
-                  onTouchEnd={(e) => handleTouchEnd(e, ayah.numberInSurah)}
-                  onTouchMove={handleTouchMove}
-                  onContextMenu={(e) => handleContextMenu(e, ayah.numberInSurah)}
-                  style={{ WebkitUserSelect: 'none', userSelect: 'none', WebkitTouchCallout: 'none', outline: 'none' }}
-                >
                   {/* Ayah Header - Subtle */}
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
@@ -916,8 +765,7 @@ const SurahReader = () => {
                       </CollapsibleContent>
                     </Collapsible>
                   )}
-                </div>
-              </motion.div>
+              </div>
             ))}
           </div>
 
@@ -955,21 +803,6 @@ const SurahReader = () => {
           onAyahSelect={scrollToAyah}
         />
       </main>
-
-      {/* iOS-style Action Menu */}
-      <AyahActionMenu
-        isOpen={actionMenuState.isOpen}
-        onClose={() => {
-          setActionMenuState({ isOpen: false, ayahNumber: null, position: { x: 0, y: 0 } });
-          setLongPressAyah(null);
-        }}
-        position={actionMenuState.position}
-        onCopyAyah={handleCopyAyah}
-        onCopyTranslation={handleCopyTranslation}
-        onBookmark={handleMenuBookmark}
-        onShare={handleMenuShare}
-        isBookmarked={actionMenuState.ayahNumber !== null && bookmarks.has(actionMenuState.ayahNumber)}
-      />
 
       <Footer />
 
