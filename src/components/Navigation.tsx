@@ -4,14 +4,12 @@ import { Menu, X, Bookmark, LogIn, LogOut, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ThemeSelector from "./ThemeSelector";
 import { useAuth } from "@/contexts/AuthContext";
-import { useCapacitor } from "@/hooks/useCapacitor";
 import logo from "@/assets/logo.png";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const { user, signOut } = useAuth();
-  const { isNativeApp } = useCapacitor();
 
   const navItems = [
     { path: "/", label: "Home" },
@@ -28,28 +26,10 @@ const Navigation = () => {
 
   const isActive = (path: string) => location.pathname === path;
 
-  // In native app, only show the minimal mobile header (no desktop nav)
-  if (isNativeApp) {
-    return (
-      <nav className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 safe-area-top">
-        <div className="container mx-auto px-4">
-          <div className="flex h-12 items-center justify-between">
-            <Link to="/" className="flex items-center space-x-2">
-              <img src={logo} alt="Rihlatul Hudah" className="h-7 w-7" />
-              <span className="text-base font-semibold text-foreground">Rihlatul Hudah</span>
-            </Link>
-            <ThemeSelector />
-          </div>
-        </div>
-      </nav>
-    );
-  }
-
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4">
-        {/* Desktop Header - Full */}
-        <div className="hidden md:flex h-16 items-center justify-between">
+        <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <img src={logo} alt="Rihlatul Hudah" className="h-8 w-8" />
@@ -59,7 +39,7 @@ const Navigation = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-4">
             <div className="flex items-center space-x-8">
               {navItems.map((item) => (
                 <Link
@@ -102,16 +82,75 @@ const Navigation = () => {
               </Link>
             )}
           </div>
+
+          {/* Mobile Menu Button */}
+          <div className="md:hidden flex items-center space-x-2">
+            <ThemeSelector />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </Button>
+          </div>
         </div>
 
-        {/* Mobile Header - Minimal */}
-        <div className="md:hidden flex h-12 items-center justify-between">
-          <Link to="/" className="flex items-center space-x-2">
-            <img src={logo} alt="Rihlatul Hudah" className="h-7 w-7" />
-            <span className="text-base font-semibold text-foreground">Rihlatul Hudah</span>
-          </Link>
-          <ThemeSelector />
-        </div>
+        {/* Mobile Navigation */}
+        {isOpen && (
+          <div className="md:hidden pb-4 space-y-2">
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                onClick={() => setIsOpen(false)}
+                className={`block px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  isActive(item.path)
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:bg-muted"
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
+            <Link
+              to="/support"
+              onClick={() => setIsOpen(false)}
+              className="block px-4 py-2 rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90"
+            >
+              <Heart className="h-4 w-4 inline mr-2" />
+              Donate
+            </Link>
+            {user ? (
+              <>
+                <Link
+                  to="/bookmarks"
+                  onClick={() => setIsOpen(false)}
+                  className="block px-4 py-2 rounded-md text-sm font-medium text-muted-foreground hover:bg-muted"
+                >
+                  Bookmarks
+                </Link>
+                <button
+                  onClick={() => {
+                    signOut();
+                    setIsOpen(false);
+                  }}
+                  className="block w-full text-left px-4 py-2 rounded-md text-sm font-medium text-muted-foreground hover:bg-muted"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/login"
+                onClick={() => setIsOpen(false)}
+                className="block px-4 py-2 rounded-md text-sm font-medium text-muted-foreground hover:bg-muted"
+              >
+                Login
+              </Link>
+            )}
+          </div>
+        )}
       </div>
     </nav>
   );

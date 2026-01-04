@@ -1,14 +1,7 @@
 import { Link } from "react-router-dom";
 import { Mail, FileText, Shield, DollarSign } from "lucide-react";
-import { useCapacitor } from "@/hooks/useCapacitor";
 
 const Footer = () => {
-  const { isNativeApp } = useCapacitor();
-
-  // Hide footer entirely in native app
-  if (isNativeApp) {
-    return null;
-  }
   const allPages = [
     { path: "/", label: "Home" },
     { path: "/quran", label: "Qur'an" },
@@ -24,7 +17,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="hidden md:block bg-muted/30 border-t border-border mt-auto">
+    <footer className="bg-muted/30 border-t border-border mt-auto">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* About Section */}

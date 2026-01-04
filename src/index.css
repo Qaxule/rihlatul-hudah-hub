@@ -145,36 +145,5 @@ All colors MUST be HSL.
     line-height: 1.8;
     letter-spacing: 0.02em;
   }
-
-  /* Safe area for mobile devices with notch/home indicator */
-  .safe-area-bottom {
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-  }
-
-  .safe-area-top {
-    padding-top: env(safe-area-inset-top, 0px);
-  }
-}
-
-/* Mobile app-like styles */
-@layer utilities {
-  /* Touch-friendly tap targets */
-  .touch-target {
-    min-height: 44px;
-    min-width: 44px;
-  }
-
-  /* Prevent text selection on mobile nav */
-  .no-select {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
-  }
-
-  /* Smooth momentum scrolling for mobile */
-  .scroll-smooth-mobile {
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-  }
 }
 
