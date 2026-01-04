@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import { PageWrapper } from "@/components/app/PageWrapper";
+import { AppHeader } from "@/components/app/AppHeader";
+import { useNativeAppContext } from "@/contexts/NativeAppContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -44,6 +45,7 @@ interface SearchFilters {
   revelationType?: string;
 }
 const Index = () => {
+  const { isNativeApp } = useNativeAppContext();
   const [ayatOfTheDay, setAyatOfTheDay] = useState<AyatOfTheDay | null>(null);
   const [loading, setLoading] = useState(true);
   const [readingProgress, setReadingProgress] = useState<ReadingProgress | null>(null);
@@ -244,8 +246,9 @@ const Index = () => {
     href: "/calendar",
     icon: Calendar
   }];
-  return <div className="min-h-screen bg-background flex flex-col">
-      <Navigation />
+  return <PageWrapper>
+      {/* App Header for native app only */}
+      {isNativeApp && <AppHeader />}
       
       {/* Hero Section */}
       <section className="relative">
@@ -551,7 +554,6 @@ const Index = () => {
         </div>
       </section>
 
-      <Footer />
-    </div>;
+    </PageWrapper>;
 };
 export default Index;

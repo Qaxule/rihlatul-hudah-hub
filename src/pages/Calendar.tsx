@@ -1,6 +1,5 @@
 import { useState, useMemo } from "react";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import { PageWrapper } from "@/components/app/PageWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar as CalendarIcon, Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -231,8 +230,7 @@ const Calendar = () => {
     },
   ];
   return (
-    <div className="min-h-screen bg-gradient-subtle">
-      <Navigation />
+    <PageWrapper className="bg-gradient-subtle">
       <main className="container mx-auto px-4 py-8">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">Islamic Calendar</h1>
@@ -338,8 +336,7 @@ const Calendar = () => {
           </div>
         </div>
       </main>
-      <Footer />
-    </div>
+    </PageWrapper>
   );
 };
 

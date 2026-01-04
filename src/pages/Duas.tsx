@@ -1,5 +1,4 @@
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import { PageWrapper } from "@/components/app/PageWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart, Volume2 } from "lucide-react";
@@ -52,10 +51,8 @@ const Duas = () => {
       ],
     },
   ];
-
   return (
-    <div className="min-h-screen bg-gradient-subtle">
-      <Navigation />
+    <PageWrapper className="bg-gradient-subtle">
       <main className="container mx-auto px-4 py-8">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">Duas & Supplications</h1>
@@ -99,8 +96,7 @@ const Duas = () => {
           ))}
         </div>
       </main>
-      <Footer />
-    </div>
+    </PageWrapper>
   );
 };
 

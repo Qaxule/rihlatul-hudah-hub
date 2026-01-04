@@ -1,5 +1,4 @@
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import { PageWrapper } from "@/components/app/PageWrapper";
 import { Card, CardContent } from "@/components/ui/card";
 import { Book, Search, ArrowUpDown, ChevronRight } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
@@ -68,9 +67,7 @@ const Quran = () => {
   }, [filteredSurahs, viewMode, sortOrder]);
 
   return (
-    <div className="min-h-screen bg-gradient-subtle flex flex-col">
-      <Navigation />
-      
+    <PageWrapper className="bg-gradient-subtle">
       <div className="container mx-auto px-4 py-12 flex-grow">
         {/* Header */}
         <div className="max-w-4xl mx-auto text-center space-y-6 mb-12">
@@ -231,12 +228,10 @@ const Quran = () => {
                 ))}
               </div>
             </TabsContent>
-          </Tabs>
+        </Tabs>
         </div>
       </div>
-
-      <Footer />
-    </div>
+    </PageWrapper>
   );
 };
 

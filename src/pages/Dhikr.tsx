@@ -1,6 +1,5 @@
 import { useState } from "react";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import { PageWrapper } from "@/components/app/PageWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, Minus, RotateCcw } from "lucide-react";
@@ -33,8 +32,7 @@ const Dhikr = () => {
   const selectedDhikr = dhikrOptions.find((d) => d.name === dhikrName) || dhikrOptions[0];
 
   return (
-    <div className="min-h-screen bg-gradient-subtle">
-      <Navigation />
+    <PageWrapper className="bg-gradient-subtle">
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto text-center">
           <h1 className="text-4xl font-bold mb-4">Dhikr Counter</h1>
@@ -96,8 +94,7 @@ const Dhikr = () => {
           </Card>
         </div>
       </main>
-      <Footer />
-    </div>
+    </PageWrapper>
   );
 };
 

@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import { PageWrapper } from "@/components/app/PageWrapper";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, BookOpen, Bookmark, BookmarkCheck, ChevronDown, ChevronUp, Share2, Menu, WifiOff, Play, Pause, ArrowUp } from "lucide-react";
@@ -494,8 +493,7 @@ const SurahReader = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-subtle flex flex-col">
-        <Navigation />
+      <PageWrapper className="bg-gradient-subtle">
         <div className="flex-1 container mx-auto px-4 py-8">
           <div className="max-w-4xl mx-auto space-y-6">
             {Array.from({ length: 5 }).map((_, i) => (
@@ -503,26 +501,22 @@ const SurahReader = () => {
             ))}
           </div>
         </div>
-        <Footer />
-      </div>
+      </PageWrapper>
     );
   }
 
   if (!arabicData || !translationData) {
     return (
-      <div className="min-h-screen bg-gradient-subtle flex flex-col">
-        <Navigation />
+      <PageWrapper className="bg-gradient-subtle">
         <div className="flex-1 flex items-center justify-center">
           <p className="text-muted-foreground">Failed to load Surah</p>
         </div>
-        <Footer />
-      </div>
+      </PageWrapper>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-subtle flex flex-col">
-      <Navigation />
+    <PageWrapper className="bg-gradient-subtle">
       
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
@@ -804,8 +798,6 @@ const SurahReader = () => {
         />
       </main>
 
-      <Footer />
-
       {/* Audio Control Bar */}
       {showAudioBar && arabicData && (
         <AudioControlBar
@@ -836,7 +828,7 @@ const SurahReader = () => {
           </motion.button>
         )}
       </AnimatePresence>
-    </div>
+    </PageWrapper>
   );
 };
 
