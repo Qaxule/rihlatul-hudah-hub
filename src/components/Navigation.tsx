@@ -4,12 +4,14 @@ import { Menu, X, Bookmark, LogIn, LogOut, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ThemeSelector from "./ThemeSelector";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCapacitor } from "@/hooks/useCapacitor";
 import logo from "@/assets/logo.png";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const { user, signOut } = useAuth();
+  const { isNativeApp } = useCapacitor();
 
   const navItems = [
     { path: "/", label: "Home" },
@@ -25,6 +27,23 @@ const Navigation = () => {
   ];
 
   const isActive = (path: string) => location.pathname === path;
+
+  // In native app, only show the minimal mobile header (no desktop nav)
+  if (isNativeApp) {
+    return (
+      <nav className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 safe-area-top">
+        <div className="container mx-auto px-4">
+          <div className="flex h-12 items-center justify-between">
+            <Link to="/" className="flex items-center space-x-2">
+              <img src={logo} alt="Rihlatul Hudah" className="h-7 w-7" />
+              <span className="text-base font-semibold text-foreground">Rihlatul Hudah</span>
+            </Link>
+            <ThemeSelector />
+          </div>
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">

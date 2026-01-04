@@ -5,11 +5,13 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useCapacitor } from "@/hooks/useCapacitor";
 
 const MobileBottomNav = () => {
   const location = useLocation();
   const { user, signOut } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isNativeApp } = useCapacitor();
 
   const isActive = (path: string) => {
     if (path === "/") return location.pathname === "/";
@@ -41,15 +43,23 @@ const MobileBottomNav = () => {
     { section: "Support", items: [
       { path: "/support", label: "Donate", icon: HandHeart },
     ]},
-    { section: "Legal", items: [
+    // Only show legal section in web browser, not in native app
+    ...(!isNativeApp ? [{ section: "Legal", items: [
       { path: "/privacy-policy", label: "Privacy Policy", icon: FileText },
       { path: "/terms-of-use", label: "Terms of Use", icon: FileText },
       { path: "/disclaimer", label: "Disclaimer", icon: Shield },
-    ]},
+    ]}] : []),
   ];
 
+  // Only show bottom nav in native app OR on mobile web
+  // In native app: always show (no md:hidden)
+  // In web: only show on mobile (md:hidden)
+  const navClassName = isNativeApp 
+    ? "fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-t border-border safe-area-bottom"
+    : "md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-t border-border safe-area-bottom";
+
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-t border-border safe-area-bottom">
+    <nav className={navClassName}>
       <div className="flex items-center justify-around h-16 px-2">
         {mainNavItems.map((item) => (
           <Link

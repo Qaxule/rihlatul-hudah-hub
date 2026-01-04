@@ -1,7 +1,14 @@
 import { Link } from "react-router-dom";
 import { Mail, FileText, Shield, DollarSign } from "lucide-react";
+import { useCapacitor } from "@/hooks/useCapacitor";
 
 const Footer = () => {
+  const { isNativeApp } = useCapacitor();
+
+  // Hide footer entirely in native app
+  if (isNativeApp) {
+    return null;
+  }
   const allPages = [
     { path: "/", label: "Home" },
     { path: "/quran", label: "Qur'an" },
