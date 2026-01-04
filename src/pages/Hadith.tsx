@@ -1,5 +1,4 @@
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import { PageWrapper } from "@/components/app/PageWrapper";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Book, Search, ChevronRight, BookOpen, Languages, Bookmark, BookmarkCheck } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -328,8 +327,7 @@ const Hadith = () => {
     : hadiths;
 
   return (
-    <div className="min-h-screen bg-gradient-subtle flex flex-col">
-      <Navigation />
+    <PageWrapper className="bg-gradient-subtle">
       <main className="container mx-auto px-4 py-12 flex-grow">
         {/* Header */}
         <div className="max-w-4xl mx-auto text-center space-y-6 mb-12">
@@ -593,8 +591,7 @@ const Hadith = () => {
           </div>
         )}
       </main>
-      <Footer />
-    </div>
+    </PageWrapper>
   );
 };
 

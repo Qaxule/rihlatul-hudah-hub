@@ -1,0 +1,261 @@
+import { useEffect, useState } from 'react';
+import { MapPin, Moon } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+
+interface PrayerTime {
+  name: string;
+  time: string;
+}
+
+interface LocationInfo {
+  city: string;
+  country: string;
+}
+
+// Hijri date calculation with adjustment
+const getHijriDate = (): string => {
+  const today = new Date();
+  const gregorianYear = today.getFullYear();
+  const gregorianMonth = today.getMonth() + 1;
+  const gregorianDay = today.getDate();
+
+  // Julian day calculation
+  let jd = Math.floor((1461 * (gregorianYear + 4800 + Math.floor((gregorianMonth - 14) / 12))) / 4) +
+           Math.floor((367 * (gregorianMonth - 2 - 12 * Math.floor((gregorianMonth - 14) / 12))) / 12) -
+           Math.floor((3 * Math.floor((gregorianYear + 4900 + Math.floor((gregorianMonth - 14) / 12)) / 100)) / 4) +
+           gregorianDay - 32075;
+
+  // Hijri calculation with adjustment (-2 days to match observed dates)
+  const adjustedJd = jd - 2;
+  const l = adjustedJd - 1948440 + 10632;
+  const n = Math.floor((l - 1) / 10631);
+  const remainingL = l - 10631 * n + 354;
+  const j = Math.floor((10985 - remainingL) / 5316) * Math.floor((50 * remainingL) / 17719) +
+            Math.floor(remainingL / 5670) * Math.floor((43 * remainingL) / 15238);
+  const finalL = remainingL - Math.floor((30 - j) / 15) * Math.floor((17719 * j) / 50) -
+                 Math.floor(j / 16) * Math.floor((15238 * j) / 43) + 29;
+  const hijriMonth = Math.floor((24 * finalL) / 709);
+  const hijriDay = finalL - Math.floor((709 * hijriMonth) / 24);
+  const hijriYear = 30 * n + j - 30;
+
+  const monthNames = [
+    'Muharram', 'Safar', 'Rabi\' al-Awwal', 'Rabi\' al-Thani',
+    'Jumada al-Awwal', 'Jumada al-Thani', 'Rajab', 'Sha\'ban',
+    'Ramadan', 'Shawwal', 'Dhul Qi\'dah', 'Dhul Hijjah'
+  ];
+
+  return `${hijriDay} ${monthNames[hijriMonth - 1]} ${hijriYear}`;
+};
+
+const formatTime = (date: Date): string => {
+  return date.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+  });
+};
+
+const parseTimeToDate = (timeStr: string): Date => {
+  const [time, period] = timeStr.split(' ');
+  const [hours, minutes] = time.split(':').map(Number);
+  const date = new Date();
+  let adjustedHours = hours;
+  
+  if (period === 'PM' && hours !== 12) adjustedHours += 12;
+  if (period === 'AM' && hours === 12) adjustedHours = 0;
+  
+  date.setHours(adjustedHours, minutes, 0, 0);
+  return date;
+};
+
+const getTimeUntil = (targetTime: Date): string => {
+  const now = new Date();
+  let diff = targetTime.getTime() - now.getTime();
+  
+  if (diff < 0) {
+    // Target is tomorrow
+    diff += 24 * 60 * 60 * 1000;
+  }
+  
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  
+  if (hours > 0) {
+    return `${hours}h ${minutes}m`;
+  }
+  return `${minutes}m`;
+};
+
+export const AppHeader = () => {
+  const { user } = useAuth();
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [location, setLocation] = useState<LocationInfo | null>(null);
+  const [nextPrayer, setNextPrayer] = useState<{ name: string; time: string; countdown: string } | null>(null);
+  const [userName, setUserName] = useState<string>('');
+
+  // Update time every second
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Fetch user profile
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (user) {
+        const { data } = await supabase
+          .from('profiles')
+          .select('full_name, location')
+          .eq('id', user.id)
+          .single();
+        
+        if (data?.full_name) {
+          // Get first name only
+          setUserName(data.full_name.split(' ')[0]);
+        }
+        if (data?.location) {
+          // Parse location if stored as "City, Country"
+          const parts = data.location.split(',').map(s => s.trim());
+          if (parts.length >= 2) {
+            setLocation({ city: parts[0], country: parts[1] });
+          } else {
+            setLocation({ city: data.location, country: '' });
+          }
+        }
+      }
+    };
+    fetchProfile();
+  }, [user]);
+
+  // Get user's geolocation and fetch prayer times
+  useEffect(() => {
+    const fetchPrayerTimes = async (lat: number, lon: number) => {
+      try {
+        const response = await supabase.functions.invoke('prayer-times', {
+          body: { latitude: lat, longitude: lon },
+        });
+
+        if (response.data?.timings) {
+          const timings = response.data.timings;
+          const prayers: PrayerTime[] = [
+            { name: 'Fajr', time: timings.Fajr },
+            { name: 'Dhuhr', time: timings.Dhuhr },
+            { name: 'Asr', time: timings.Asr },
+            { name: 'Maghrib', time: timings.Maghrib },
+            { name: 'Isha', time: timings.Isha },
+          ];
+
+          // Find next prayer
+          const now = new Date();
+          for (const prayer of prayers) {
+            const prayerTime = parseTimeToDate(prayer.time);
+            if (prayerTime > now) {
+              setNextPrayer({
+                name: prayer.name,
+                time: prayer.time,
+                countdown: getTimeUntil(prayerTime),
+              });
+              return;
+            }
+          }
+          // If all prayers passed, next is tomorrow's Fajr
+          const fajrTime = parseTimeToDate(prayers[0].time);
+          setNextPrayer({
+            name: 'Fajr',
+            time: prayers[0].time,
+            countdown: getTimeUntil(fajrTime),
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching prayer times:', error);
+      }
+    };
+
+    // Get location
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          
+          // Reverse geocode for city name if not in profile
+          if (!location) {
+            try {
+              const response = await fetch(
+                `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+              );
+              const data = await response.json();
+              setLocation({
+                city: data.city || data.locality || 'Unknown',
+                country: data.countryName || '',
+              });
+            } catch (e) {
+              console.error('Error getting location name:', e);
+            }
+          }
+
+          fetchPrayerTimes(latitude, longitude);
+        },
+        (error) => {
+          console.error('Geolocation error:', error);
+          // Default to a common location if geolocation fails
+          fetchPrayerTimes(0.3136, 32.5811); // Kampala coordinates
+        }
+      );
+    }
+  }, [location]);
+
+  // Update countdown every minute
+  useEffect(() => {
+    if (nextPrayer) {
+      const timer = setInterval(() => {
+        const prayerTime = parseTimeToDate(nextPrayer.time);
+        setNextPrayer(prev => prev ? { ...prev, countdown: getTimeUntil(prayerTime) } : null);
+      }, 60000);
+      return () => clearInterval(timer);
+    }
+  }, [nextPrayer?.time]);
+
+  const greeting = userName ? `Assalamu Alaikum, ${userName}` : 'Assalamu Alaikum';
+
+  return (
+    <header className="bg-gradient-to-br from-primary/10 via-background to-secondary/10 safe-area-top">
+      <div className="px-4 pt-2 pb-4">
+        {/* Greeting & Hijri Date */}
+        <div className="mb-4">
+          <h1 className="text-xl font-semibold text-foreground">{greeting}</h1>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
+            <Moon className="w-4 h-4" />
+            <span>{getHijriDate()}</span>
+          </div>
+        </div>
+
+        {/* Current Time & Location */}
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <p className="text-4xl font-bold text-foreground tracking-tight">
+              {formatTime(currentTime)}
+            </p>
+            {location && (
+              <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
+                <MapPin className="w-3 h-3" />
+                <span>{location.city}{location.country && `, ${location.country}`}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Next Prayer Countdown */}
+          {nextPrayer && (
+            <div className="bg-primary/10 rounded-xl px-4 py-3 text-center min-w-[120px]">
+              <p className="text-xs text-muted-foreground uppercase tracking-wider">Next Prayer</p>
+              <p className="text-lg font-bold text-primary">{nextPrayer.name}</p>
+              <p className="text-sm text-foreground font-medium">{nextPrayer.countdown}</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </header>
+  );
+};

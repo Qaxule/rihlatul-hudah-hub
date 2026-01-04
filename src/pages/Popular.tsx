@@ -1,5 +1,4 @@
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import { PageWrapper } from "@/components/app/PageWrapper";
 import { Link } from "react-router-dom";
 import { Book, Gem, ChevronRight } from "lucide-react";
 
@@ -23,8 +22,7 @@ const Popular = () => {
   const verses = popularItems.filter(item => item.type === "ayah");
 
   return (
-    <div className="min-h-screen bg-gradient-subtle flex flex-col">
-      <Navigation />
+    <PageWrapper className="bg-gradient-subtle">
       
       <div className="container mx-auto px-4 py-12 flex-grow">
         {/* Header */}
@@ -117,9 +115,7 @@ const Popular = () => {
           </div>
         </div>
       </div>
-
-      <Footer />
-    </div>
+    </PageWrapper>
   );
 };
 

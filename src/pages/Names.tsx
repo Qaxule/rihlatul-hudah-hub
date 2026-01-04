@@ -1,13 +1,11 @@
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import { PageWrapper } from "@/components/app/PageWrapper";
 import { Card, CardContent } from "@/components/ui/card";
 import { Sparkles } from "lucide-react";
 import { namesOfAllah } from "@/data/namesOfAllah";
 
 const Names = () => {
   return (
-    <div className="min-h-screen bg-gradient-subtle flex flex-col">
-      <Navigation />
+    <PageWrapper className="bg-gradient-subtle">
       
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
@@ -74,9 +72,7 @@ const Names = () => {
           </Card>
         </div>
       </div>
-
-      <Footer />
-    </div>
+    </PageWrapper>
   );
 };
 
