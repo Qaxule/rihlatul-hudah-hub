@@ -1,8 +1,10 @@
 import { PageWrapper } from "@/components/app/PageWrapper";
 import { Link } from "react-router-dom";
 import { Book, Gem, ChevronRight } from "lucide-react";
+import { useSEO, SEO_DATA } from "@/hooks/useSEO";
 
 const Popular = () => {
+  useSEO(SEO_DATA.popular);
   const popularItems = [
     // Full Surahs
     { type: "surah" as const, number: 1, name: "Al-Fatihah", arabicName: "الفاتحة", translation: "The Opener", verses: 7, href: "/surah/1" },

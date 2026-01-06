@@ -10,8 +10,10 @@ import { Compass, MapPin, Loader2, Bell, Volume2, WifiOff } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useOfflinePrayerTimes } from "@/hooks/useOfflinePrayerTimes";
+import { useSEO, SEO_DATA } from "@/hooks/useSEO";
 
 const PrayerTimes = () => {
+  useSEO(SEO_DATA.prayerTimes);
   const { user, session } = useAuth();
   const navigate = useNavigate();
   const [location, setLocation] = useState<{ lat: number; lon: number } | null>(null);

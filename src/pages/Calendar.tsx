@@ -3,6 +3,7 @@ import { PageWrapper } from "@/components/app/PageWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar as CalendarIcon, Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useSEO, SEO_DATA } from "@/hooks/useSEO";
 
 // Hijri month names
 const hijriMonths = [
@@ -111,6 +112,7 @@ function getHijriDateForDay(gregorianDate: Date): { day: number; month: number; 
 }
 
 const Calendar = () => {
+  useSEO(SEO_DATA.calendar);
   const [currentDate, setCurrentDate] = useState(new Date());
   
   // Calculate today's Hijri date dynamically

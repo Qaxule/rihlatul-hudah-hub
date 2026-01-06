@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { z } from "zod";
+import { useSEO, SEO_DATA } from "@/hooks/useSEO";
 
 const loginSchema = z.object({
   email: z
@@ -22,6 +23,7 @@ const loginSchema = z.object({
 });
 
 const Login = () => {
+  useSEO(SEO_DATA.login);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);

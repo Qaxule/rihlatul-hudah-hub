@@ -7,8 +7,10 @@ import { BookOpen, CheckCircle, Clock } from "lucide-react";
 import { lessons } from "@/data/lessonContent";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { useSEO, SEO_DATA } from "@/hooks/useSEO";
 
 const Learning = () => {
+  useSEO(SEO_DATA.learning);
   const navigate = useNavigate();
   const { user } = useAuth();
   const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set());
