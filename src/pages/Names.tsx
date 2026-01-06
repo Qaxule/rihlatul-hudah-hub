@@ -2,8 +2,10 @@ import { PageWrapper } from "@/components/app/PageWrapper";
 import { Card, CardContent } from "@/components/ui/card";
 import { Sparkles } from "lucide-react";
 import { namesOfAllah } from "@/data/namesOfAllah";
+import { useSEO, SEO_DATA } from "@/hooks/useSEO";
 
 const Names = () => {
+  useSEO(SEO_DATA.names);
   return (
     <PageWrapper className="bg-gradient-subtle">
       

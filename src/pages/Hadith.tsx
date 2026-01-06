@@ -11,6 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { HadithSkeleton } from "@/components/HadithSkeleton";
+import { useSEO, SEO_DATA } from "@/hooks/useSEO";
 
 interface HadithData {
   hadithnumber: number;
@@ -23,6 +24,7 @@ interface HadithData {
 }
 
 const Hadith = () => {
+  useSEO(SEO_DATA.hadith);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCollection, setSelectedCollection] = useState<string | null>(null);
   const [hadiths, setHadiths] = useState<HadithData[]>([]);

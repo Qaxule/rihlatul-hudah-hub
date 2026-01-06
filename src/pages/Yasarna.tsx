@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useSEO, SEO_DATA } from "@/hooks/useSEO";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,7 @@ import {
 } from "@/data/yasarnaContent";
 
 const Yasarna = () => {
+  useSEO(SEO_DATA.yasarna);
   const [completedLessons, setCompletedLessons] = useState<string[]>([]);
   const [currentQuiz, setCurrentQuiz] = useState(0);
   const [quizAnswers, setQuizAnswers] = useState<Record<string, string>>({});

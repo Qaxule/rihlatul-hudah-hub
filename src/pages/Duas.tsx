@@ -2,8 +2,10 @@ import { PageWrapper } from "@/components/app/PageWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart, Volume2 } from "lucide-react";
+import { useSEO, SEO_DATA } from "@/hooks/useSEO";
 
 const Duas = () => {
+  useSEO(SEO_DATA.duas);
   const duaCategories = [
     {
       category: "Morning & Evening",

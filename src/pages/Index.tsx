@@ -13,6 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { getSurahInfo } from "@/data/quranMetadata";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/contexts/AuthContext";
+import { useSEO, SEO_DATA } from "@/hooks/useSEO";
 interface AyatOfTheDay {
   surah: {
     number: number;
@@ -46,6 +47,7 @@ interface SearchFilters {
 }
 const Index = () => {
   const { isNativeApp } = useNativeAppContext();
+  useSEO(SEO_DATA.home);
   const [ayatOfTheDay, setAyatOfTheDay] = useState<AyatOfTheDay | null>(null);
   const [loading, setLoading] = useState(true);
   const [readingProgress, setReadingProgress] = useState<ReadingProgress | null>(null);

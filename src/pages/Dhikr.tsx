@@ -4,8 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, Minus, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
+import { useSEO, SEO_DATA } from "@/hooks/useSEO";
 
 const Dhikr = () => {
+  useSEO(SEO_DATA.dhikr);
   const [count, setCount] = useState(0);
   const [target, setTarget] = useState(33);
   const [dhikrName, setDhikrName] = useState("SubhanAllah");

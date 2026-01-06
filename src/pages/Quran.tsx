@@ -7,6 +7,7 @@ import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { surahList, juzList, getSurahsByJuz } from "@/data/quranMetadata";
+import { useSEO, SEO_DATA } from "@/hooks/useSEO";
 
 // Chronological revelation order mapping
 const revelationOrder: { [key: number]: number } = {
@@ -36,6 +37,7 @@ const surahs = surahList.map(surah => ({
 }));
 
 const Quran = () => {
+  useSEO(SEO_DATA.quran);
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState<"surah" | "juz" | "revelation">("surah");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
