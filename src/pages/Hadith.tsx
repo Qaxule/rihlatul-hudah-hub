@@ -358,63 +358,58 @@ const Hadith = () => {
         </div>
 
         {/* Hadith of the Day */}
-        <Card className="max-w-4xl mx-auto mb-12 shadow-soft border-primary/20">
-          <CardHeader>
-            <CardTitle className="text-2xl flex items-center gap-2">
-              <Book className="h-6 w-6 text-primary" />
-              Hadith of the Day
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {randomHadith ? (
-              <>
-                {/* Arabic Text */}
-                {showArabic && randomHadith.arabictext && (
-                  <div className="bg-muted/30 rounded-lg p-6 border border-border/50">
-                    <p className="text-2xl leading-loose text-right font-amiri" dir="rtl">
-                      {randomHadith.arabictext}
-                    </p>
-                  </div>
-                )}
-                
-                {/* English Translation */}
-                <p className="text-lg leading-relaxed italic text-foreground">
-                  "{randomHadith.text}"
+        <div className="max-w-4xl mx-auto mb-12">
+          <h2 className="text-xl font-semibold flex items-center gap-2 mb-6">
+            <Book className="h-5 w-5 text-primary" />
+            Hadith of the Day
+          </h2>
+          {randomHadith ? (
+            <div className="space-y-4">
+              {/* Arabic Text */}
+              {showArabic && randomHadith.arabictext && (
+                <p className="text-2xl leading-loose text-right font-amiri text-foreground/90" dir="rtl">
+                  {randomHadith.arabictext}
                 </p>
-                
-                <div className="flex justify-between items-center pt-4 border-t">
-                  <p className="text-sm text-muted-foreground">
-                    Sahih Bukhari - Hadith {randomHadith.hadithnumber}
-                  </p>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => toggleBookmark(randomHadith, 'eng-bukhari')}
-                    >
-                      {isBookmarked('eng-bukhari', randomHadith.hadithnumber) ? (
-                        <>
-                          <BookmarkCheck className="w-4 h-4 mr-1 fill-primary text-primary" />
-                          Bookmarked
-                        </>
-                      ) : (
-                        <>
-                          <Bookmark className="w-4 h-4 mr-1" />
-                          Bookmark
-                        </>
-                      )}
-                    </Button>
-                    <Button variant="ghost" size="sm" onClick={fetchRandomHadith}>
-                      Get Another
-                    </Button>
-                  </div>
+              )}
+              
+              {/* English Translation */}
+              <p className="text-lg leading-relaxed text-foreground/80">
+                "{randomHadith.text}"
+              </p>
+              
+              <div className="flex justify-between items-center pt-4">
+                <p className="text-sm text-muted-foreground">
+                  Sahih Bukhari · Hadith {randomHadith.hadithnumber}
+                </p>
+                <div className="flex gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => toggleBookmark(randomHadith, 'eng-bukhari')}
+                  >
+                    {isBookmarked('eng-bukhari', randomHadith.hadithnumber) ? (
+                      <>
+                        <BookmarkCheck className="w-4 h-4 mr-1 fill-primary text-primary" />
+                        Bookmarked
+                      </>
+                    ) : (
+                      <>
+                        <Bookmark className="w-4 h-4 mr-1" />
+                        Bookmark
+                      </>
+                    )}
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={fetchRandomHadith}>
+                    Get Another
+                  </Button>
                 </div>
-              </>
-            ) : (
-              <Skeleton className="h-24 w-full" />
-            )}
-          </CardContent>
-        </Card>
+              </div>
+            </div>
+          ) : (
+            <Skeleton className="h-24 w-full" />
+          )}
+          <div className="border-b border-border/50 mt-8" />
+        </div>
 
         {/* Collections */}
         {!selectedCollection && (
@@ -499,73 +494,63 @@ const Hadith = () => {
             </div>
 
             {/* Hadiths */}
-            <div className="space-y-6">
+            <div className="divide-y divide-border/40">
               {loading ? (
                 Array.from({ length: 5 }).map((_, i) => (
                   <HadithSkeleton key={i} />
                 ))
               ) : filteredHadiths.length > 0 ? (
                 filteredHadiths.map((hadith, index) => (
-                  <Card key={index} className="shadow-soft hover:shadow-elevated transition-all">
-                    <CardContent className="p-6">
-                      <div className="flex items-start gap-4">
-                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                          <span className="text-primary font-bold text-sm">
-                            {hadith.hadithnumber}
-                          </span>
-                        </div>
-                        <div className="flex-1 space-y-4">
-                          {/* Arabic Text */}
-                          {showArabic && hadith.arabictext && (
-                            <div className="bg-muted/30 rounded-lg p-4 border border-border/50">
-                              <p className="text-xl leading-loose text-right font-amiri" dir="rtl">
-                                {hadith.arabictext}
-                              </p>
-                            </div>
+                  <article key={index} className="py-8 first:pt-0">
+                    <div className="space-y-4">
+                      {/* Hadith Number Badge */}
+                      <span className="inline-flex items-center text-xs font-medium text-primary bg-primary/5 px-2.5 py-1 rounded-full">
+                        #{hadith.hadithnumber}
+                      </span>
+                      
+                      {/* Arabic Text */}
+                      {showArabic && hadith.arabictext && (
+                        <p className="text-xl leading-loose text-right font-amiri text-foreground/90" dir="rtl">
+                          {hadith.arabictext}
+                        </p>
+                      )}
+                      
+                      {/* English Translation */}
+                      <p className="text-base leading-relaxed text-foreground/80">
+                        {hadith.text}
+                      </p>
+                      
+                      <div className="flex items-center justify-between pt-2">
+                        <p className="text-sm text-muted-foreground">
+                          {hadith.reference?.book && `Book ${hadith.reference.book}`}
+                          {hadith.reference?.hadith && ` · Hadith ${hadith.reference.hadith}`}
+                        </p>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => toggleBookmark(hadith, selectedCollection!)}
+                          className="-mr-2"
+                        >
+                          {isBookmarked(selectedCollection!, hadith.hadithnumber) ? (
+                            <>
+                              <BookmarkCheck className="w-4 h-4 mr-1 fill-primary text-primary" />
+                              Bookmarked
+                            </>
+                          ) : (
+                            <>
+                              <Bookmark className="w-4 h-4 mr-1" />
+                              Bookmark
+                            </>
                           )}
-                          
-                          {/* English Translation */}
-                          <p className="text-base leading-relaxed text-foreground">
-                            {hadith.text}
-                          </p>
-                          
-                          <div className="flex items-center justify-between pt-2">
-                            {hadith.reference && (
-                              <p className="text-sm text-muted-foreground">
-                                {hadith.reference.book && `Book: ${hadith.reference.book}`}
-                                {hadith.reference.hadith && ` • Hadith: ${hadith.reference.hadith}`}
-                              </p>
-                            )}
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => toggleBookmark(hadith, selectedCollection!)}
-                              className="ml-auto"
-                            >
-                              {isBookmarked(selectedCollection!, hadith.hadithnumber) ? (
-                                <>
-                                  <BookmarkCheck className="w-4 h-4 mr-1 fill-primary text-primary" />
-                                  Bookmarked
-                                </>
-                              ) : (
-                                <>
-                                  <Bookmark className="w-4 h-4 mr-1" />
-                                  Bookmark
-                                </>
-                              )}
-                            </Button>
-                          </div>
-                        </div>
+                        </Button>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </article>
                 ))
               ) : (
-                <Card>
-                  <CardContent className="p-12 text-center">
-                    <p className="text-muted-foreground">No hadiths found matching your search.</p>
-                  </CardContent>
-                </Card>
+                <div className="py-12 text-center">
+                  <p className="text-muted-foreground">No hadiths found matching your search.</p>
+                </div>
               )}
 
               {/* Load More Button */}
