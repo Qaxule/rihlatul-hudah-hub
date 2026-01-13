@@ -107,6 +107,27 @@ export type Database = {
         }
         Relationships: []
       }
+      juz_completion: {
+        Row: {
+          completed_at: string
+          id: string
+          juz_number: number
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          id?: string
+          juz_number: number
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          id?: string
+          juz_number?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       learning_progress: {
         Row: {
           completed: boolean | null
@@ -133,6 +154,45 @@ export type Database = {
           id?: string
           lesson_id?: string
           quiz_score?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      memorization_progress: {
+        Row: {
+          ayah_from: number
+          ayah_to: number
+          created_at: string
+          id: string
+          last_reviewed_at: string | null
+          memorization_level: string
+          review_count: number
+          surah_number: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ayah_from?: number
+          ayah_to: number
+          created_at?: string
+          id?: string
+          last_reviewed_at?: string | null
+          memorization_level?: string
+          review_count?: number
+          surah_number: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ayah_from?: number
+          ayah_to?: number
+          created_at?: string
+          id?: string
+          last_reviewed_at?: string | null
+          memorization_level?: string
+          review_count?: number
+          surah_number?: number
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
@@ -278,32 +338,104 @@ export type Database = {
         }
         Relationships: []
       }
+      reading_streaks: {
+        Row: {
+          created_at: string
+          current_streak: number
+          id: string
+          last_read_date: string | null
+          longest_streak: number
+          streak_start_date: string | null
+          total_days_read: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_streak?: number
+          id?: string
+          last_read_date?: string | null
+          longest_streak?: number
+          streak_start_date?: string | null
+          total_days_read?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_streak?: number
+          id?: string
+          last_read_date?: string | null
+          longest_streak?: number
+          streak_start_date?: string | null
+          total_days_read?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       reflections: {
         Row: {
+          ayah_number: number | null
           content: string
           created_at: string | null
           id: string
           is_public: boolean | null
+          surah_number: number | null
           title: string | null
           updated_at: string | null
           user_id: string
         }
         Insert: {
+          ayah_number?: number | null
           content: string
           created_at?: string | null
           id?: string
           is_public?: boolean | null
+          surah_number?: number | null
           title?: string | null
           updated_at?: string | null
           user_id: string
         }
         Update: {
+          ayah_number?: number | null
           content?: string
           created_at?: string | null
           id?: string
           is_public?: boolean | null
+          surah_number?: number | null
           title?: string | null
           updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_badges: {
+        Row: {
+          badge_description: string | null
+          badge_icon: string | null
+          badge_id: string
+          badge_name: string
+          earned_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          badge_description?: string | null
+          badge_icon?: string | null
+          badge_id: string
+          badge_name: string
+          earned_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          badge_description?: string | null
+          badge_icon?: string | null
+          badge_id?: string
+          badge_name?: string
+          earned_at?: string
+          id?: string
           user_id?: string
         }
         Relationships: []
