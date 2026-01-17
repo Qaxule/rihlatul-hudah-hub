@@ -374,6 +374,35 @@ export type Database = {
         }
         Relationships: []
       }
+      reflection_likes: {
+        Row: {
+          created_at: string
+          id: string
+          reflection_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          reflection_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          reflection_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reflection_likes_reflection_id_fkey"
+            columns: ["reflection_id"]
+            isOneToOne: false
+            referencedRelation: "reflections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reflections: {
         Row: {
           ayah_number: number | null
