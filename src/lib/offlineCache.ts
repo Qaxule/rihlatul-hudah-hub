@@ -7,6 +7,7 @@ const STORES = {
   QURAN_DATA: 'quran-data',
   PRAYER_TIMES: 'prayer-times',
   TAFSIR: 'tafsir',
+  WORD_BY_WORD: 'word-by-word',
 };
 
 class OfflineCache {
@@ -34,6 +35,9 @@ class OfflineCache {
         }
         if (!db.objectStoreNames.contains(STORES.TAFSIR)) {
           db.createObjectStore(STORES.TAFSIR, { keyPath: 'key' });
+        }
+        if (!db.objectStoreNames.contains(STORES.WORD_BY_WORD)) {
+          db.createObjectStore(STORES.WORD_BY_WORD, { keyPath: 'key' });
         }
       };
     });
@@ -124,11 +128,14 @@ export const CACHE_CONFIG = {
     `prayer-${lat.toFixed(2)}-${lon.toFixed(2)}-${date}`,
   TAFSIR: (surah: number, ayah: number, tafsirId: number, abridged: boolean) =>
     `tafsir-${surah}-${ayah}-${tafsirId}-${abridged}`,
+  WORD_BY_WORD: (surah: number, ayah: number) =>
+    `wbw-${surah}-${ayah}`,
   
   // Max ages in milliseconds
   QURAN_MAX_AGE: 30 * 24 * 60 * 60 * 1000, // 30 days - Quran text doesn't change
   PRAYER_TIMES_MAX_AGE: 24 * 60 * 60 * 1000, // 1 day
   TAFSIR_MAX_AGE: 30 * 24 * 60 * 60 * 1000, // 30 days
+  WORD_BY_WORD_MAX_AGE: 30 * 24 * 60 * 60 * 1000, // 30 days
 };
 
 export { STORES };
