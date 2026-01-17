@@ -3,7 +3,13 @@ import { useParams, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { PageWrapper } from "@/components/app/PageWrapper";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, BookOpen, Bookmark, BookmarkCheck, ChevronDown, ChevronUp, Share2, Menu, WifiOff, Play, Pause, ArrowUp, Eye, EyeOff } from "lucide-react";
+import { ChevronLeft, ChevronRight, BookOpen, Bookmark, BookmarkCheck, ChevronDown, ChevronUp, Share2, Menu, WifiOff, Play, Pause, ArrowUp, Eye, EyeOff, Link2, Copy } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -300,7 +306,7 @@ const SurahReader = () => {
   };
 
 
-  const handleShareAyah = async (ayahNumber: number) => {
+  const handleCopyAyahText = async (ayahNumber: number) => {
     if (!arabicData || !translationData) return;
     
     const index = ayahNumber - 1;
@@ -349,6 +355,18 @@ const SurahReader = () => {
     } catch (error) {
       console.error("Error sharing:", error);
       toast.error("Failed to copy to clipboard");
+    }
+  };
+
+  const handleCopyAyahLink = async (ayahNumber: number) => {
+    const link = `https://rihlatulhudah.com/surah/${surahNum}#ayah-${ayahNumber}`;
+    
+    try {
+      await navigator.clipboard.writeText(link);
+      toast.success("Link copied to clipboard");
+    } catch (error) {
+      console.error("Error copying link:", error);
+      toast.error("Failed to copy link");
     }
   };
 
@@ -753,15 +771,28 @@ const SurahReader = () => {
                           ayahNumber={ayah.numberInSurah}
                           surahName={arabicData.englishName}
                         />
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleShareAyah(ayah.numberInSurah)}
-                          className="h-8 w-8 text-muted-foreground hover:text-foreground"
-                          title="Share ayah"
-                        >
-                          <Share2 className="w-4 h-4" />
-                        </Button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                              title="Share ayah"
+                            >
+                              <Share2 className="w-4 h-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-48">
+                            <DropdownMenuItem onClick={() => handleCopyAyahText(ayah.numberInSurah)}>
+                              <Copy className="w-4 h-4 mr-2" />
+                              Copy Text
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleCopyAyahLink(ayah.numberInSurah)}>
+                              <Link2 className="w-4 h-4 mr-2" />
+                              Copy Link
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                         <Button
                           variant="ghost"
                           size="icon"
