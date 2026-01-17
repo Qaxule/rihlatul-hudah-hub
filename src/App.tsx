@@ -24,6 +24,7 @@ import GuideDetail from "./pages/GuideDetail";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Bookmarks from "./pages/Bookmarks";
+import Reflections from "./pages/Reflections";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
 import Disclaimer from "./pages/Disclaimer";
@@ -60,6 +61,7 @@ const App = () => (
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/bookmarks" element={<Bookmarks />} />
+              <Route path="/reflections" element={<Reflections />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-use" element={<TermsOfUse />} />
               <Route path="/disclaimer" element={<Disclaimer />} />
