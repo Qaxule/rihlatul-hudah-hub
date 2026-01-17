@@ -63,12 +63,15 @@ const GuideDetail = () => {
 
     const { error } = await supabase
       .from("guide_progress")
-      .upsert({
-        user_id: user.id,
-        guide_id: guideId,
-        completed_steps: newCompletedSteps,
-        completed: isFullyCompleted,
-      });
+      .upsert(
+        {
+          user_id: user.id,
+          guide_id: guideId,
+          completed_steps: newCompletedSteps,
+          completed: isFullyCompleted,
+        },
+        { onConflict: 'user_id,guide_id' }
+      );
 
     if (error) {
       console.error("Error saving progress:", error);
