@@ -117,7 +117,11 @@ const GuideDetail = () => {
 
             <div className="flex items-start gap-4 flex-wrap mb-6">
               <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                {IconComponent && <IconComponent className="w-8 h-8 text-primary" />}
+                {guide.iconImage ? (
+                  <img src={guide.iconImage} alt={guide.title} className="w-8 h-8 dark:invert" />
+                ) : (
+                  IconComponent && <IconComponent className="w-8 h-8 text-primary" />
+                )}
               </div>
               <div className="flex-1">
                 <Badge variant="secondary" className="mb-2">
