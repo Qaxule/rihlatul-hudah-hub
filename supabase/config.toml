@@ -24,3 +24,6 @@ verify_jwt = false
 
 [functions.pesapal-payment]
 verify_jwt = false
+
+[functions.quran-word-by-word]
+verify_jwt = false
