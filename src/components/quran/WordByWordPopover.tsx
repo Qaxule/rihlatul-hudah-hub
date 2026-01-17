@@ -22,6 +22,63 @@ interface WordByWordPopoverProps {
 // Cache for ayah word data to avoid refetching
 const ayahWordCache = new Map<string, WordData[]>();
 
+// Remove Arabic diacritics for comparison
+function stripDiacritics(text: string): string {
+  // Arabic diacritical marks range: U+064B to U+0652, plus others
+  return text.replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, '').trim();
+}
+
+// Find the best matching word from API data
+function findBestMatch(clickedWord: string, words: WordData[], index: number): WordData | null {
+  if (!words || words.length === 0) return null;
+  
+  const strippedClicked = stripDiacritics(clickedWord);
+  
+  // First, try exact match (after stripping diacritics)
+  for (const word of words) {
+    if (stripDiacritics(word.arabic) === strippedClicked) {
+      return word;
+    }
+  }
+  
+  // Second, try partial match (one contains the other)
+  for (const word of words) {
+    const strippedApi = stripDiacritics(word.arabic);
+    if (strippedApi.includes(strippedClicked) || strippedClicked.includes(strippedApi)) {
+      return word;
+    }
+  }
+  
+  // Third, try matching by similar position (fallback to index-based)
+  // The API words are in order, so if index is within range, use it
+  if (index >= 0 && index < words.length) {
+    return words[index];
+  }
+  
+  // Last resort: find word with most character overlap
+  let bestMatch: WordData | null = null;
+  let bestScore = 0;
+  
+  for (const word of words) {
+    const strippedApi = stripDiacritics(word.arabic);
+    let score = 0;
+    
+    // Count matching characters
+    for (const char of strippedClicked) {
+      if (strippedApi.includes(char)) {
+        score++;
+      }
+    }
+    
+    if (score > bestScore) {
+      bestScore = score;
+      bestMatch = word;
+    }
+  }
+  
+  return bestMatch;
+}
+
 export function WordByWordPopover({
   word,
   index,
@@ -43,8 +100,9 @@ export function WordByWordPopover({
       // Check in-memory cache first
       if (ayahWordCache.has(cacheKey)) {
         const words = ayahWordCache.get(cacheKey)!;
-        if (words[index]) {
-          setWordData(words[index]);
+        const match = findBestMatch(displayWord, words, index);
+        if (match) {
+          setWordData(match);
           return;
         }
       }
@@ -60,8 +118,9 @@ export function WordByWordPopover({
         
         if (cached?.words) {
           ayahWordCache.set(cacheKey, cached.words);
-          if (cached.words[index]) {
-            setWordData(cached.words[index]);
+          const match = findBestMatch(displayWord, cached.words, index);
+          if (match) {
+            setWordData(match);
             return;
           }
         }
@@ -96,8 +155,9 @@ export function WordByWordPopover({
             console.log('Failed to cache word data in IndexedDB');
           }
 
-          if (data.words[index]) {
-            setWordData(data.words[index]);
+          const match = findBestMatch(displayWord, data.words, index);
+          if (match) {
+            setWordData(match);
           }
         }
       } catch (err) {
@@ -109,7 +169,7 @@ export function WordByWordPopover({
     };
 
     fetchWordData();
-  }, [open, surahNumber, ayahNumber, index, cacheKey]);
+  }, [open, surahNumber, ayahNumber, index, cacheKey, displayWord]);
 
   if (!displayWord) return null;
 
