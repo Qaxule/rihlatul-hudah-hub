@@ -10,6 +10,7 @@ export interface Guide {
   title: string;
   description: string;
   icon: string;
+  iconImage?: string;
   category: string;
   steps: GuideStep[];
   tips?: string[];
@@ -86,6 +87,7 @@ export const guides: Guide[] = [
     title: "How to Perform Salah (Prayer)",
     description: "Step-by-step guide to the five daily prayers",
     icon: "HandPrayer",
+    iconImage: "/guides/salah-icon.png",
     category: "Worship",
     steps: [
       {
@@ -244,6 +246,7 @@ export const guides: Guide[] = [
     title: "Daily Dhikr & Remembrance",
     description: "Essential daily supplications for every Muslim",
     icon: "Sparkles",
+    iconImage: "/guides/dhikr-icon.png",
     category: "Worship",
     steps: [
       {

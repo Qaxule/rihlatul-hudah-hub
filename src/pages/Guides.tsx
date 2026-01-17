@@ -91,7 +91,11 @@ const Guides = () => {
                 <CardHeader>
                   <div className="flex items-start justify-between mb-3">
                     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                      {IconComponent && <IconComponent className="w-6 h-6 text-primary" />}
+                      {guide.iconImage ? (
+                        <img src={guide.iconImage} alt={guide.title} className="w-6 h-6 dark:invert" />
+                      ) : (
+                        IconComponent && <IconComponent className="w-6 h-6 text-primary" />
+                      )}
                     </div>
                     <Badge variant="secondary">{guide.category}</Badge>
                   </div>
