@@ -5,7 +5,8 @@ import { useNativeAppContext } from "@/contexts/NativeAppContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Book, Heart, Calendar, ArrowRight, Compass, BookOpen, Gem, Search, ChevronRight, Bookmark, GraduationCap, HandHeart, Loader2, X, Filter, ChevronDown, Flame, Trophy, MessageSquare } from "lucide-react";
+import { Book, Heart, Calendar, ArrowRight, Compass, BookOpen, Search, ChevronRight, Bookmark, GraduationCap, HandHeart, Loader2, X, Filter, ChevronDown, Flame, Trophy, MessageSquare } from "lucide-react";
+import asmaUlHusnaIcon from "@/assets/asma-ul-husna-icon.png";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { surahList, juzList } from "@/data/quranMetadata";
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -238,7 +239,7 @@ const Index = () => {
     title: "99 Names",
     description: "Names of Allah",
     href: "/names",
-    icon: Gem
+    iconImage: asmaUlHusnaIcon
   }, {
     title: "Dhikr",
     description: "Digital tasbih",
@@ -566,7 +567,11 @@ const Index = () => {
                 <Card className="h-full hover:shadow-soft hover:border-primary/20 transition-all group">
                   <CardContent className="p-4 flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
-                      <feature.icon className="w-5 h-5 text-primary" />
+                      {feature.iconImage ? (
+                        <img src={feature.iconImage} alt={feature.title} className="w-5 h-5 dark:invert" />
+                      ) : (
+                        <feature.icon className="w-5 h-5 text-primary" />
+                      )}
                     </div>
                     <div className="min-w-0">
                       <h3 className="font-medium text-foreground text-sm group-hover:text-primary transition-colors truncate">
