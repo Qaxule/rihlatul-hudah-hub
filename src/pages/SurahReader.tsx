@@ -543,19 +543,12 @@ const SurahReader = () => {
     setHiddenAyahs(new Set());
   }, []);
 
-  // Bismillah patterns to strip from ayah 1 (for surahs 2-114 except 9)
-  const BISMILLAH_ARABIC = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
-  const BISMILLAH_ARABIC_ALT = "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ";
-  const BISMILLAH_TRANSLITERATION = "Bismi Allahi alrrahmani alrraheemi";
-  const BISMILLAH_TRANSLITERATION_ALT = "bismillahi r-rahmani r-rahim";
-  const BISMILLAH_TRANSLATION_PATTERNS = [
-    "In the name of Allah, the Entirely Merciful, the Especially Merciful.",
-    "In the name of Allah, Most Gracious, Most Merciful.",
-    "In the name of God, the Most Gracious, the Most Merciful.",
-    "In the name of Allah, the Beneficent, the Merciful.",
-  ];
+  // Strip Bismillah from ayah 1 for surahs 2-114 (except 9)
+  // Use regex with stripped diacritics for reliable matching
+  const stripDiacritics = (text: string): string => {
+    return text.replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, '');
+  };
   
-  // Get the actual text, stripping Bismillah from ayah 1 for surahs 2-114 (except 9)
   const getCleanText = useCallback((text: string, ayahNumber: number, surahNumber: number, type: 'arabic' | 'transliteration' | 'translation'): string => {
     // Only process ayah 1
     if (ayahNumber !== 1) return text;
@@ -567,29 +560,46 @@ const SurahReader = () => {
     let cleanText = text.trim();
     
     if (type === 'arabic') {
-      if (cleanText.startsWith(BISMILLAH_ARABIC)) {
-        cleanText = cleanText.substring(BISMILLAH_ARABIC.length).trim();
-      } else if (cleanText.startsWith(BISMILLAH_ARABIC_ALT)) {
-        cleanText = cleanText.substring(BISMILLAH_ARABIC_ALT.length).trim();
+      // Match "بسم الله الرحمن الرحيم" with any diacritics/variations
+      // Strip diacritics and match the base letters
+      const stripped = stripDiacritics(cleanText);
+      // Look for بسم الله at the start (base consonants)
+      const bismillahBase = "بسم الله الرحمن الرحيم";
+      const bismillahBaseAlt = "بسم ٱلله ٱلرحمن ٱلرحيم";
+      
+      if (stripped.startsWith(bismillahBase) || stripped.startsWith(bismillahBaseAlt)) {
+        // Find where the actual bismillah ends in the original text
+        // Count roughly 4 words (بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ)
+        const words = cleanText.split(/\s+/);
+        if (words.length > 4) {
+          cleanText = words.slice(4).join(' ');
+        } else {
+          cleanText = '';
+        }
       }
     } else if (type === 'transliteration') {
-      // Case-insensitive check for transliteration
+      // Match common transliteration patterns
       const lowerText = cleanText.toLowerCase();
-      if (lowerText.startsWith(BISMILLAH_TRANSLITERATION.toLowerCase())) {
-        cleanText = cleanText.substring(BISMILLAH_TRANSLITERATION.length).trim();
-      } else if (lowerText.startsWith(BISMILLAH_TRANSLITERATION_ALT.toLowerCase())) {
-        cleanText = cleanText.substring(BISMILLAH_TRANSLITERATION_ALT.length).trim();
+      const patterns = [
+        /^bismi(llahi?|'?l-?lahi?)\s*(ar-?)?r-?rah?ma?n[i]?\s*(ar-?)?r-?rah?[ie]?[ie]?m[i]?\s*/i,
+        /^in the name of (allah|god)[,.]?\s*(the\s+)?(most\s+)?(entirely\s+)?merciful[,.]?\s*(the\s+)?(especially\s+|most\s+)?merciful[.]?\s*/i,
+      ];
+      
+      for (const pattern of patterns) {
+        cleanText = cleanText.replace(pattern, '');
       }
     } else if (type === 'translation') {
-      for (const pattern of BISMILLAH_TRANSLATION_PATTERNS) {
-        if (cleanText.startsWith(pattern)) {
-          cleanText = cleanText.substring(pattern.length).trim();
-          break;
-        }
+      // Match translation patterns for Bismillah
+      const patterns = [
+        /^In the name of (Allah|God)[,.]?\s*(the\s+)?(Entirely|Most|All)[- ]?(Gracious|Merciful|Compassionate)[,.]?\s*(the\s+)?(Especially|Most|All)[- ]?(Merciful|Compassionate)[.]?\s*/i,
+      ];
+      
+      for (const pattern of patterns) {
+        cleanText = cleanText.replace(pattern, '');
       }
     }
     
-    return cleanText;
+    return cleanText.trim();
   }, []);
 
   // Render Arabic text with word-by-word or plain
