@@ -1,8 +1,8 @@
 import { PageWrapper } from "@/components/app/PageWrapper";
 import { Card, CardContent } from "@/components/ui/card";
-import { Sparkles } from "lucide-react";
 import { namesOfAllah } from "@/data/namesOfAllah";
 import { useSEO, SEO_DATA } from "@/hooks/useSEO";
+import asmaUlHusnaIcon from "@/assets/asma-ul-husna-icon.png";
 
 const Names = () => {
   useSEO(SEO_DATA.names);
@@ -13,7 +13,7 @@ const Names = () => {
         {/* Header */}
         <div className="max-w-4xl mx-auto text-center space-y-6 mb-12">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/10">
-            <Sparkles className="w-8 h-8 text-accent" />
+            <img src={asmaUlHusnaIcon} alt="99 Names" className="w-8 h-8 dark:invert" />
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-foreground">
             The 99 Names of Allah
