@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { lessons } from "@/data/lessonContent";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { toast } from "sonner";
 import LessonQuiz from "@/components/LessonQuiz";
 import LessonContent from "@/components/LessonContent";
@@ -22,6 +22,14 @@ const LessonDetail = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [quizScore, setQuizScore] = useState<number | null>(null);
   const [showQuiz, setShowQuiz] = useState(false);
+  const quizRef = useRef<HTMLDivElement>(null);
+
+  const scrollToQuiz = () => {
+    setShowQuiz(true);
+    setTimeout(() => {
+      quizRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  };
 
   const lesson = lessons.find((l) => l.id === lessonId);
 
@@ -173,7 +181,7 @@ const LessonDetail = () => {
                 </Button>
                 {!showQuiz && (
                   <Button
-                    onClick={() => setShowQuiz(true)}
+                    onClick={scrollToQuiz}
                     variant="secondary"
                     className="gap-2"
                   >
@@ -262,7 +270,7 @@ const LessonDetail = () => {
 
           {/* Quiz Section */}
           {showQuiz ? (
-            <div className="mt-6">
+            <div ref={quizRef} className="mt-6">
               <Separator className="mb-6" />
               <div className="mb-4">
                 <Button
@@ -279,9 +287,9 @@ const LessonDetail = () => {
               />
             </div>
           ) : (
-            <div className="mt-6 flex flex-col items-center gap-4">
+            <div ref={quizRef} className="mt-6 flex flex-col items-center gap-4">
               <Button
-                onClick={() => setShowQuiz(true)}
+                onClick={scrollToQuiz}
                 size="lg"
                 variant="default"
                 className="gap-2"
