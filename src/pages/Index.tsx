@@ -5,7 +5,7 @@ import { useNativeAppContext } from "@/contexts/NativeAppContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Book, Heart, Calendar, ArrowRight, Compass, BookOpen, Gem, Search, ChevronRight, Bookmark, GraduationCap, HandHeart, Loader2, X, Filter, ChevronDown } from "lucide-react";
+import { Book, Heart, Calendar, ArrowRight, Compass, BookOpen, Gem, Search, ChevronRight, Bookmark, GraduationCap, HandHeart, Loader2, X, Filter, ChevronDown, Flame, Trophy } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { surahList, juzList } from "@/data/quranMetadata";
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -14,6 +14,7 @@ import { getSurahInfo } from "@/data/quranMetadata";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSEO, SEO_DATA } from "@/hooks/useSEO";
+import { useReadingStreak } from "@/hooks/useReadingStreak";
 interface AyatOfTheDay {
   surah: {
     number: number;
@@ -64,6 +65,7 @@ const Index = () => {
   const {
     user
   } = useAuth();
+  const { streak, badges } = useReadingStreak();
   useEffect(() => {
     fetchAyatOfTheDay();
     if (user) {
@@ -429,9 +431,26 @@ const Index = () => {
                       {readingProgress ? `Ayah ${readingProgress.ayah_number} • ${getSurahInfo(readingProgress.surah_number)?.englishNameTranslation || ""}` : "The Opener"}
                     </p>
                   </div>
-                  <Button className="w-fit mt-4 group-hover:bg-primary/90">
-                    {readingProgress ? "Continue" : "Begin"}
-                  </Button>
+                  <div className="flex items-center justify-between mt-4">
+                    <Button className="w-fit group-hover:bg-primary/90">
+                      {readingProgress ? "Continue" : "Begin"}
+                    </Button>
+                    {/* Streak Display */}
+                    {user && streak && (
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-orange-500/10" title="Current streak">
+                          <Flame className="h-4 w-4 text-orange-500" />
+                          <span className="font-semibold text-sm text-orange-600">{streak.current_streak}</span>
+                        </div>
+                        {streak.longest_streak > 0 && (
+                          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-yellow-500/10" title="Longest streak">
+                            <Trophy className="h-4 w-4 text-yellow-500" />
+                            <span className="font-semibold text-sm text-yellow-600">{streak.longest_streak}</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
             </Link>
