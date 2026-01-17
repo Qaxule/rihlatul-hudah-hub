@@ -5,7 +5,7 @@ import { useNativeAppContext } from "@/contexts/NativeAppContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Book, Heart, Calendar, ArrowRight, Compass, BookOpen, Gem, Search, ChevronRight, Bookmark, GraduationCap, HandHeart, Loader2, X, Filter, ChevronDown, Flame, Trophy } from "lucide-react";
+import { Book, Heart, Calendar, ArrowRight, Compass, BookOpen, Gem, Search, ChevronRight, Bookmark, GraduationCap, HandHeart, Loader2, X, Filter, ChevronDown, Flame, Trophy, MessageSquare } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { surahList, juzList } from "@/data/quranMetadata";
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -409,10 +409,18 @@ const Index = () => {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold text-foreground">Start Reading</h2>
-            {user && <Link to="/bookmarks" className="text-sm text-primary hover:underline flex items-center gap-1">
-                <Bookmark className="h-4 w-4" />
-                My Bookmarks
-              </Link>}
+            {user && (
+              <div className="flex items-center gap-4">
+                <Link to="/reflections" className="text-sm text-primary hover:underline flex items-center gap-1">
+                  <MessageSquare className="h-4 w-4" />
+                  Reflections
+                </Link>
+                <Link to="/bookmarks" className="text-sm text-primary hover:underline flex items-center gap-1">
+                  <Bookmark className="h-4 w-4" />
+                  Bookmarks
+                </Link>
+              </div>
+            )}
           </div>
           
           <div className="grid md:grid-cols-2 gap-4">
