@@ -407,10 +407,10 @@ const Index = () => {
       {/* Start Reading Section */}
       <section className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-between mb-4">
+          <div className="mb-4">
             <h2 className="text-xl font-semibold text-foreground">Start Reading</h2>
             {user && (
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 mt-2">
                 <Link to="/reflections" className="text-sm text-primary hover:underline flex items-center gap-1">
                   <MessageSquare className="h-4 w-4" />
                   Reflections
