@@ -543,14 +543,66 @@ const SurahReader = () => {
     setHiddenAyahs(new Set());
   }, []);
 
+  // Bismillah patterns to strip from ayah 1 (for surahs 2-114 except 9)
+  const BISMILLAH_ARABIC = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
+  const BISMILLAH_ARABIC_ALT = "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ";
+  const BISMILLAH_TRANSLITERATION = "Bismi Allahi alrrahmani alrraheemi";
+  const BISMILLAH_TRANSLITERATION_ALT = "bismillahi r-rahmani r-rahim";
+  const BISMILLAH_TRANSLATION_PATTERNS = [
+    "In the name of Allah, the Entirely Merciful, the Especially Merciful.",
+    "In the name of Allah, Most Gracious, Most Merciful.",
+    "In the name of God, the Most Gracious, the Most Merciful.",
+    "In the name of Allah, the Beneficent, the Merciful.",
+  ];
+  
+  // Get the actual text, stripping Bismillah from ayah 1 for surahs 2-114 (except 9)
+  const getCleanText = useCallback((text: string, ayahNumber: number, surahNumber: number, type: 'arabic' | 'transliteration' | 'translation'): string => {
+    // Only process ayah 1
+    if (ayahNumber !== 1) return text;
+    
+    // Surah 1 (Al-Fatihah): Bismillah IS the first ayah, don't strip
+    // Surah 9 (At-Tawbah): No Bismillah at all
+    if (surahNumber === 1 || surahNumber === 9) return text;
+    
+    let cleanText = text.trim();
+    
+    if (type === 'arabic') {
+      if (cleanText.startsWith(BISMILLAH_ARABIC)) {
+        cleanText = cleanText.substring(BISMILLAH_ARABIC.length).trim();
+      } else if (cleanText.startsWith(BISMILLAH_ARABIC_ALT)) {
+        cleanText = cleanText.substring(BISMILLAH_ARABIC_ALT.length).trim();
+      }
+    } else if (type === 'transliteration') {
+      // Case-insensitive check for transliteration
+      const lowerText = cleanText.toLowerCase();
+      if (lowerText.startsWith(BISMILLAH_TRANSLITERATION.toLowerCase())) {
+        cleanText = cleanText.substring(BISMILLAH_TRANSLITERATION.length).trim();
+      } else if (lowerText.startsWith(BISMILLAH_TRANSLITERATION_ALT.toLowerCase())) {
+        cleanText = cleanText.substring(BISMILLAH_TRANSLITERATION_ALT.length).trim();
+      }
+    } else if (type === 'translation') {
+      for (const pattern of BISMILLAH_TRANSLATION_PATTERNS) {
+        if (cleanText.startsWith(pattern)) {
+          cleanText = cleanText.substring(pattern.length).trim();
+          break;
+        }
+      }
+    }
+    
+    return cleanText;
+  }, []);
+
   // Render Arabic text with word-by-word or plain
   const renderArabicText = (text: string, ayahNumber: number) => {
+    // Get cleaned text (Bismillah stripped for ayah 1 where applicable)
+    const cleanText = getCleanText(text, ayahNumber, surahNum, 'arabic');
+    
     if (!wordByWordMode) {
-      return text;
+      return cleanText;
     }
 
     // Split by whitespace while preserving the characters
-    const words = text.split(/\s+/).filter(w => w.trim());
+    const words = cleanText.split(/\s+/).filter(w => w.trim());
     
     return (
       <span className="inline">
@@ -829,14 +881,14 @@ const SurahReader = () => {
                         {/* Transliteration - Smaller */}
                         {!arabicOnlyMode && transliterationData?.ayahs[index] && (
                           <p className="text-base md:text-lg text-muted-foreground/80 italic mt-4 leading-relaxed">
-                            {transliterationData.ayahs[index].text}
+                            {getCleanText(transliterationData.ayahs[index].text, ayah.numberInSurah, surahNum, 'transliteration')}
                           </p>
                         )}
 
                         {/* Translation - Secondary */}
                         {!arabicOnlyMode && translationData?.ayahs[index] && (
                           <p className="text-sm md:text-base text-foreground/80 mt-3 leading-relaxed">
-                            {translationData.ayahs[index].text}
+                            {getCleanText(translationData.ayahs[index].text, ayah.numberInSurah, surahNum, 'translation')}
                           </p>
                         )}
                       </>
