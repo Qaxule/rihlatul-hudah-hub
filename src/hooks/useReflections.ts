@@ -14,6 +14,8 @@ export interface Reflection {
   created_at: string;
   updated_at: string;
   user_name?: string;
+  like_count?: number;
+  liked_by_user?: boolean;
 }
 
 export function useReflections(surahNumber?: number, ayahNumber?: number) {
@@ -60,17 +62,34 @@ export function useReflections(surahNumber?: number, ayahNumber?: number) {
         if (publicData) {
           // Fetch profile names for public reflections
           const userIds = [...new Set(publicData.map((r) => r.user_id))];
-          const { data: profiles } = await supabase
-            .from('profiles')
-            .select('id, full_name')
-            .in('id', userIds);
+          const reflectionIds = publicData.map((r) => r.id);
+          
+          const [profilesRes, likesRes, userLikesRes] = await Promise.all([
+            supabase.from('profiles').select('id, full_name').in('id', userIds),
+            supabase.from('reflection_likes').select('reflection_id').in('reflection_id', reflectionIds),
+            user 
+              ? supabase.from('reflection_likes').select('reflection_id').eq('user_id', user.id).in('reflection_id', reflectionIds)
+              : Promise.resolve({ data: [] })
+          ]);
 
-          const profileMap = new Map(profiles?.map((p) => [p.id, p.full_name]) || []);
+          const profileMap = new Map(profilesRes.data?.map((p) => [p.id, p.full_name]) || []);
+          
+          // Count likes per reflection
+          const likeCountMap = new Map<string, number>();
+          likesRes.data?.forEach((like) => {
+            const count = likeCountMap.get(like.reflection_id) || 0;
+            likeCountMap.set(like.reflection_id, count + 1);
+          });
+          
+          // User's likes
+          const userLikedSet = new Set(userLikesRes.data?.map((l) => l.reflection_id) || []);
 
           setPublicReflections(
             publicData.map((r) => ({
               ...r,
               user_name: profileMap.get(r.user_id) || 'Anonymous',
+              like_count: likeCountMap.get(r.id) || 0,
+              liked_by_user: userLikedSet.has(r.id),
             })) as Reflection[]
           );
         }
@@ -126,8 +145,8 @@ export function useReflections(surahNumber?: number, ayahNumber?: number) {
       if (!user) return false;
 
       try {
-        const updateData: { content: string; title?: string; is_public?: boolean } = { content };
-        if (title !== undefined) updateData.title = title;
+        const updateData: { content: string; title?: string | null; is_public?: boolean } = { content };
+        if (title !== undefined) updateData.title = title || null;
         if (isPublic !== undefined) updateData.is_public = isPublic;
 
         const { error } = await supabase
@@ -182,6 +201,65 @@ export function useReflections(surahNumber?: number, ayahNumber?: number) {
     [user]
   );
 
+  const likeReflection = useCallback(
+    async (reflectionId: string) => {
+      if (!user) {
+        toast.error('Please login to like reflections');
+        return false;
+      }
+
+      try {
+        const { error } = await supabase
+          .from('reflection_likes')
+          .insert({ user_id: user.id, reflection_id: reflectionId });
+
+        if (error) throw error;
+
+        setPublicReflections((prev) =>
+          prev.map((r) =>
+            r.id === reflectionId
+              ? { ...r, like_count: (r.like_count || 0) + 1, liked_by_user: true }
+              : r
+          )
+        );
+        return true;
+      } catch (error) {
+        console.error('Error liking reflection:', error);
+        return false;
+      }
+    },
+    [user]
+  );
+
+  const unlikeReflection = useCallback(
+    async (reflectionId: string) => {
+      if (!user) return false;
+
+      try {
+        const { error } = await supabase
+          .from('reflection_likes')
+          .delete()
+          .eq('user_id', user.id)
+          .eq('reflection_id', reflectionId);
+
+        if (error) throw error;
+
+        setPublicReflections((prev) =>
+          prev.map((r) =>
+            r.id === reflectionId
+              ? { ...r, like_count: Math.max((r.like_count || 1) - 1, 0), liked_by_user: false }
+              : r
+          )
+        );
+        return true;
+      } catch (error) {
+        console.error('Error unliking reflection:', error);
+        return false;
+      }
+    },
+    [user]
+  );
+
   return {
     reflections,
     publicReflections,
@@ -189,6 +267,8 @@ export function useReflections(surahNumber?: number, ayahNumber?: number) {
     addReflection,
     updateReflection,
     deleteReflection,
+    likeReflection,
+    unlikeReflection,
     refresh: fetchReflections,
   };
 }
