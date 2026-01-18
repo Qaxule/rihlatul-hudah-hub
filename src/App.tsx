@@ -13,6 +13,7 @@ import SurahReader from "./pages/SurahReader";
 import Hadith from "./pages/Hadith";
 import Duas from "./pages/Duas";
 import Names from "./pages/Names";
+import NameDetail from "./pages/NameDetail";
 import PrayerTimes from "./pages/PrayerTimes";
 import Dhikr from "./pages/Dhikr";
 import Learning from "./pages/Learning";
@@ -50,6 +51,7 @@ const App = () => (
               <Route path="/hadith" element={<Hadith />} />
               <Route path="/duas" element={<Duas />} />
               <Route path="/names" element={<Names />} />
+              <Route path="/names/:nameIndex" element={<NameDetail />} />
               <Route path="/prayer-times" element={<PrayerTimes />} />
               <Route path="/dhikr" element={<Dhikr />} />
               <Route path="/learning" element={<Learning />} />
