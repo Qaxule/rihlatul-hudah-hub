@@ -47,6 +47,36 @@ export type Database = {
         }
         Relationships: []
       }
+      dua_bookmarks: {
+        Row: {
+          arabic: string
+          category: string
+          created_at: string
+          id: string
+          meaning: string
+          transliteration: string
+          user_id: string
+        }
+        Insert: {
+          arabic: string
+          category: string
+          created_at?: string
+          id?: string
+          meaning: string
+          transliteration: string
+          user_id: string
+        }
+        Update: {
+          arabic?: string
+          category?: string
+          created_at?: string
+          id?: string
+          meaning?: string
+          transliteration?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       guide_progress: {
         Row: {
           completed: boolean | null
