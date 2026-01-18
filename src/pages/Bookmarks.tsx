@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trash2, BookOpen, Book } from "lucide-react";
+import { Trash2, BookOpen, Book, Heart } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -27,9 +27,19 @@ interface HadithBookmark {
   created_at: string;
 }
 
+interface DuaBookmark {
+  id: string;
+  category: string;
+  arabic: string;
+  transliteration: string;
+  meaning: string;
+  created_at: string;
+}
+
 const Bookmarks = () => {
   const [quranBookmarks, setQuranBookmarks] = useState<QuranBookmark[]>([]);
   const [hadithBookmarks, setHadithBookmarks] = useState<HadithBookmark[]>([]);
+  const [duaBookmarks, setDuaBookmarks] = useState<DuaBookmark[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -58,13 +68,17 @@ const Bookmarks = () => {
   }, [user, navigate]);
 
   const fetchBookmarks = async () => {
-    const [quranResult, hadithResult] = await Promise.all([
+    const [quranResult, hadithResult, duaResult] = await Promise.all([
       supabase
         .from("quran_bookmarks")
         .select("*")
         .order("created_at", { ascending: false }),
       supabase
         .from("hadith_bookmarks")
+        .select("*")
+        .order("created_at", { ascending: false }),
+      supabase
+        .from("dua_bookmarks")
         .select("*")
         .order("created_at", { ascending: false })
     ]);
@@ -87,6 +101,16 @@ const Bookmarks = () => {
       });
     } else {
       setHadithBookmarks(hadithResult.data || []);
+    }
+
+    if (duaResult.error) {
+      toast({
+        title: "Error",
+        description: "Failed to load Dua bookmarks",
+        variant: "destructive",
+      });
+    } else {
+      setDuaBookmarks(duaResult.data || []);
     }
 
     setLoading(false);
@@ -134,6 +158,27 @@ const Bookmarks = () => {
     }
   };
 
+  const deleteDuaBookmark = async (id: string) => {
+    const { error } = await supabase
+      .from("dua_bookmarks")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete bookmark",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Success",
+        description: "Bookmark removed",
+      });
+      setDuaBookmarks(duaBookmarks.filter((b) => b.id !== id));
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col">
@@ -153,7 +198,7 @@ const Bookmarks = () => {
         <h1 className="text-4xl font-bold text-center mb-8">My Bookmarks</h1>
         
         <Tabs defaultValue="quran" className="max-w-4xl mx-auto">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="quran" className="flex items-center gap-2">
               <BookOpen className="w-4 h-4" />
               Quran ({quranBookmarks.length})
@@ -161,6 +206,10 @@ const Bookmarks = () => {
             <TabsTrigger value="hadith" className="flex items-center gap-2">
               <Book className="w-4 h-4" />
               Hadith ({hadithBookmarks.length})
+            </TabsTrigger>
+            <TabsTrigger value="duas" className="flex items-center gap-2">
+              <Heart className="w-4 h-4" />
+              Duas ({duaBookmarks.length})
             </TabsTrigger>
           </TabsList>
 
@@ -238,6 +287,54 @@ const Bookmarks = () => {
                       )}
                       <p className="text-base leading-relaxed text-foreground">
                         {bookmark.hadith_text}
+                      </p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="duas" className="mt-6">
+            {duaBookmarks.length === 0 ? (
+              <Card className="p-8 text-center">
+                <Heart className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                <p className="text-muted-foreground">No Dua bookmarks yet</p>
+                <Button 
+                  variant="outline" 
+                  className="mt-4"
+                  onClick={() => navigate("/duas")}
+                >
+                  Browse Duas
+                </Button>
+              </Card>
+            ) : (
+              <div className="space-y-4">
+                {duaBookmarks.map((bookmark) => (
+                  <Card key={bookmark.id} className="p-6">
+                    <CardHeader className="p-0 mb-4">
+                      <CardTitle className="text-lg flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">{bookmark.category}</span>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => deleteDuaBookmark(bookmark.id)}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-0 space-y-3">
+                      <div className="bg-muted/30 rounded-lg p-4 border border-border/50">
+                        <p className="text-2xl leading-loose text-center font-arabic" dir="rtl">
+                          {bookmark.arabic}
+                        </p>
+                      </div>
+                      <p className="text-center text-muted-foreground italic">
+                        {bookmark.transliteration}
+                      </p>
+                      <p className="text-center text-foreground">
+                        {bookmark.meaning}
                       </p>
                     </CardContent>
                   </Card>
