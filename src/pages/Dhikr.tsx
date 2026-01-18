@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, RotateCcw, X, Trash2 } from "lucide-react";
+import { Plus, RotateCcw, X, Target } from "lucide-react";
 import { toast } from "sonner";
 import { useSEO, SEO_DATA } from "@/hooks/useSEO";
 import {
@@ -14,6 +14,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface DhikrOption {
   name: string;
@@ -29,10 +34,14 @@ const defaultDhikrOptions: DhikrOption[] = [
   { name: "La ilaha illallah", arabic: "لَا إِلَٰهَ إِلَّا اللَّهُ", meaning: "There is no god but Allah" },
 ];
 
+const targetPresets = [33, 100, 500, 1000];
+
 const Dhikr = () => {
   useSEO(SEO_DATA.dhikr);
   const [count, setCount] = useState(0);
   const [target, setTarget] = useState(33);
+  const [customTarget, setCustomTarget] = useState("");
+  const [targetPopoverOpen, setTargetPopoverOpen] = useState(false);
   const [dhikrName, setDhikrName] = useState("SubhanAllah");
   const [customDhikrs, setCustomDhikrs] = useState<DhikrOption[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -42,6 +51,10 @@ const Dhikr = () => {
     const saved = localStorage.getItem("customDhikrs");
     if (saved) {
       setCustomDhikrs(JSON.parse(saved));
+    }
+    const savedTarget = localStorage.getItem("dhikrTarget");
+    if (savedTarget) {
+      setTarget(parseInt(savedTarget, 10));
     }
   }, []);
 
@@ -57,6 +70,23 @@ const Dhikr = () => {
 
   const reset = () => {
     setCount(0);
+  };
+
+  const handleSetTarget = (value: number) => {
+    setTarget(value);
+    localStorage.setItem("dhikrTarget", value.toString());
+    setTargetPopoverOpen(false);
+    if (count > value) setCount(0);
+  };
+
+  const handleCustomTarget = () => {
+    const value = parseInt(customTarget, 10);
+    if (isNaN(value) || value < 1 || value > 99999) {
+      toast.error("Please enter a valid number (1-99999)");
+      return;
+    }
+    handleSetTarget(value);
+    setCustomTarget("");
   };
 
   const handleAddCustomDhikr = () => {
@@ -182,7 +212,44 @@ const Dhikr = () => {
             <CardContent className="space-y-8">
               <div>
                 <div className="text-8xl font-bold text-primary mb-4">{count}</div>
-                <p className="text-muted-foreground">of {target}</p>
+                <Popover open={targetPopoverOpen} onOpenChange={setTargetPopoverOpen}>
+                  <PopoverTrigger asChild>
+                    <button className="text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1 cursor-pointer">
+                      of {target} <Target className="h-4 w-4" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-64">
+                    <div className="space-y-3">
+                      <p className="text-sm font-medium">Set Target</p>
+                      <div className="flex flex-wrap gap-2">
+                        {targetPresets.map((preset) => (
+                          <Button
+                            key={preset}
+                            size="sm"
+                            variant={target === preset ? "default" : "outline"}
+                            onClick={() => handleSetTarget(preset)}
+                          >
+                            {preset}
+                          </Button>
+                        ))}
+                      </div>
+                      <div className="flex gap-2">
+                        <Input
+                          type="number"
+                          placeholder="Custom"
+                          value={customTarget}
+                          onChange={(e) => setCustomTarget(e.target.value)}
+                          className="h-9"
+                          min={1}
+                          max={99999}
+                        />
+                        <Button size="sm" onClick={handleCustomTarget}>
+                          Set
+                        </Button>
+                      </div>
+                    </div>
+                  </PopoverContent>
+                </Popover>
                 <div className="w-full bg-secondary rounded-full h-2 mt-4">
                   <div
                     className="bg-primary h-2 rounded-full transition-all"
