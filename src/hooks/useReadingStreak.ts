@@ -19,15 +19,15 @@ interface Badge {
 }
 
 const BADGE_DEFINITIONS = [
-  { id: 'first_read', name: 'First Step', description: 'Read your first ayah', icon: '📖', threshold: 1 },
-  { id: 'streak_3', name: 'Consistent Reader', description: '3-day reading streak', icon: '🔥', threshold: 3 },
-  { id: 'streak_7', name: 'Weekly Warrior', description: '7-day reading streak', icon: '⭐', threshold: 7 },
-  { id: 'streak_30', name: 'Monthly Master', description: '30-day reading streak', icon: '🏆', threshold: 30 },
-  { id: 'streak_100', name: 'Century Champion', description: '100-day reading streak', icon: '👑', threshold: 100 },
-  { id: 'juz_1', name: 'First Juz', description: 'Completed 1 Juz', icon: '📚', threshold: 1 },
-  { id: 'juz_5', name: 'Five Complete', description: 'Completed 5 Juz', icon: '📕', threshold: 5 },
-  { id: 'juz_10', name: 'Ten Complete', description: 'Completed 10 Juz', icon: '📗', threshold: 10 },
-  { id: 'juz_30', name: 'Khatm ul-Quran', description: 'Completed all 30 Juz', icon: '🎉', threshold: 30 },
+  { id: 'first_read', name: 'First Step', description: 'Read your first ayah', icon: 'book-open', threshold: 1 },
+  { id: 'streak_3', name: 'Consistent Reader', description: '3-day reading streak', icon: 'flame', threshold: 3 },
+  { id: 'streak_7', name: 'Weekly Warrior', description: '7-day reading streak', icon: 'star', threshold: 7 },
+  { id: 'streak_30', name: 'Monthly Master', description: '30-day reading streak', icon: 'trophy', threshold: 30 },
+  { id: 'streak_100', name: 'Century Champion', description: '100-day reading streak', icon: 'crown', threshold: 100 },
+  { id: 'juz_1', name: 'First Juz', description: 'Completed 1 Juz', icon: 'book', threshold: 1 },
+  { id: 'juz_5', name: 'Five Complete', description: 'Completed 5 Juz', icon: 'library', threshold: 5 },
+  { id: 'juz_10', name: 'Ten Complete', description: 'Completed 10 Juz', icon: 'bookmark', threshold: 10 },
+  { id: 'juz_30', name: 'Khatm ul-Quran', description: 'Completed all 30 Juz', icon: 'award', threshold: 30 },
 ];
 
 export function useReadingStreak() {

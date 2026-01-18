@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { namesOfAllah } from "@/data/namesOfAllah";
 import { namesOfAllahDetails } from "@/data/namesOfAllahDetails";
-import { BookOpen, Quote, Sparkles, ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react";
+import { BookOpen, Quote, ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react";
 
 const NameDetail = () => {
   const { nameIndex } = useParams();
@@ -158,10 +158,7 @@ const NameDetail = () => {
                 {/* Explanation */}
                 <Card className="shadow-soft">
                   <CardContent className="p-6">
-                    <div className="flex items-center gap-2 mb-4">
-                      <Sparkles className="h-5 w-5 text-primary" />
-                      <h2 className="font-semibold text-lg">Understanding This Name</h2>
-                    </div>
+                    <h2 className="font-semibold text-lg mb-4">Understanding This Name</h2>
                     <p className="text-muted-foreground leading-relaxed">
                       {details.explanation}
                     </p>
@@ -215,9 +212,7 @@ const NameDetail = () => {
                 {details.benefits && details.benefits.length > 0 && (
                   <Card className="shadow-soft">
                     <CardContent className="p-6">
-                      <h2 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                        <span className="text-xl">💡</span> Benefits & Reflections
-                      </h2>
+                      <h2 className="font-semibold text-lg mb-4">Benefits & Reflections</h2>
                       <ul className="space-y-3">
                         {details.benefits.map((benefit, i) => (
                           <li key={i} className="flex items-start gap-3 text-muted-foreground">
