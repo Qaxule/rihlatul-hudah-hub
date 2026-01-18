@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { PageWrapper } from "@/components/app/PageWrapper";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -14,6 +14,11 @@ const Names = () => {
   useSEO(SEO_DATA.names);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const selectedName = selectedIndex !== null ? namesOfAllah[selectedIndex] : null;
+  
+  // Swipe gesture state
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
+  const minSwipeDistance = 50;
 
   const getNameDetails = (transliteration: string) => {
     return namesOfAllahDetails[transliteration];
@@ -30,6 +35,32 @@ const Names = () => {
       setSelectedIndex(selectedIndex + 1);
     }
   }, [selectedIndex]);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchEndX.current = null;
+    touchStartX.current = e.targetTouches[0].clientX;
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    
+    const distance = touchStartX.current - touchEndX.current;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    
+    if (isLeftSwipe) {
+      goToNext();
+    } else if (isRightSwipe) {
+      goToPrevious();
+    }
+    
+    touchStartX.current = null;
+    touchEndX.current = null;
+  };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -119,7 +150,12 @@ const Names = () => {
 
       {/* Detail Dialog */}
       <Dialog open={selectedIndex !== null} onOpenChange={() => setSelectedIndex(null)}>
-        <DialogContent className="max-w-2xl max-h-[90vh] p-0 overflow-hidden">
+        <DialogContent 
+          className="max-w-2xl max-h-[90vh] p-0 overflow-hidden"
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+        >
           {/* Header with gradient background */}
           <div className="bg-gradient-to-br from-primary/10 via-primary/5 to-transparent p-6 pb-4 border-b">
             <DialogHeader>
