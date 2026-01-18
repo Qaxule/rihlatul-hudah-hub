@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { PageWrapper } from "@/components/app/PageWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Heart } from "lucide-react";
+import { Heart, Copy } from "lucide-react";
 import { useSEO, SEO_DATA } from "@/hooks/useSEO";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -362,6 +362,15 @@ const Duas = () => {
     setSavingDua(null);
   };
 
+  const copyDuaToClipboard = (dua: Dua) => {
+    const text = `${dua.arabic}\n\n${dua.transliteration}\n\n${dua.meaning}`;
+    navigator.clipboard.writeText(text);
+    toast({
+      title: "Copied",
+      description: "Dua copied to clipboard",
+    });
+  };
+
   return (
     <PageWrapper className="bg-gradient-subtle">
       <main className="container mx-auto px-4 py-8">
@@ -393,7 +402,15 @@ const Duas = () => {
                           {dua.transliteration}
                         </p>
                         <p className="text-center">{dua.meaning}</p>
-                        <div className="flex justify-center">
+                        <div className="flex justify-center gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => copyDuaToClipboard(dua)}
+                          >
+                            <Copy className="h-4 w-4 mr-2" />
+                            Copy
+                          </Button>
                           <Button
                             variant={isSaved ? "default" : "outline"}
                             size="sm"
