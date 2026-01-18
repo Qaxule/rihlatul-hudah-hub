@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { PageWrapper } from "@/components/app/PageWrapper";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -19,17 +19,34 @@ const Names = () => {
     return namesOfAllahDetails[transliteration];
   };
 
-  const goToPrevious = () => {
+  const goToPrevious = useCallback(() => {
     if (selectedIndex !== null && selectedIndex > 0) {
       setSelectedIndex(selectedIndex - 1);
     }
-  };
+  }, [selectedIndex]);
 
-  const goToNext = () => {
+  const goToNext = useCallback(() => {
     if (selectedIndex !== null && selectedIndex < namesOfAllah.length - 1) {
       setSelectedIndex(selectedIndex + 1);
     }
-  };
+  }, [selectedIndex]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (selectedIndex === null) return;
+      
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        goToPrevious();
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        goToNext();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedIndex, goToPrevious, goToNext]);
 
   return (
     <PageWrapper className="bg-gradient-subtle">
