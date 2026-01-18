@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Plus, RotateCcw, X, Target } from "lucide-react";
 import { toast } from "sonner";
 import { useSEO, SEO_DATA } from "@/hooks/useSEO";
+import { Haptics, ImpactStyle } from "@capacitor/haptics";
 import {
   Dialog,
   DialogContent,
@@ -60,7 +61,19 @@ const Dhikr = () => {
 
   const allDhikrOptions = [...defaultDhikrOptions, ...customDhikrs.map(d => ({ ...d, isCustom: true }))];
 
-  const increment = () => {
+  const triggerHaptic = async () => {
+    try {
+      await Haptics.impact({ style: ImpactStyle.Medium });
+    } catch {
+      // Fallback for web browsers that support vibration
+      if (navigator.vibrate) {
+        navigator.vibrate(10);
+      }
+    }
+  };
+
+  const increment = async () => {
+    await triggerHaptic();
     const newCount = count + 1;
     setCount(newCount);
     if (newCount === target) {
