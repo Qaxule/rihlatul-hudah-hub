@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { PageWrapper } from "@/components/app/PageWrapper";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, BookOpen, Bookmark, BookmarkCheck, ChevronDown, ChevronUp, Share2, Menu, WifiOff, Play, Pause, ArrowUp, Eye, EyeOff, Link2, Copy } from "lucide-react";
+import { ChevronLeft, ChevronRight, BookOpen, Bookmark, BookmarkCheck, ChevronDown, ChevronUp, Share2, Menu, WifiOff, Play, Pause, ArrowUp, Eye, EyeOff, Link2, Copy, Loader2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,13 +22,13 @@ import { AyahSkeleton } from "@/components/AyahSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useOfflineQuranData } from "@/hooks/useOfflineQuranData";
 import { offlineCache, CACHE_CONFIG, STORES } from "@/lib/offlineCache";
-import AudioPlayer from "@/components/AudioPlayer";
 import AudioControlBar from "@/components/AudioControlBar";
 import { WordByWordPopover } from "@/components/quran/WordByWordPopover";
 import { ReflectionDialog } from "@/components/quran/ReflectionDialog";
 import { HifzModePanel } from "@/components/quran/HifzModePanel";
 import { StreakDisplay } from "@/components/quran/StreakDisplay";
 import { useReadingStreak } from "@/hooks/useReadingStreak";
+import { useQuranAudioPlayer } from "@/hooks/useQuranAudioPlayer";
 
 interface Ayah {
   number: number;
@@ -94,8 +94,6 @@ const SurahReader = () => {
   const [navigatorOpen, setNavigatorOpen] = useState(false);
   const [currentVisibleAyah, setCurrentVisibleAyah] = useState<number>(1);
   const [arabicOnlyMode, setArabicOnlyMode] = useState<boolean>(false);
-  const [playingAyah, setPlayingAyah] = useState<number | null>(null);
-  const [isAudioBuffering, setIsAudioBuffering] = useState<boolean>(false);
   const [showAudioBar, setShowAudioBar] = useState<boolean>(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   
@@ -110,6 +108,20 @@ const SurahReader = () => {
   const ayahRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const { user } = useAuth();
   const { updateStreak } = useReadingStreak();
+
+  // Quran audio player hook with preloading for seamless playback
+  const audioPlayer = useQuranAudioPlayer({
+    surahNumber: surahNum,
+    totalAyahs: arabicData?.numberOfAyahs || 0,
+    reciterId: selectedReciter,
+    getAudioUrl,
+    onAyahChange: (ayahNumber) => {
+      setTimeout(() => scrollToAyah(ayahNumber), 100);
+    },
+    onComplete: () => {
+      toast.success("Surah completed");
+    },
+  });
 
   // Track scroll position for scroll-to-top button
   useEffect(() => {
@@ -410,57 +422,32 @@ const SurahReader = () => {
     }
   };
 
-  const handleAyahPlay = (ayahNumberInSurah: number) => {
-    if (playingAyah === ayahNumberInSurah) {
-      setPlayingAyah(null);
-    } else {
+  // Show audio bar when audio starts playing
+  useEffect(() => {
+    if (audioPlayer.currentAyah !== null) {
       setShowAudioBar(true);
-      setPlayingAyah(ayahNumberInSurah);
     }
-  };
+  }, [audioPlayer.currentAyah]);
 
-  const handleAyahEnded = () => {
-    if (!arabicData || playingAyah === null) return;
-    
-    const nextAyahNumber = playingAyah + 1;
-    if (nextAyahNumber <= arabicData.numberOfAyahs) {
-      setPlayingAyah(nextAyahNumber);
-      // Scroll to next ayah
-      setTimeout(() => scrollToAyah(nextAyahNumber), 100);
-    } else {
-      setPlayingAyah(null);
-      toast.success("Surah completed");
-    }
+  const handleAyahPlay = (ayahNumberInSurah: number) => {
+    audioPlayer.toggleAyah(ayahNumberInSurah);
   };
 
   const handlePlaySurah = () => {
-    if (playingAyah !== null) {
-      setPlayingAyah(null);
+    if (audioPlayer.isPlaying || audioPlayer.isPaused) {
+      if (audioPlayer.isPlaying) {
+        audioPlayer.pause();
+      } else {
+        audioPlayer.resume();
+      }
     } else {
-      setShowAudioBar(true);
-      setPlayingAyah(1);
+      audioPlayer.playAyah(1);
       scrollToAyah(1);
     }
   };
 
-  const handleNextAyah = () => {
-    if (playingAyah !== null && arabicData && playingAyah < arabicData.numberOfAyahs) {
-      const nextAyah = playingAyah + 1;
-      setPlayingAyah(nextAyah);
-      scrollToAyah(nextAyah);
-    }
-  };
-
-  const handlePreviousAyah = () => {
-    if (playingAyah !== null && playingAyah > 1) {
-      const prevAyah = playingAyah - 1;
-      setPlayingAyah(prevAyah);
-      scrollToAyah(prevAyah);
-    }
-  };
-
   const handleCloseAudioBar = () => {
-    setPlayingAyah(null);
+    audioPlayer.stop();
     setShowAudioBar(false);
   };
 
@@ -697,10 +684,15 @@ const SurahReader = () => {
                   variant="outline"
                   className="gap-2"
                 >
-                  {playingAyah !== null ? (
+                  {audioPlayer.isPlaying ? (
                     <>
                       <Pause className="h-4 w-4" />
-                      Stop Surah
+                      Pause
+                    </>
+                  ) : audioPlayer.isPaused ? (
+                    <>
+                      <Play className="h-4 w-4" />
+                      Resume
                     </>
                   ) : (
                     <>
@@ -800,22 +792,21 @@ const SurahReader = () => {
                         <span className="text-xs font-medium text-muted-foreground/70 tabular-nums">
                           {currentSurahNum}:{ayah.numberInSurah}
                         </span>
-                        <AudioPlayer 
-                          audioUrl={getAudioUrl(currentSurahNum, ayah.numberInSurah, selectedReciter)}
-                          preloadUrl={
-                            ayah.numberInSurah < arabicData.numberOfAyahs
-                              ? getAudioUrl(currentSurahNum, ayah.numberInSurah + 1, selectedReciter)
-                              : undefined
-                          }
-                          isPlaying={playingAyah === ayah.numberInSurah}
-                          onPlay={() => handleAyahPlay(ayah.numberInSurah)}
-                          onEnded={handleAyahEnded}
-                          onBufferingChange={(buffering) => {
-                            if (playingAyah === ayah.numberInSurah) {
-                              setIsAudioBuffering(buffering);
-                            }
-                          }}
-                        />
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleAyahPlay(ayah.numberInSurah)}
+                          className="h-8 w-8"
+                          title={audioPlayer.currentAyah === ayah.numberInSurah && audioPlayer.isPlaying ? "Pause" : "Play"}
+                        >
+                          {audioPlayer.currentAyah === ayah.numberInSurah && audioPlayer.isBuffering ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : audioPlayer.currentAyah === ayah.numberInSurah && audioPlayer.isPlaying ? (
+                            <Pause className="w-4 h-4" />
+                          ) : (
+                            <Play className="w-4 h-4" />
+                          )}
+                        </Button>
                       </div>
                       <div className="flex items-center gap-1">
                         {/* Hifz hide/show button */}
@@ -1016,14 +1007,14 @@ const SurahReader = () => {
       {/* Audio Control Bar */}
       {showAudioBar && arabicData && (
         <AudioControlBar
-          isPlaying={playingAyah !== null}
-          isBuffering={isAudioBuffering}
-          currentAyah={playingAyah || 1}
+          isPlaying={audioPlayer.isPlaying}
+          isBuffering={audioPlayer.isBuffering}
+          currentAyah={audioPlayer.currentAyah || 1}
           totalAyahs={arabicData.numberOfAyahs}
           surahName={arabicData.englishName}
           onPlayPause={handlePlaySurah}
-          onNext={handleNextAyah}
-          onPrevious={handlePreviousAyah}
+          onNext={() => audioPlayer.next()}
+          onPrevious={() => audioPlayer.previous()}
           onClose={handleCloseAudioBar}
         />
       )}
