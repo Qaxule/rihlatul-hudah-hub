@@ -35,6 +35,7 @@ export const useQuranAudioPlayer = ({
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
   const preloadedAudioRef = useRef<HTMLAudioElement | null>(null);
   const preloadedAyahRef = useRef<number | null>(null);
+  const isTransitioningRef = useRef(false);
 
   // Preload the next ayah's audio
   const preloadNextAyah = useCallback((currentAyahNumber: number) => {
@@ -66,6 +67,22 @@ export const useQuranAudioPlayer = ({
 
   // Play a specific ayah
   const playAyah = useCallback((ayahNumber: number) => {
+    // Prevent multiple rapid transitions
+    if (isTransitioningRef.current) return;
+    isTransitioningRef.current = true;
+
+    // Clean up current audio first (remove all listeners)
+    if (currentAudioRef.current) {
+      const oldAudio = currentAudioRef.current;
+      oldAudio.pause();
+      oldAudio.oncanplay = null;
+      oldAudio.onplaying = null;
+      oldAudio.onended = null;
+      oldAudio.onerror = null;
+      oldAudio.src = "";
+      currentAudioRef.current = null;
+    }
+
     // Check if we have this ayah preloaded
     let audio: HTMLAudioElement;
     
@@ -79,13 +96,6 @@ export const useQuranAudioPlayer = ({
       audio = new Audio(getAudioUrl(surahNumber, ayahNumber, reciterId));
     }
 
-    // Clean up current audio
-    if (currentAudioRef.current) {
-      currentAudioRef.current.pause();
-      currentAudioRef.current.src = "";
-      currentAudioRef.current = null;
-    }
-
     currentAudioRef.current = audio;
 
     setState(prev => ({
@@ -96,24 +106,28 @@ export const useQuranAudioPlayer = ({
       isPaused: false,
     }));
 
-    const handleCanPlay = () => {
+    // Use property assignment instead of addEventListener to auto-cleanup
+    audio.oncanplay = () => {
       setState(prev => ({ ...prev, isBuffering: false }));
     };
 
-    const handlePlaying = () => {
+    audio.onplaying = () => {
       setState(prev => ({ ...prev, isBuffering: false }));
+      isTransitioningRef.current = false;
       // Start preloading next ayah as soon as current starts playing
       preloadNextAyah(ayahNumber);
     };
 
-    const handleEnded = () => {
+    audio.onended = () => {
       const nextAyah = ayahNumber + 1;
       if (nextAyah <= totalAyahs) {
         // Auto-advance to next ayah
+        isTransitioningRef.current = false; // Allow transition
         playAyah(nextAyah);
         onAyahChange?.(nextAyah);
       } else {
         // Surah complete
+        isTransitioningRef.current = false;
         setState({
           currentAyah: null,
           isPlaying: false,
@@ -124,43 +138,18 @@ export const useQuranAudioPlayer = ({
       }
     };
 
-    const handleError = () => {
-      console.error("Audio error for ayah:", ayahNumber);
+    audio.onerror = (e) => {
+      console.error("Audio error for ayah:", ayahNumber, e);
+      isTransitioningRef.current = false;
       setState(prev => ({ ...prev, isBuffering: false }));
-      // Try to continue to next ayah after a short delay
-      setTimeout(() => {
-        const nextAyah = ayahNumber + 1;
-        if (nextAyah <= totalAyahs) {
-          playAyah(nextAyah);
-          onAyahChange?.(nextAyah);
-        } else {
-          setState({
-            currentAyah: null,
-            isPlaying: false,
-            isBuffering: false,
-            isPaused: false,
-          });
-          onComplete?.();
-        }
-      }, 300);
+      // Don't auto-skip on error - let user manually retry or skip
     };
-
-    audio.addEventListener("canplay", handleCanPlay);
-    audio.addEventListener("playing", handlePlaying);
-    audio.addEventListener("ended", handleEnded);
-    audio.addEventListener("error", handleError);
 
     audio.play().catch((err) => {
       console.error("Play error:", err);
-      handleError();
+      isTransitioningRef.current = false;
+      setState(prev => ({ ...prev, isBuffering: false, isPlaying: false }));
     });
-
-    return () => {
-      audio.removeEventListener("canplay", handleCanPlay);
-      audio.removeEventListener("playing", handlePlaying);
-      audio.removeEventListener("ended", handleEnded);
-      audio.removeEventListener("error", handleError);
-    };
   }, [surahNumber, totalAyahs, reciterId, getAudioUrl, preloadNextAyah, onAyahChange, onComplete]);
 
   // Pause playback (resume will continue from same position)
@@ -239,6 +228,10 @@ export const useQuranAudioPlayer = ({
   const stop = useCallback(() => {
     if (currentAudioRef.current) {
       currentAudioRef.current.pause();
+      currentAudioRef.current.oncanplay = null;
+      currentAudioRef.current.onplaying = null;
+      currentAudioRef.current.onended = null;
+      currentAudioRef.current.onerror = null;
       currentAudioRef.current.src = "";
       currentAudioRef.current = null;
     }
@@ -247,6 +240,7 @@ export const useQuranAudioPlayer = ({
       preloadedAudioRef.current = null;
       preloadedAyahRef.current = null;
     }
+    isTransitioningRef.current = false;
     setState({
       currentAyah: null,
       isPlaying: false,
@@ -260,6 +254,10 @@ export const useQuranAudioPlayer = ({
     return () => {
       if (currentAudioRef.current) {
         currentAudioRef.current.pause();
+        currentAudioRef.current.oncanplay = null;
+        currentAudioRef.current.onplaying = null;
+        currentAudioRef.current.onended = null;
+        currentAudioRef.current.onerror = null;
         currentAudioRef.current.src = "";
       }
       if (preloadedAudioRef.current) {
