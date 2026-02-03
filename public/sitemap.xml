@@ -1184,4 +1184,48 @@
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
+  
+  <!-- Learning Lesson Pages -->
+  <url>
+    <loc>https://rihlatulhudah.com/learning/five-pillars</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://rihlatulhudah.com/learning/understanding-tawhid</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Guide Pages -->
+  <url>
+    <loc>https://rihlatulhudah.com/guides/wudhu</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://rihlatulhudah.com/guides/salah</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://rihlatulhudah.com/guides/quran-basics</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://rihlatulhudah.com/guides/daily-dhikr</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://rihlatulhudah.com/guides/halal-haram</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://rihlatulhudah.com/guides/islamic-months</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
