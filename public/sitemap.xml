@@ -68,6 +68,13 @@
     <priority>0.85</priority>
   </url>
   
+  <!-- Community Features -->
+  <url>
+    <loc>https://rihlatulhudah.com/reflections</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.75</priority>
+  </url>
+  
   <!-- User Pages -->
   <url>
     <loc>https://rihlatulhudah.com/bookmarks</loc>
@@ -80,7 +87,7 @@
     <priority>0.5</priority>
   </url>
   
-  <!-- Auth Pages (lower priority but still indexed) -->
+  <!-- Auth Pages -->
   <url>
     <loc>https://rihlatulhudah.com/login</loc>
     <changefreq>monthly</changefreq>
