@@ -1,7 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Check } from "lucide-react";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import { PageWrapper } from "@/components/app/PageWrapper";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -84,8 +83,7 @@ const GuideDetail = () => {
 
   if (!guide) {
     return (
-      <div className="min-h-screen bg-gradient-subtle">
-        <Navigation />
+      <PageWrapper>
         <main className="container mx-auto px-4 py-8">
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Guide not found</h1>
@@ -95,16 +93,14 @@ const GuideDetail = () => {
             </Button>
           </div>
         </main>
-        <Footer />
-      </div>
+      </PageWrapper>
     );
   }
 
   const IconComponent = Icons[guide.icon as keyof typeof Icons] as React.ComponentType<{ className?: string }>;
 
   return (
-    <div className="min-h-screen bg-gradient-subtle">
-      <Navigation />
+    <PageWrapper>
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
@@ -234,8 +230,7 @@ const GuideDetail = () => {
           )}
         </div>
       </main>
-      <Footer />
-    </div>
+    </PageWrapper>
   );
 };
 

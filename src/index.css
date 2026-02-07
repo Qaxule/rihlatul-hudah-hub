@@ -147,7 +147,7 @@ All colors MUST be HSL.
   }
 }
 
-/* Safe area handling for native apps (Capacitor) */
+/* Safe area handling for native apps (Capacitor) and mobile web */
 @layer utilities {
   .safe-area-top {
     padding-top: env(safe-area-inset-top, 0px);
@@ -180,6 +180,36 @@ All colors MUST be HSL.
     padding-bottom: env(safe-area-inset-bottom, 0px);
     padding-left: env(safe-area-inset-left, 0px);
     padding-right: env(safe-area-inset-right, 0px);
+  }
+}
+
+/* Mobile app-like UI enhancements */
+@layer components {
+  /* Smooth tap feedback for mobile */
+  .mobile-tap {
+    @apply transition-transform active:scale-95;
+  }
+  
+  /* Card with mobile-app-like styling */
+  .mobile-card {
+    @apply bg-card rounded-2xl shadow-sm border border-border/50;
+  }
+  
+  /* Bottom nav safe spacing */
+  .pb-nav {
+    padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Hide scrollbar on mobile for cleaner look */
+@media (max-width: 768px) {
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 }
 

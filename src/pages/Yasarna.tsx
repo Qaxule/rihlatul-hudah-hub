@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import { PageWrapper } from "@/components/app/PageWrapper";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSEO, SEO_DATA } from "@/hooks/useSEO";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -139,8 +138,7 @@ const Yasarna = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navigation />
+    <PageWrapper>
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
@@ -712,8 +710,7 @@ const Yasarna = () => {
           </Tabs>
         </div>
       </main>
-      <Footer />
-    </div>
+    </PageWrapper>
   );
 };
 

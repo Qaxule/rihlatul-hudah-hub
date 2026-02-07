@@ -1,6 +1,5 @@
 import { useState } from "react";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import { PageWrapper } from "@/components/app/PageWrapper";
 import { useSEO, SEO_DATA } from "@/hooks/useSEO";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -147,10 +146,8 @@ const Support = () => {
     }
   };
   const getFinalAmount = () => selectedAmount || Number(customAmount) || 0;
-  return <div className="min-h-screen flex flex-col bg-gradient-subtle">
-      <Navigation />
-      
-      <main className="flex-1 container mx-auto px-4 py-8 mt-16">
+  return <PageWrapper>
+      <main className="flex-1 container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto space-y-8">
           
           {/* Hero Section */}
@@ -417,8 +414,6 @@ const Support = () => {
 
         </div>
       </main>
-      
-      <Footer />
-    </div>;
+    </PageWrapper>;
 };
 export default Support;
