@@ -252,25 +252,25 @@ const Index = () => {
     icon: Calendar
   }];
   return <PageWrapper>
+      {/* Global Islamic Pattern Background */}
+      <div className="fixed inset-0 opacity-[0.06] pointer-events-none z-0" aria-hidden="true">
+        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="islamic-pattern-global" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+              <path d="M50 0L62 38L100 50L62 62L50 100L38 62L0 50L38 38Z" fill="none" stroke="currentColor" strokeWidth="0.5" />
+              <circle cx="50" cy="50" r="20" fill="none" stroke="currentColor" strokeWidth="0.5" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#islamic-pattern-global)" className="text-primary" />
+        </svg>
+      </div>
+
       {/* App Header for mobile app mode only */}
       {isMobileAppMode && <AppHeader />}
       
       {/* Hero Section */}
-      <section className="relative">
-        {/* Subtle Islamic Pattern Background */}
-        <div className="absolute inset-0 opacity-[0.06]" aria-hidden="true">
-          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="islamic-pattern" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-                <path d="M50 0L62 38L100 50L62 62L50 100L38 62L0 50L38 38Z" fill="none" stroke="currentColor" strokeWidth="0.5" />
-                <circle cx="50" cy="50" r="20" fill="none" stroke="currentColor" strokeWidth="0.5" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#islamic-pattern)" className="text-primary" />
-          </svg>
-        </div>
-        
-        <div className="container mx-auto px-4 pt-12 pb-8 md:pt-20 md:pb-12 relative z-10">
+      <section className="relative z-10">
+        <div className="container mx-auto px-4 pt-8 pb-8 md:pt-20 md:pb-12">
           <div className="max-w-2xl mx-auto text-center space-y-6">
             {/* Logo/Brand */}
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif text-foreground tracking-tight animate-fade-in">A Journey to Islamic Guidance.</h1>
@@ -406,7 +406,7 @@ const Index = () => {
       </section>
 
       {/* Start Reading Section */}
-      <section className="container mx-auto px-4 py-8">
+      <section className="container mx-auto px-4 py-8 relative z-10">
         <div className="max-w-4xl mx-auto">
           <div className="mb-4">
             <h2 className="text-xl font-semibold text-foreground">Start Reading</h2>
@@ -504,7 +504,7 @@ const Index = () => {
       </section>
 
       {/* Explore Topics */}
-      <section className="container mx-auto px-4 py-6">
+      <section className="container mx-auto px-4 py-6 relative z-10">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-xl font-semibold text-foreground mb-4">Explore Topics</h2>
           <div className="flex flex-wrap gap-3">
@@ -517,7 +517,7 @@ const Index = () => {
       </section>
 
       {/* Ayah of the Day */}
-      <section className="container mx-auto px-4 py-8">
+      <section className="container mx-auto px-4 py-8 relative z-10">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-xl font-semibold text-foreground mb-4">Daily Verse</h2>
           {loading ? <Card className="border-l-4 border-l-primary">
@@ -559,7 +559,7 @@ const Index = () => {
       </section>
 
       {/* Features Grid */}
-      <section className="container mx-auto px-4 py-8 pb-16">
+      <section className="container mx-auto px-4 py-8 pb-16 relative z-10">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-xl font-semibold text-foreground mb-4">Quick Access</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">

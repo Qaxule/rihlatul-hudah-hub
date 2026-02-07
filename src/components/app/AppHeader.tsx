@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { MapPin, Moon } from 'lucide-react';
+import { MapPin, Moon, Sun, Sunset, CloudSun, MoonStar } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 
 interface PrayerTime {
   name: string;
   time: string;
+  icon: React.ComponentType<{ className?: string }>;
 }
 
 interface LocationInfo {
@@ -56,6 +57,13 @@ const formatTime = (date: Date): string => {
   });
 };
 
+const formatPrayerTime = (timeStr: string): string => {
+  // Convert "05:30 AM" to "5:30" format
+  const [time] = timeStr.split(' ');
+  const [hours, minutes] = time.split(':');
+  return `${parseInt(hours)}:${minutes}`;
+};
+
 const parseTimeToDate = (timeStr: string): Date => {
   const [time, period] = timeStr.split(' ');
   const [hours, minutes] = time.split(':').map(Number);
@@ -87,11 +95,20 @@ const getTimeUntil = (targetTime: Date): string => {
   return `${minutes}m`;
 };
 
+const prayerIcons: Record<string, React.ComponentType<{ className?: string }>> = {
+  Fajr: Sun,
+  Dhuhr: CloudSun,
+  Asr: Sunset,
+  Maghrib: Sunset,
+  Isha: MoonStar,
+};
+
 export const AppHeader = () => {
   const { user } = useAuth();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [location, setLocation] = useState<LocationInfo | null>(null);
-  const [nextPrayer, setNextPrayer] = useState<{ name: string; time: string; countdown: string } | null>(null);
+  const [prayerTimes, setPrayerTimes] = useState<PrayerTime[]>([]);
+  const [nextPrayer, setNextPrayer] = useState<{ name: string; time: string; countdown: string; index: number } | null>(null);
   const [userName, setUserName] = useState<string>('');
 
   // Update time every second
@@ -141,22 +158,25 @@ export const AppHeader = () => {
         if (response.data?.timings) {
           const timings = response.data.timings;
           const prayers: PrayerTime[] = [
-            { name: 'Fajr', time: timings.Fajr },
-            { name: 'Dhuhr', time: timings.Dhuhr },
-            { name: 'Asr', time: timings.Asr },
-            { name: 'Maghrib', time: timings.Maghrib },
-            { name: 'Isha', time: timings.Isha },
+            { name: 'Fajr', time: timings.Fajr, icon: prayerIcons.Fajr },
+            { name: 'Dhuhr', time: timings.Dhuhr, icon: prayerIcons.Dhuhr },
+            { name: 'Asr', time: timings.Asr, icon: prayerIcons.Asr },
+            { name: 'Maghrib', time: timings.Maghrib, icon: prayerIcons.Maghrib },
+            { name: 'Isha', time: timings.Isha, icon: prayerIcons.Isha },
           ];
+
+          setPrayerTimes(prayers);
 
           // Find next prayer
           const now = new Date();
-          for (const prayer of prayers) {
-            const prayerTime = parseTimeToDate(prayer.time);
+          for (let i = 0; i < prayers.length; i++) {
+            const prayerTime = parseTimeToDate(prayers[i].time);
             if (prayerTime > now) {
               setNextPrayer({
-                name: prayer.name,
-                time: prayer.time,
+                name: prayers[i].name,
+                time: prayers[i].time,
                 countdown: getTimeUntil(prayerTime),
+                index: i,
               });
               return;
             }
@@ -167,6 +187,7 @@ export const AppHeader = () => {
             name: 'Fajr',
             time: prayers[0].time,
             countdown: getTimeUntil(fajrTime),
+            index: 0,
           });
         }
       } catch (error) {
@@ -220,6 +241,12 @@ export const AppHeader = () => {
 
   const greeting = userName ? `Assalamu Alaikum, ${userName}` : 'Assalamu Alaikum';
 
+  // Check if a prayer time has passed
+  const isPrayerPassed = (time: string): boolean => {
+    const prayerTime = parseTimeToDate(time);
+    return prayerTime < new Date();
+  };
+
   return (
     <header className="bg-gradient-to-br from-primary/10 via-background to-secondary/10 safe-area-top">
       <div className="px-6 pt-8 pb-6">
@@ -245,13 +272,46 @@ export const AppHeader = () => {
           )}
         </div>
 
+        {/* Prayer Times Row */}
+        {prayerTimes.length > 0 && (
+          <div className="mb-6">
+            <div className="flex justify-between items-center gap-1 bg-card/50 rounded-2xl p-3 border border-border/50">
+              {prayerTimes.map((prayer, index) => {
+                const isNext = nextPrayer?.index === index;
+                const passed = isPrayerPassed(prayer.time) && !isNext;
+                const IconComponent = prayer.icon;
+                
+                return (
+                  <div 
+                    key={prayer.name} 
+                    className={`flex flex-col items-center flex-1 py-2 px-1 rounded-xl transition-all ${
+                      isNext 
+                        ? 'bg-primary/15 scale-105' 
+                        : passed 
+                          ? 'opacity-50' 
+                          : ''
+                    }`}
+                  >
+                    <IconComponent className={`w-4 h-4 mb-1 ${isNext ? 'text-primary' : 'text-muted-foreground'}`} />
+                    <span className={`text-[10px] font-medium ${isNext ? 'text-primary' : 'text-muted-foreground'}`}>
+                      {prayer.name}
+                    </span>
+                    <span className={`text-xs font-semibold ${isNext ? 'text-primary' : 'text-foreground'}`}>
+                      {formatPrayerTime(prayer.time)}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* Next Prayer Countdown - Centered Card */}
         {nextPrayer && (
           <div className="flex justify-center">
-            <div className="bg-primary/10 rounded-2xl px-6 py-4 text-center min-w-[160px]">
-              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Next Prayer</p>
-              <p className="text-xl font-bold text-primary">{nextPrayer.name}</p>
-              <p className="text-sm text-foreground font-medium mt-0.5">in {nextPrayer.countdown}</p>
+            <div className="bg-primary/10 rounded-2xl px-8 py-4 text-center">
+              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Time until {nextPrayer.name}</p>
+              <p className="text-3xl font-bold text-primary">{nextPrayer.countdown}</p>
             </div>
           </div>
         )}
