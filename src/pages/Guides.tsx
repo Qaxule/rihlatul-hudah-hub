@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import { PageWrapper } from "@/components/app/PageWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Heart, CheckCircle2 } from "lucide-react";
@@ -36,9 +35,7 @@ const Guides = () => {
   }, [user]);
 
   return (
-    <div className="min-h-screen bg-gradient-subtle">
-      <Navigation />
-      
+    <PageWrapper>
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
         <div className="max-w-4xl mx-auto text-center space-y-6 mb-12">
@@ -118,8 +115,7 @@ const Guides = () => {
           })}
         </div>
       </div>
-      <Footer />
-    </div>
+    </PageWrapper>
   );
 };
 

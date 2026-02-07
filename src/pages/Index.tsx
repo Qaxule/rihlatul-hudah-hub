@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { PageWrapper } from "@/components/app/PageWrapper";
 import { AppHeader } from "@/components/app/AppHeader";
-import { useNativeAppContext } from "@/contexts/NativeAppContext";
+import { useMobileAppMode } from "@/hooks/useMobileAppMode";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -48,7 +48,7 @@ interface SearchFilters {
   revelationType?: string;
 }
 const Index = () => {
-  const { isNativeApp } = useNativeAppContext();
+  const { isMobileAppMode } = useMobileAppMode();
   useSEO(SEO_DATA.home);
   const [ayatOfTheDay, setAyatOfTheDay] = useState<AyatOfTheDay | null>(null);
   const [loading, setLoading] = useState(true);
@@ -252,8 +252,8 @@ const Index = () => {
     icon: Calendar
   }];
   return <PageWrapper>
-      {/* App Header for native app only */}
-      {isNativeApp && <AppHeader />}
+      {/* App Header for mobile app mode only */}
+      {isMobileAppMode && <AppHeader />}
       
       {/* Hero Section */}
       <section className="relative">

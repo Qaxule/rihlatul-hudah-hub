@@ -1,15 +1,12 @@
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import { PageWrapper } from "@/components/app/PageWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Shield } from "lucide-react";
 
 const PrivacyPolicy = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-subtle">
-      <Navigation />
-      
-      <main className="flex-1 container mx-auto px-4 py-8 mt-16">
+    <PageWrapper>
+      <main className="flex-1 container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <Card className="shadow-lg">
             <CardHeader className="space-y-4 border-b">
@@ -134,9 +131,7 @@ const PrivacyPolicy = () => {
           </Card>
         </div>
       </main>
-      
-      <Footer />
-    </div>
+    </PageWrapper>
   );
 };
 

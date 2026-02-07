@@ -6,8 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Trash2, BookOpen, Book, Heart } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import { PageWrapper } from "@/components/app/PageWrapper";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface QuranBookmark {
@@ -181,19 +180,16 @@ const Bookmarks = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col">
-        <Navigation />
+      <PageWrapper>
         <main className="flex-1 container mx-auto px-4 py-8">
           <p className="text-center">Loading...</p>
         </main>
-        <Footer />
-      </div>
+      </PageWrapper>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navigation />
+    <PageWrapper>
       <main className="flex-1 container mx-auto px-4 py-8">
         <h1 className="text-4xl font-bold text-center mb-8">My Bookmarks</h1>
         
@@ -344,8 +340,7 @@ const Bookmarks = () => {
           </TabsContent>
         </Tabs>
       </main>
-      <Footer />
-    </div>
+    </PageWrapper>
   );
 };
 

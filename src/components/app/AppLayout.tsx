@@ -1,7 +1,6 @@
 import { ReactNode } from 'react';
-import { useNativeAppContext } from '@/contexts/NativeAppContext';
-import { BottomNavigation } from './BottomNavigation';
-import { cn } from '@/lib/utils';
+import { useMobileAppMode } from '@/hooks/useMobileAppMode';
+import { MobileAppLayout } from './MobileAppLayout';
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -10,26 +9,26 @@ interface AppLayoutProps {
   className?: string;
 }
 
+/**
+ * Main app layout that switches between:
+ * - Mobile app mode: Bottom navigation, no header/footer (mobile web + native)
+ * - Desktop mode: Traditional navigation and footer (desktop web)
+ */
 export const AppLayout = ({ 
   children, 
-  showHeader = true, 
-  showFooter = true,
   className 
 }: AppLayoutProps) => {
-  const { isNativeApp } = useNativeAppContext();
+  const { isMobileAppMode } = useMobileAppMode();
 
-  if (!isNativeApp) {
-    // Web: render children as-is (pages handle their own Navigation/Footer)
-    return <>{children}</>;
+  // Mobile app mode: use mobile-specific layout with bottom nav
+  if (isMobileAppMode) {
+    return (
+      <MobileAppLayout className={className}>
+        {children}
+      </MobileAppLayout>
+    );
   }
 
-  // Native app: wrap with app-specific layout
-  return (
-    <div className={cn("min-h-screen flex flex-col", className)}>
-      <main className="flex-1 pb-20">
-        {children}
-      </main>
-      <BottomNavigation />
-    </div>
-  );
+  // Desktop: render children as-is (pages handle their own Navigation/Footer)
+  return <>{children}</>;
 };

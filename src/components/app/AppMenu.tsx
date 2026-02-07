@@ -56,10 +56,11 @@ const menuSections = [
     ],
   },
   {
-    title: 'More',
+    title: 'Community',
     items: [
+      { path: '/reflections', label: 'Reflections', icon: Sparkles },
       { path: '/bookmarks', label: 'Bookmarks', icon: BookMarked },
-      { path: '/support', label: 'Support', icon: DollarSign },
+      { path: '/support', label: 'Support Us', icon: DollarSign },
     ],
   },
 ];

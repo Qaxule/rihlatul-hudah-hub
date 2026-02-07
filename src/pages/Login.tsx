@@ -5,8 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import { PageWrapper } from "@/components/app/PageWrapper";
 import { z } from "zod";
 import { useSEO, SEO_DATA } from "@/hooks/useSEO";
 
@@ -75,8 +74,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navigation />
+    <PageWrapper>
       <main className="flex-1 container max-w-md mx-auto px-4 py-12">
         <Card className="p-8">
           <h1 className="text-3xl font-bold text-center mb-6">تسجيل الدخول</h1>
@@ -115,8 +113,7 @@ const Login = () => {
           </p>
         </Card>
       </main>
-      <Footer />
-    </div>
+    </PageWrapper>
   );
 };
 

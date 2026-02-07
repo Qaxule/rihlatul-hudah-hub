@@ -1,7 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, CheckCircle, BookOpen, Clock, GraduationCap } from "lucide-react";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import { PageWrapper } from "@/components/app/PageWrapper";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -116,8 +115,7 @@ const LessonDetail = () => {
 
   if (!lesson) {
     return (
-      <div className="min-h-screen bg-gradient-subtle">
-        <Navigation />
+      <PageWrapper>
         <main className="container mx-auto px-4 py-8">
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Lesson not found</h1>
@@ -127,14 +125,12 @@ const LessonDetail = () => {
             </Button>
           </div>
         </main>
-        <Footer />
-      </div>
+      </PageWrapper>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-subtle">
-      <Navigation />
+    <PageWrapper>
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
@@ -311,8 +307,7 @@ const LessonDetail = () => {
           )}
         </div>
       </main>
-      <Footer />
-    </div>
+    </PageWrapper>
   );
 };
 
