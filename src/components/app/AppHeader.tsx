@@ -222,39 +222,39 @@ export const AppHeader = () => {
 
   return (
     <header className="bg-gradient-to-br from-primary/10 via-background to-secondary/10 safe-area-top">
-      <div className="px-4 pt-2 pb-4">
-        {/* Greeting & Hijri Date */}
-        <div className="mb-4">
-          <h1 className="text-xl font-semibold text-foreground">{greeting}</h1>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
+      <div className="px-6 pt-8 pb-6">
+        {/* Greeting & Hijri Date - Centered */}
+        <div className="text-center mb-6">
+          <h1 className="text-2xl font-semibold text-foreground">{greeting}</h1>
+          <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground mt-2">
             <Moon className="w-4 h-4" />
             <span>{getHijriDate()}</span>
           </div>
         </div>
 
-        {/* Current Time & Location */}
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <p className="text-4xl font-bold text-foreground tracking-tight">
-              {formatTime(currentTime)}
-            </p>
-            {location && (
-              <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
-                <MapPin className="w-3 h-3" />
-                <span>{location.city}{location.country && `, ${location.country}`}</span>
-              </div>
-            )}
-          </div>
-
-          {/* Next Prayer Countdown */}
-          {nextPrayer && (
-            <div className="bg-primary/10 rounded-xl px-4 py-3 text-center min-w-[120px]">
-              <p className="text-xs text-muted-foreground uppercase tracking-wider">Next Prayer</p>
-              <p className="text-lg font-bold text-primary">{nextPrayer.name}</p>
-              <p className="text-sm text-foreground font-medium">{nextPrayer.countdown}</p>
+        {/* Current Time - Centered */}
+        <div className="text-center mb-6">
+          <p className="text-5xl font-bold text-foreground tracking-tight">
+            {formatTime(currentTime)}
+          </p>
+          {location && (
+            <div className="flex items-center justify-center gap-1.5 text-sm text-muted-foreground mt-2">
+              <MapPin className="w-3.5 h-3.5" />
+              <span>{location.city}{location.country && `, ${location.country}`}</span>
             </div>
           )}
         </div>
+
+        {/* Next Prayer Countdown - Centered Card */}
+        {nextPrayer && (
+          <div className="flex justify-center">
+            <div className="bg-primary/10 rounded-2xl px-6 py-4 text-center min-w-[160px]">
+              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Next Prayer</p>
+              <p className="text-xl font-bold text-primary">{nextPrayer.name}</p>
+              <p className="text-sm text-foreground font-medium mt-0.5">in {nextPrayer.countdown}</p>
+            </div>
+          </div>
+        )}
       </div>
     </header>
   );
