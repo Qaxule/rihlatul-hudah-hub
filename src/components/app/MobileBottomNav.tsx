@@ -49,14 +49,6 @@ export const MobileBottomNav = () => {
                   whileTap={{ scale: 0.9 }}
                   transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
-                  {/* Active indicator pill */}
-                  {active && (
-                    <motion.div
-                      layoutId="activeTab"
-                      className="absolute -top-1 w-12 h-1 bg-primary rounded-full"
-                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                    />
-                  )}
                   
                   <div className={cn(
                     "p-2 rounded-2xl transition-all duration-200",
