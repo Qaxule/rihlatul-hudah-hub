@@ -26,7 +26,7 @@ const AudioControlBar = ({
   onClose,
 }: AudioControlBarProps) => {
   return (
-    <Card className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 shadow-lg border-border bg-background/95 backdrop-blur-sm">
+    <Card className="fixed bottom-20 md:bottom-4 left-1/2 transform -translate-x-1/2 z-50 shadow-lg border-border bg-background/95 backdrop-blur-sm">
       <div className="flex items-center gap-4 px-4 py-3">
         <div className="flex flex-col min-w-[120px]">
           <span className="text-sm font-semibold text-foreground">{surahName}</span>
