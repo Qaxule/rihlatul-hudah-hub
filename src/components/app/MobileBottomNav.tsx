@@ -32,10 +32,10 @@ export const MobileBottomNav = () => {
       {/* Bottom Navigation Bar */}
       <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden">
         {/* Frosted glass background */}
-        <div className="absolute inset-0 bg-background/80 backdrop-blur-xl border-t border-border/50" />
+        <div className="absolute inset-0 bg-background/95 backdrop-blur-2xl border-t border-border/40 shadow-[0_-2px_20px_rgba(0,0,0,0.06)]" />
         
         {/* Safe area padding for notched devices */}
-        <div className="relative flex items-center justify-around h-16 px-2 safe-area-bottom">
+        <div className="relative flex items-center justify-around h-[4.5rem] px-3 pb-[env(safe-area-inset-bottom,8px)]">
           {navItems.map((item) => {
             const active = isActive(item.path);
             return (
