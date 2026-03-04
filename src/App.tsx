@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { AppLayout } from "./components/app/AppLayout";
+import { AnimatedRoutes } from "./components/app/AnimatedRoutes";
 import ScrollToTop from "./components/ScrollToTop";
 import Index from "./pages/Index";
 import Quran from "./pages/Quran";
@@ -43,34 +44,35 @@ const App = () => (
         <BrowserRouter>
           <ScrollToTop />
           <AppLayout>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/quran" element={<Quran />} />
-              <Route path="/popular" element={<Popular />} />
-              <Route path="/surah/:surahNumber" element={<SurahReader />} />
-              <Route path="/hadith" element={<Hadith />} />
-              <Route path="/duas" element={<Duas />} />
-              <Route path="/names" element={<Names />} />
-              <Route path="/names/:nameIndex" element={<NameDetail />} />
-              <Route path="/prayer-times" element={<PrayerTimes />} />
-              <Route path="/dhikr" element={<Dhikr />} />
-              <Route path="/learning" element={<Learning />} />
-              <Route path="/learning/:lessonId" element={<LessonDetail />} />
-              <Route path="/yasarna" element={<Yasarna />} />
-              <Route path="/calendar" element={<Calendar />} />
-              <Route path="/guides" element={<Guides />} />
-              <Route path="/guides/:guideId" element={<GuideDetail />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/bookmarks" element={<Bookmarks />} />
-              <Route path="/reflections" element={<Reflections />} />
-              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-              <Route path="/terms-of-use" element={<TermsOfUse />} />
-              <Route path="/disclaimer" element={<Disclaimer />} />
-              <Route path="/support" element={<Support />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <AnimatedRoutes>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/quran" element={<Quran />} />
+                <Route path="/popular" element={<Popular />} />
+                <Route path="/surah/:surahNumber" element={<SurahReader />} />
+                <Route path="/hadith" element={<Hadith />} />
+                <Route path="/duas" element={<Duas />} />
+                <Route path="/names" element={<Names />} />
+                <Route path="/names/:nameIndex" element={<NameDetail />} />
+                <Route path="/prayer-times" element={<PrayerTimes />} />
+                <Route path="/dhikr" element={<Dhikr />} />
+                <Route path="/learning" element={<Learning />} />
+                <Route path="/learning/:lessonId" element={<LessonDetail />} />
+                <Route path="/yasarna" element={<Yasarna />} />
+                <Route path="/calendar" element={<Calendar />} />
+                <Route path="/guides" element={<Guides />} />
+                <Route path="/guides/:guideId" element={<GuideDetail />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/bookmarks" element={<Bookmarks />} />
+                <Route path="/reflections" element={<Reflections />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/terms-of-use" element={<TermsOfUse />} />
+                <Route path="/disclaimer" element={<Disclaimer />} />
+                <Route path="/support" element={<Support />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </AnimatedRoutes>
           </AppLayout>
         </BrowserRouter>
       </TooltipProvider>
