@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Home, BookOpen, Sparkles, MoreHorizontal, User } from 'lucide-react';
+import { Home, BookOpen, MessageCircleHeart, MoreHorizontal, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { AppMenu } from './AppMenu';
@@ -14,7 +14,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { path: '/', label: 'Home', icon: Home },
   { path: '/quran', label: 'Quran', icon: BookOpen },
-  { path: '/reflections', label: 'Reflections', icon: Sparkles },
+  { path: '/reflections', label: 'Reflections', icon: MessageCircleHeart },
   { path: '/bookmarks', label: 'Profile', icon: User },
 ];
 
