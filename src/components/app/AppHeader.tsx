@@ -260,7 +260,7 @@ export const AppHeader = () => {
         </div>
 
         {/* Current Time - Centered */}
-        <div className="text-center mb-6">
+        <div className="text-center mb-4">
           <p className="text-5xl font-bold text-foreground tracking-tight">
             {formatTime(currentTime)}
           </p>
@@ -272,9 +272,19 @@ export const AppHeader = () => {
           )}
         </div>
 
+        {/* Next Prayer Countdown - Below time */}
+        {nextPrayer && (
+          <div className="flex justify-center mb-6">
+            <div className="bg-primary/10 rounded-2xl px-8 py-4 text-center">
+              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Time until {nextPrayer.name}</p>
+              <p className="text-3xl font-bold text-primary">{nextPrayer.countdown}</p>
+            </div>
+          </div>
+        )}
+
         {/* Prayer Times Row */}
         {prayerTimes.length > 0 && (
-          <div className="mb-6">
+          <div>
             <div className="flex justify-between items-center gap-1 bg-card/50 rounded-2xl p-3 border border-border/50">
               {prayerTimes.map((prayer, index) => {
                 const isNext = nextPrayer?.index === index;
@@ -302,16 +312,6 @@ export const AppHeader = () => {
                   </div>
                 );
               })}
-            </div>
-          </div>
-        )}
-
-        {/* Next Prayer Countdown - Centered Card */}
-        {nextPrayer && (
-          <div className="flex justify-center">
-            <div className="bg-primary/10 rounded-2xl px-8 py-4 text-center">
-              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Time until {nextPrayer.name}</p>
-              <p className="text-3xl font-bold text-primary">{nextPrayer.countdown}</p>
             </div>
           </div>
         )}
