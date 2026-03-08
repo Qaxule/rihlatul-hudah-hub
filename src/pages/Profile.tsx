@@ -285,7 +285,7 @@ const Profile = () => {
           ) : (
             <button
               onClick={() => { setTempLocation(location); setEditingLocation(true); }}
-              className="flex items-center gap-1 justify-center text-sm text-muted-foreground mt-1 group"
+              className="flex items-center gap-1 justify-center text-sm text-muted-foreground mt-1 group mx-auto"
             >
               <MapPin className="w-3.5 h-3.5" />
               <span>{location || 'Add location'}</span>
