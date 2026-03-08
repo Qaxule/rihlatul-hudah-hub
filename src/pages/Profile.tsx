@@ -121,7 +121,7 @@ const Profile = () => {
     }
   };
 
-  const deleteBookmark = async (table: string, id: string) => {
+  const deleteBookmark = async (table: 'quran_bookmarks' | 'hadith_bookmarks' | 'dua_bookmarks', id: string) => {
     const { error } = await supabase.from(table).delete().eq('id', id);
     if (error) {
       toast({ title: 'Error', description: 'Failed to delete', variant: 'destructive' });
