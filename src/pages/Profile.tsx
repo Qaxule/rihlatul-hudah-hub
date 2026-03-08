@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   User, MapPin, Edit3, Check, X, Flame, BookOpen, Book, Heart,
-  Trash2, LogOut, ChevronRight, Award, Calendar, TrendingUp,
+  Trash2, LogOut, ChevronRight, Award, Calendar, TrendingUp, Camera, Loader2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -60,10 +60,13 @@ const Profile = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [loading, setLoading] = useState(true);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [fullName, setFullName] = useState('');
   const [location, setLocation] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [editingName, setEditingName] = useState(false);
   const [editingLocation, setEditingLocation] = useState(false);
   const [tempName, setTempName] = useState('');
@@ -88,7 +91,7 @@ const Profile = () => {
     setLoading(true);
 
     const [profileRes, streakRes, badgeRes, quranRes, hadithRes, duaRes] = await Promise.all([
-      supabase.from('profiles').select('full_name, location').eq('id', user.id).single(),
+      supabase.from('profiles').select('full_name, location, avatar_url').eq('id', user.id).single(),
       supabase.from('reading_streaks').select('current_streak, longest_streak, total_days_read, last_read_date').eq('user_id', user.id).single(),
       supabase.from('user_badges').select('id').eq('user_id', user.id),
       supabase.from('quran_bookmarks').select('id, surah_number, ayah_number, note').order('created_at', { ascending: false }),
@@ -99,6 +102,7 @@ const Profile = () => {
     if (profileRes.data) {
       setFullName(profileRes.data.full_name || '');
       setLocation(profileRes.data.location || '');
+      setAvatarUrl((profileRes.data as any).avatar_url || null);
     }
     if (streakRes.data) setStreak(streakRes.data);
     if (badgeRes.data) setBadgeCount(badgeRes.data.length);
@@ -107,6 +111,53 @@ const Profile = () => {
     if (duaRes.data) setDuaBookmarks(duaRes.data);
 
     setLoading(false);
+  };
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast({ title: 'Too large', description: 'Image must be under 2MB', variant: 'destructive' });
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      toast({ title: 'Invalid file', description: 'Please select an image', variant: 'destructive' });
+      return;
+    }
+
+    setUploadingAvatar(true);
+    try {
+      const ext = file.name.split('.').pop();
+      const filePath = `${user.id}/avatar.${ext}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath);
+
+      const url = `${publicUrl}?t=${Date.now()}`;
+
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ avatar_url: url } as any)
+        .eq('id', user.id);
+
+      if (updateError) throw updateError;
+
+      setAvatarUrl(url);
+      toast({ title: 'Updated', description: 'Profile picture updated' });
+    } catch (err: any) {
+      toast({ title: 'Error', description: err.message || 'Failed to upload', variant: 'destructive' });
+    } finally {
+      setUploadingAvatar(false);
+    }
   };
 
   const updateProfile = async (field: 'full_name' | 'location', value: string) => {
@@ -155,8 +206,35 @@ const Profile = () => {
       <main className="flex-1 container mx-auto px-4 py-6 max-w-lg">
         {/* Profile Card */}
         <div className="text-center mb-6">
-          <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4 ring-4 ring-primary/20">
-            <User className="w-9 h-9 text-primary" />
+          {/* Avatar */}
+          <div className="relative inline-block mb-4">
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploadingAvatar}
+              className="relative w-24 h-24 rounded-full overflow-hidden ring-4 ring-primary/20 group"
+            >
+              {avatarUrl ? (
+                <img src={avatarUrl} alt="Profile" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full bg-primary/10 flex items-center justify-center">
+                  <User className="w-10 h-10 text-primary" />
+                </div>
+              )}
+              <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                {uploadingAvatar ? (
+                  <Loader2 className="w-5 h-5 text-white animate-spin" />
+                ) : (
+                  <Camera className="w-5 h-5 text-white" />
+                )}
+              </div>
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleAvatarUpload}
+              className="hidden"
+            />
           </div>
 
           {/* Name */}
