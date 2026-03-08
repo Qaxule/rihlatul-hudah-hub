@@ -58,22 +58,31 @@ const formatTime = (date: Date): string => {
 };
 
 const formatPrayerTime = (timeStr: string): string => {
-  // Convert "05:30 AM" to "5:30" format
+  // Handle both "05:30 AM" and "05:30" (24h) formats
   const [time] = timeStr.split(' ');
   const [hours, minutes] = time.split(':');
-  return `${parseInt(hours)}:${minutes}`;
+  const h = parseInt(hours);
+  const displayH = h === 0 ? 12 : h > 12 ? h - 12 : h;
+  return `${displayH}:${minutes}`;
 };
 
 const parseTimeToDate = (timeStr: string): Date => {
-  const [time, period] = timeStr.split(' ');
-  const [hours, minutes] = time.split(':').map(Number);
+  const parts = timeStr.split(' ');
+  const [hours, minutes] = parts[0].split(':').map(Number);
   const date = new Date();
-  let adjustedHours = hours;
   
-  if (period === 'PM' && hours !== 12) adjustedHours += 12;
-  if (period === 'AM' && hours === 12) adjustedHours = 0;
+  if (parts.length > 1) {
+    // AM/PM format
+    const period = parts[1];
+    let adjustedHours = hours;
+    if (period === 'PM' && hours !== 12) adjustedHours += 12;
+    if (period === 'AM' && hours === 12) adjustedHours = 0;
+    date.setHours(adjustedHours, minutes, 0, 0);
+  } else {
+    // 24-hour format
+    date.setHours(hours, minutes, 0, 0);
+  }
   
-  date.setHours(adjustedHours, minutes, 0, 0);
   return date;
 };
 
@@ -155,8 +164,9 @@ export const AppHeader = () => {
           body: { latitude: lat, longitude: lon },
         });
 
-        if (response.data?.timings) {
-          const timings = response.data.timings;
+        const apiData = response.data?.data || response.data;
+        if (apiData?.timings) {
+          const timings = apiData.timings;
           const prayers: PrayerTime[] = [
             { name: 'Fajr', time: timings.Fajr, icon: prayerIcons.Fajr },
             { name: 'Dhuhr', time: timings.Dhuhr, icon: prayerIcons.Dhuhr },
