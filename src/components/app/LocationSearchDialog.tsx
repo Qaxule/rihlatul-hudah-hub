@@ -115,7 +115,7 @@ export const LocationSearchDialog = ({ currentCity, currentCountry, onLocationSe
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button className="flex items-center justify-center gap-1.5 text-sm text-muted-foreground mt-2 hover:text-primary transition-colors flex-wrap">
+        <button className="mx-auto flex items-center justify-center gap-1.5 text-sm text-muted-foreground mt-2 hover:text-primary transition-colors flex-wrap">
           <MapPin className="w-3.5 h-3.5 shrink-0" />
           <span className="truncate max-w-[200px]">{currentCity ? `${currentCity}${currentCountry ? `, ${currentCountry}` : ''}` : 'Set location'}</span>
           {currentCity && (
