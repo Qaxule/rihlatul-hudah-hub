@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Link, useLocation } from 'react-router-dom';
+import { Sheet, SheetContent } from '@/components/ui/sheet';
 import ThemeSelector from '@/components/ThemeSelector';
 import { useAuth } from '@/contexts/AuthContext';
 import {
@@ -19,9 +19,12 @@ import {
   DollarSign,
   Star,
   Compass,
-  Settings,
+  ChevronRight,
+  Palette,
+  X,
 } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface AppMenuProps {
   open: boolean;
@@ -71,111 +74,195 @@ const legalItems = [
   { path: '/disclaimer', label: 'Disclaimer', icon: Shield },
 ];
 
+const itemVariants = {
+  hidden: { opacity: 0, x: 20 },
+  visible: (i: number) => ({
+    opacity: 1,
+    x: 0,
+    transition: { delay: i * 0.03, duration: 0.25, ease: [0.4, 0, 0.2, 1] as [number, number, number, number] },
+  }),
+};
+
 export const AppMenu = ({ open, onClose }: AppMenuProps) => {
   const { user, signOut } = useAuth();
+  const location = useLocation();
+
+  const isActive = (path: string) => {
+    if (path === '/') return location.pathname === '/';
+    return location.pathname.startsWith(path);
+  };
 
   const handleSignOut = async () => {
     await signOut();
     onClose();
   };
 
+  let globalIndex = 0;
+
   return (
     <Sheet open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <SheetContent side="right" className="w-[300px] sm:w-[350px] overflow-y-auto safe-area-top safe-area-bottom">
-        <SheetHeader className="pb-4">
-          <SheetTitle className="flex items-center gap-2">
-            <Settings className="w-5 h-5" />
-            Menu & Settings
-          </SheetTitle>
-        </SheetHeader>
-
-        {/* Theme Toggle */}
-        <div className="py-4">
-          <h3 className="text-sm font-medium text-muted-foreground mb-3">Theme</h3>
-          <ThemeSelector />
-        </div>
-
-        <Separator />
-
-        {/* User Section */}
-        <div className="py-4">
-          {user ? (
-            <div className="space-y-3">
-              <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                  <User className="w-5 h-5 text-primary" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{user.email}</p>
-                  <p className="text-xs text-muted-foreground">Logged in</p>
-                </div>
+      <SheetContent
+        side="right"
+        className="w-[320px] sm:w-[380px] p-0 border-l border-border/30 bg-background overflow-hidden safe-area-top safe-area-bottom [&>button]:hidden"
+      >
+        <div className="h-full flex flex-col overflow-y-auto">
+          {/* Header */}
+          <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-xl border-b border-border/40">
+            <div className="flex items-center justify-between px-5 py-4">
+              <div>
+                <h2 className="text-lg font-semibold text-foreground tracking-tight">Menu</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">Navigate & customize</p>
               </div>
               <button
-                onClick={handleSignOut}
-                className="flex items-center gap-3 w-full p-3 text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
+                onClick={onClose}
+                className="p-2 rounded-xl bg-muted/60 hover:bg-muted transition-colors"
               >
-                <LogOut className="w-5 h-5" />
-                <span className="font-medium">Sign Out</span>
+                <X className="w-4 h-4 text-muted-foreground" />
               </button>
             </div>
-          ) : (
-            <Link
-              to="/login"
-              onClick={onClose}
-              className="flex items-center gap-3 p-3 bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition-colors"
-            >
-              <LogIn className="w-5 h-5" />
-              <span className="font-medium">Sign In</span>
-            </Link>
-          )}
-        </div>
+          </div>
 
-        <Separator />
-
-        {/* Menu Sections */}
-        {menuSections.map((section) => (
-          <div key={section.title} className="py-4">
-            <h3 className="text-sm font-medium text-muted-foreground mb-2">{section.title}</h3>
-            <div className="space-y-1">
-              {section.items.map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  onClick={onClose}
-                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors"
+          <div className="flex-1 px-4 py-4 space-y-5">
+            {/* User Card */}
+            <AnimatePresence>
+              {open && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
                 >
-                  <item.icon className="w-5 h-5 text-muted-foreground" />
-                  <span className="font-medium">{item.label}</span>
-                </Link>
-              ))}
+                  {user ? (
+                    <div className="rounded-2xl bg-primary/5 border border-primary/10 p-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center ring-2 ring-primary/20">
+                          <User className="w-5 h-5 text-primary" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-foreground truncate">{user.email}</p>
+                          <p className="text-[11px] text-muted-foreground">Signed in</p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={handleSignOut}
+                        className="mt-3 flex items-center gap-2 text-xs font-medium text-destructive hover:text-destructive/80 transition-colors"
+                      >
+                        <LogOut className="w-3.5 h-3.5" />
+                        Sign Out
+                      </button>
+                    </div>
+                  ) : (
+                    <Link
+                      to="/login"
+                      onClick={onClose}
+                      className="flex items-center gap-3 p-4 rounded-2xl bg-primary/5 border border-primary/10 hover:bg-primary/10 transition-all group"
+                    >
+                      <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                        <LogIn className="w-5 h-5 text-primary" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-foreground">Sign In</p>
+                        <p className="text-[11px] text-muted-foreground">Access your bookmarks & progress</p>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                    </Link>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Theme */}
+            <div className="rounded-2xl bg-muted/40 border border-border/40 p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Palette className="w-4 h-4 text-muted-foreground" />
+                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Theme</span>
+              </div>
+              <ThemeSelector />
+            </div>
+
+            {/* Menu Sections */}
+            {menuSections.map((section) => (
+              <div key={section.title}>
+                <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider px-1 mb-2">
+                  {section.title}
+                </p>
+                <div className="rounded-2xl border border-border/40 overflow-hidden bg-card/50">
+                  {section.items.map((item, idx) => {
+                    const currentIndex = globalIndex++;
+                    const active = isActive(item.path);
+                    return (
+                      <motion.div
+                        key={item.path}
+                        custom={currentIndex}
+                        initial="hidden"
+                        animate={open ? "visible" : "hidden"}
+                        variants={itemVariants}
+                      >
+                        <Link
+                          to={item.path}
+                          onClick={onClose}
+                          className={cn(
+                            "flex items-center gap-3 px-4 py-3 transition-all",
+                            idx < section.items.length - 1 && "border-b border-border/30",
+                            active
+                              ? "bg-primary/8 text-primary"
+                              : "text-foreground hover:bg-muted/50"
+                          )}
+                        >
+                          <div className={cn(
+                            "w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                            active ? "bg-primary/15" : "bg-muted/60"
+                          )}>
+                            <item.icon className={cn(
+                              "w-4 h-4",
+                              active ? "text-primary" : "text-muted-foreground"
+                            )} />
+                          </div>
+                          <span className={cn(
+                            "flex-1 text-sm",
+                            active ? "font-semibold" : "font-medium"
+                          )}>
+                            {item.label}
+                          </span>
+                          {active && (
+                            <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                          )}
+                        </Link>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+
+            {/* Legal */}
+            <div>
+              <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider px-1 mb-2">
+                Legal
+              </p>
+              <div className="rounded-2xl border border-border/40 overflow-hidden bg-card/50">
+                {legalItems.map((item, idx) => (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    onClick={onClose}
+                    className={cn(
+                      "flex items-center gap-3 px-4 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors",
+                      idx < legalItems.length - 1 && "border-b border-border/30"
+                    )}
+                  >
+                    <item.icon className="w-3.5 h-3.5" />
+                    <span>{item.label}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="text-center py-4">
+              <p className="text-xs text-muted-foreground font-medium">Rihlatul Hudah</p>
+              <p className="text-xs text-muted-foreground/70 mt-0.5">رحلة الهدى</p>
             </div>
           </div>
-        ))}
-
-        <Separator />
-
-        {/* Legal */}
-        <div className="py-4">
-          <h3 className="text-sm font-medium text-muted-foreground mb-2">Legal</h3>
-          <div className="space-y-1">
-            {legalItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                onClick={onClose}
-                className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors text-sm"
-              >
-                <item.icon className="w-4 h-4 text-muted-foreground" />
-                <span>{item.label}</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        {/* App Info */}
-        <div className="py-4 text-center text-xs text-muted-foreground">
-          <p>Rihlatul Hudah</p>
-          <p className="mt-1">رحلة الهدى</p>
         </div>
       </SheetContent>
     </Sheet>
