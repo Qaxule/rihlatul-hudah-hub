@@ -48,10 +48,12 @@ const formatTime = (date: Date): string => {
 
 const prayerIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   Fajr: Sun,
+  Sunrise: Sunrise,
   Dhuhr: CloudSun,
   Asr: Sunset,
   Maghrib: Sunset,
   Isha: MoonStar,
+  Midnight: Moon,
 };
 
 export const AppHeader = () => {

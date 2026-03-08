@@ -1,9 +1,9 @@
 import { useEffect, useState, useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 
 interface PrayerTimeData {
   name: string;
   time: string;
+  isExtra?: boolean;
 }
 
 interface LocationCoords {
@@ -23,18 +23,10 @@ interface NextPrayer {
 const LOCATION_STORAGE_KEY = 'user-prayer-location';
 
 const parseTimeToDate = (timeStr: string): Date => {
-  const parts = timeStr.split(' ');
-  const [hours, minutes] = parts[0].split(':').map(Number);
+  const cleaned = timeStr.replace(/\s*\(.*\)/, '').trim();
+  const [hours, minutes] = cleaned.split(':').map(Number);
   const date = new Date();
-  if (parts.length > 1) {
-    const period = parts[1];
-    let adjustedHours = hours;
-    if (period === 'PM' && hours !== 12) adjustedHours += 12;
-    if (period === 'AM' && hours === 12) adjustedHours = 0;
-    date.setHours(adjustedHours, minutes, 0, 0);
-  } else {
-    date.setHours(hours, minutes, 0, 0);
-  }
+  date.setHours(hours, minutes, 0, 0);
   return date;
 };
 
@@ -48,12 +40,16 @@ const getTimeUntil = (targetTime: Date): string => {
 };
 
 export const formatPrayerTime = (timeStr: string): string => {
-  const [time] = timeStr.split(' ');
-  const [hours, minutes] = time.split(':');
+  const cleaned = timeStr.replace(/\s*\(.*\)/, '').trim();
+  const [hours, minutes] = cleaned.split(':');
   const h = parseInt(hours);
   const displayH = h === 0 ? 12 : h > 12 ? h - 12 : h;
+  const ampm = h >= 12 ? '' : '';
   return `${displayH}:${minutes}`;
 };
+
+// Main prayers used for next-prayer countdown calculation
+const MAIN_PRAYERS = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
 
 export const usePrayerTimes = () => {
   const [prayerTimes, setPrayerTimes] = useState<PrayerTimeData[]>([]);
@@ -78,42 +74,54 @@ export const usePrayerTimes = () => {
   const fetchPrayerTimes = useCallback(async (lat: number, lon: number) => {
     try {
       setIsLoading(true);
-      const response = await supabase.functions.invoke('prayer-times', {
-        body: { latitude: lat, longitude: lon },
-      });
+      const date = new Date();
+      const timestamp = Math.floor(date.getTime() / 1000);
+      const url = `https://api.aladhan.com/v1/timings/${timestamp}?latitude=${lat}&longitude=${lon}&method=2`;
 
-      const apiData = response.data?.data || response.data;
-      if (apiData?.timings) {
-        const timings = apiData.timings;
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`AlAdhan API error: ${response.status}`);
+
+      const result = await response.json();
+      const timings = result?.data?.timings;
+
+      if (timings) {
         const prayers: PrayerTimeData[] = [
           { name: 'Fajr', time: timings.Fajr },
+          { name: 'Sunrise', time: timings.Sunrise, isExtra: true },
           { name: 'Dhuhr', time: timings.Dhuhr },
           { name: 'Asr', time: timings.Asr },
           { name: 'Maghrib', time: timings.Maghrib },
           { name: 'Isha', time: timings.Isha },
+          { name: 'Midnight', time: timings.Midnight, isExtra: true },
         ];
         setPrayerTimes(prayers);
 
+        // Calculate next prayer from main prayers only
+        const mainPrayers = prayers.filter(p => MAIN_PRAYERS.includes(p.name));
         const now = new Date();
-        for (let i = 0; i < prayers.length; i++) {
-          const prayerTime = parseTimeToDate(prayers[i].time);
+        for (let i = 0; i < mainPrayers.length; i++) {
+          const prayerTime = parseTimeToDate(mainPrayers[i].time);
           if (prayerTime > now) {
+            // Find the index in the full array
+            const fullIndex = prayers.findIndex(p => p.name === mainPrayers[i].name);
             setNextPrayer({
-              name: prayers[i].name,
-              time: prayers[i].time,
+              name: mainPrayers[i].name,
+              time: mainPrayers[i].time,
               countdown: getTimeUntil(prayerTime),
-              index: i,
+              index: fullIndex,
             });
             setIsLoading(false);
             return;
           }
         }
-        const fajrTime = parseTimeToDate(prayers[0].time);
+        // All prayers passed — next is Fajr
+        const fajrTime = parseTimeToDate(mainPrayers[0].time);
+        const fajrIndex = prayers.findIndex(p => p.name === 'Fajr');
         setNextPrayer({
           name: 'Fajr',
-          time: prayers[0].time,
+          time: mainPrayers[0].time,
           countdown: getTimeUntil(fajrTime),
-          index: 0,
+          index: fajrIndex,
         });
       }
     } catch (error) {
