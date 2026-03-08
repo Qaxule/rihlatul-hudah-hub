@@ -164,8 +164,9 @@ export const AppHeader = () => {
           body: { latitude: lat, longitude: lon },
         });
 
-        if (response.data?.timings) {
-          const timings = response.data.timings;
+        const apiData = response.data?.data || response.data;
+        if (apiData?.timings) {
+          const timings = apiData.timings;
           const prayers: PrayerTime[] = [
             { name: 'Fajr', time: timings.Fajr, icon: prayerIcons.Fajr },
             { name: 'Dhuhr', time: timings.Dhuhr, icon: prayerIcons.Dhuhr },
