@@ -195,6 +195,12 @@ export const AppHeader = () => {
       }
     };
 
+    const setDefaultLocation = () => {
+      if (!location) {
+        setLocation({ city: 'Kampala', country: 'Uganda' });
+      }
+    };
+
     // Get location
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -214,6 +220,7 @@ export const AppHeader = () => {
               });
             } catch (e) {
               console.error('Error getting location name:', e);
+              setDefaultLocation();
             }
           }
 
@@ -221,12 +228,17 @@ export const AppHeader = () => {
         },
         (error) => {
           console.error('Geolocation error:', error);
-          // Default to a common location if geolocation fails
-          fetchPrayerTimes(0.3136, 32.5811); // Kampala coordinates
+          setDefaultLocation();
+          // Default to Kampala coordinates
+          fetchPrayerTimes(0.3136, 32.5811);
         }
       );
+    } else {
+      setDefaultLocation();
+      fetchPrayerTimes(0.3136, 32.5811);
     }
-  }, [location]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Update countdown every minute
   useEffect(() => {
