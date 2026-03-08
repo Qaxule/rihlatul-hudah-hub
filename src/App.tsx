@@ -26,6 +26,7 @@ import GuideDetail from "./pages/GuideDetail";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Bookmarks from "./pages/Bookmarks";
+import Profile from "./pages/Profile";
 import Reflections from "./pages/Reflections";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
