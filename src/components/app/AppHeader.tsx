@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Moon, Sun, Sunset, CloudSun, MoonStar } from 'lucide-react';
+import { Moon, Sun, Sunset, CloudSun, MoonStar, Sunrise } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { usePrayerTimes, formatPrayerTime } from '@/hooks/usePrayerTimes';
