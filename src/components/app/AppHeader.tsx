@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Moon, Sun, Sunset, CloudSun, MoonStar } from 'lucide-react';
+import { Moon, Sun, Sunset, CloudSun, MoonStar, Sunrise } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { usePrayerTimes, formatPrayerTime } from '@/hooks/usePrayerTimes';
@@ -48,10 +48,12 @@ const formatTime = (date: Date): string => {
 
 const prayerIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   Fajr: Sun,
+  Sunrise: Sunrise,
   Dhuhr: CloudSun,
   Asr: Sunset,
   Maghrib: Sunset,
   Isha: MoonStar,
+  Midnight: Moon,
 };
 
 export const AppHeader = () => {
