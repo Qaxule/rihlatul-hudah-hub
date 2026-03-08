@@ -115,15 +115,15 @@ export const LocationSearchDialog = ({ currentCity, currentCountry, onLocationSe
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button className="flex items-center justify-center gap-1.5 text-sm text-muted-foreground mt-2 hover:text-primary transition-colors">
-          <MapPin className="w-3.5 h-3.5" />
-          <span>{currentCity ? `${currentCity}${currentCountry ? `, ${currentCountry}` : ''}` : 'Set location'}</span>
+        <button className="flex items-center justify-center gap-1.5 text-sm text-muted-foreground mt-2 hover:text-primary transition-colors flex-wrap">
+          <MapPin className="w-3.5 h-3.5 shrink-0" />
+          <span className="truncate max-w-[200px]">{currentCity ? `${currentCity}${currentCountry ? `, ${currentCountry}` : ''}` : 'Set location'}</span>
           {currentCity && (
-            <span className="text-[10px] bg-muted px-1.5 py-0.5 rounded-full font-medium">
+            <span className="text-[10px] bg-muted px-1.5 py-0.5 rounded-full font-medium shrink-0">
               UTC{new Date().getTimezoneOffset() <= 0 ? '+' : '-'}{String(Math.floor(Math.abs(new Date().getTimezoneOffset()) / 60)).padStart(2, '0')}:{String(Math.abs(new Date().getTimezoneOffset()) % 60).padStart(2, '0')}
             </span>
           )}
-          <Pencil className="w-3 h-3 opacity-60" />
+          <Pencil className="w-3 h-3 opacity-60 shrink-0" />
         </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
