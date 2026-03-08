@@ -15,7 +15,7 @@ const navItems: NavItem[] = [
   { path: '/', label: 'Home', icon: Home },
   { path: '/quran', label: 'Quran', icon: BookOpen },
   { path: '/reflections', label: 'Reflections', icon: Lightbulb },
-  { path: '/bookmarks', label: 'Profile', icon: User },
+  { path: '/profile', label: 'Profile', icon: User },
 ];
 
 export const MobileBottomNav = () => {
