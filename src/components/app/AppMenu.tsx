@@ -227,9 +227,6 @@ export const AppMenu = ({ open, onClose }: AppMenuProps) => {
                     );
                   })}
                 </div>
-                    );
-                  })}
-                </div>
               </div>
             ))}
 
