@@ -185,8 +185,8 @@ export const AppMenu = ({ open, onClose }: AppMenuProps) => {
                 <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider px-1 mb-2">
                   {section.title}
                 </p>
-                <div className="rounded-2xl border border-border/40 overflow-hidden bg-card/50">
-                  {section.items.map((item, idx) => {
+                <div className="grid grid-cols-2 gap-2">
+                  {section.items.map((item) => {
                     const currentIndex = globalIndex++;
                     const active = isActive(item.path);
                     return (
@@ -201,33 +201,32 @@ export const AppMenu = ({ open, onClose }: AppMenuProps) => {
                           to={item.path}
                           onClick={onClose}
                           className={cn(
-                            "flex items-center gap-3 px-4 py-3 transition-all",
-                            idx < section.items.length - 1 && "border-b border-border/30",
+                            "flex flex-col items-center gap-2 p-4 rounded-2xl border transition-all text-center",
                             active
-                              ? "bg-primary/8 text-primary"
-                              : "text-foreground hover:bg-muted/50"
+                              ? "bg-primary/8 border-primary/20 text-primary"
+                              : "bg-card/50 border-border/40 text-foreground hover:bg-muted/50"
                           )}
                         >
                           <div className={cn(
-                            "w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                            "w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
                             active ? "bg-primary/15" : "bg-muted/60"
                           )}>
                             <item.icon className={cn(
-                              "w-4 h-4",
+                              "w-5 h-5",
                               active ? "text-primary" : "text-muted-foreground"
                             )} />
                           </div>
                           <span className={cn(
-                            "flex-1 text-sm",
+                            "text-xs leading-tight",
                             active ? "font-semibold" : "font-medium"
                           )}>
                             {item.label}
                           </span>
-                          {active && (
-                            <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                          )}
                         </Link>
                       </motion.div>
+                    );
+                  })}
+                </div>
                     );
                   })}
                 </div>
