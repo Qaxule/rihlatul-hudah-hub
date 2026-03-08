@@ -103,7 +103,7 @@ export const AppMenu = ({ open, onClose }: AppMenuProps) => {
     <Sheet open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
       <SheetContent
         side="right"
-        className="w-[320px] sm:w-[380px] p-0 border-l border-border/30 bg-background overflow-hidden safe-area-top safe-area-bottom [&>button]:hidden"
+        className="w-full sm:max-w-full p-0 border-none bg-background overflow-hidden safe-area-top safe-area-bottom [&>button]:hidden"
       >
         <div className="h-full flex flex-col overflow-y-auto">
           {/* Header */}
