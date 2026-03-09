@@ -101,7 +101,7 @@ export const usePrayerTimes = () => {
       setIsLoading(true);
       const date = new Date();
       const timestamp = Math.floor(date.getTime() / 1000);
-      const url = `https://api.aladhan.com/v1/timings/${timestamp}?latitude=${lat}&longitude=${lon}&method=2`;
+      const url = `https://api.aladhan.com/v1/timings/${timestamp}?latitude=${lat}&longitude=${lon}&method=${calculationMethod}`;
 
       const response = await fetch(url);
       if (!response.ok) throw new Error(`AlAdhan API error: ${response.status}`);
