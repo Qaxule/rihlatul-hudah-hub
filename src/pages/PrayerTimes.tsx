@@ -34,6 +34,14 @@ const PrayerTimes = () => {
   const [notificationSound, setNotificationSound] = useState(() => {
     return localStorage.getItem("prayerNotificationSound") || "adhan1";
   });
+  const [calculationMethod, setCalculationMethod] = useState(() => {
+    try {
+      const saved = localStorage.getItem("prayer-calculation-method");
+      return saved ? parseInt(saved, 10) : 3;
+    } catch {
+      return 3;
+    }
+  });
 
   const soundOptions = [
     { value: "silent", label: "Silent" },
