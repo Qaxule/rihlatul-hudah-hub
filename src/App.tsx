@@ -73,6 +73,7 @@ const App = () => (
                 <Route path="/terms-of-use" element={<TermsOfUse />} />
                 <Route path="/disclaimer" element={<Disclaimer />} />
                 <Route path="/support" element={<Support />} />
+                <Route path="/menu" element={<Menu />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </AnimatedRoutes>
