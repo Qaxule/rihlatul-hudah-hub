@@ -270,10 +270,10 @@ const Index = () => {
       
       {/* Hero Section */}
       <section className="relative z-10">
-        <div className="container mx-auto px-4 pt-8 pb-8 md:pt-20 md:pb-12">
-          <div className="max-w-2xl mx-auto text-center space-y-6">
-            {/* Logo/Brand */}
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif text-foreground tracking-tight animate-fade-in">A Journey to Islamic Guidance.</h1>
+        <div className="container mx-auto px-4 pt-4 pb-6 md:pt-20 md:pb-12">
+          <div className="max-w-2xl mx-auto text-center space-y-5">
+            {/* Logo/Brand - hidden on mobile */}
+            <h1 className="hidden md:block text-3xl md:text-4xl lg:text-5xl font-serif text-foreground tracking-tight animate-fade-in">A Journey to Islamic Guidance.</h1>
             
             {/* Search Bar with Results */}
             <div ref={searchRef} className="relative max-w-xl mx-auto animate-fade-in [animation-delay:0.2s]">
