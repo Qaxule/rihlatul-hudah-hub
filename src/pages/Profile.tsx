@@ -188,15 +188,6 @@ const Profile = () => {
     navigate('/');
   };
 
-  if (loading) {
-    return (
-      <PageWrapper>
-        <main className="flex-1 container mx-auto px-4 py-8">
-          <p className="text-center text-muted-foreground">Loading...</p>
-        </main>
-      </PageWrapper>
-    );
-  }
 
   const totalBookmarks = quranBookmarks.length + hadithBookmarks.length + duaBookmarks.length;
 
