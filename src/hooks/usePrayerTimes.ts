@@ -235,5 +235,7 @@ export const usePrayerTimes = () => {
     isLoading,
     isPrayerPassed,
     setManualLocation,
+    calculationMethod,
+    setCalculationMethod,
   };
 };
