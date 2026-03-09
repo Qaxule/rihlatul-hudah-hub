@@ -32,6 +32,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
 import Disclaimer from "./pages/Disclaimer";
 import Support from "./pages/Support";
+import Menu from "./pages/Menu";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -72,6 +73,7 @@ const App = () => (
                 <Route path="/terms-of-use" element={<TermsOfUse />} />
                 <Route path="/disclaimer" element={<Disclaimer />} />
                 <Route path="/support" element={<Support />} />
+                <Route path="/menu" element={<Menu />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </AnimatedRoutes>
