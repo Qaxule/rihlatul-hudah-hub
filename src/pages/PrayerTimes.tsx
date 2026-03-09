@@ -243,6 +243,29 @@ const PrayerTimes = () => {
                 )}
                 Get My Location
               </Button>
+
+              <div className="flex items-center gap-2">
+                <Label className="text-sm text-muted-foreground">Calculation Method</Label>
+                <Select value={String(calculationMethod)} onValueChange={(v) => {
+                  const method = Number(v);
+                  setCalculationMethod(method);
+                  localStorage.setItem("prayer-calculation-method", v);
+                  if (location) {
+                    fetchPrayerTimes(location.lat, location.lon);
+                  }
+                }}>
+                  <SelectTrigger className="w-[260px]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CALCULATION_METHODS.map((m) => (
+                      <SelectItem key={m.value} value={String(m.value)}>
+                        {m.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
               
               {prayerTimes && (
                 <div className="flex flex-col items-center gap-3">
