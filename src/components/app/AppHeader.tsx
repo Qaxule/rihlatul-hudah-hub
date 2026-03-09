@@ -100,20 +100,21 @@ export const AppHeader = () => {
         </div>
 
         {/* Current Time */}
-        <div className="text-center mb-4">
+        <div className="text-center mb-4 space-y-2">
           <p className="text-5xl font-bold text-foreground tracking-tight">
             {formatTime(currentTime)}
           </p>
-          <div className="flex items-center justify-center gap-2">
-            <LocationSearchDialog
-              currentCity={locationCoords?.city}
-              currentCountry={locationCoords?.country}
-              onLocationSelect={setManualLocation}
-            />
+          <LocationSearchDialog
+            currentCity={locationCoords?.city}
+            currentCountry={locationCoords?.country}
+            onLocationSelect={setManualLocation}
+          />
+          <div className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
+            <Settings2 className="w-3.5 h-3.5" />
             <Popover>
               <PopoverTrigger asChild>
-                <button className="p-1.5 rounded-full hover:bg-muted transition-colors">
-                  <Settings2 className="w-4 h-4 text-muted-foreground" />
+                <button className="hover:text-primary transition-colors underline-offset-2 hover:underline">
+                  {CALCULATION_METHODS.find(m => m.value === calculationMethod)?.label || 'Calculation Method'}
                 </button>
               </PopoverTrigger>
               <PopoverContent className="w-72" align="center">
