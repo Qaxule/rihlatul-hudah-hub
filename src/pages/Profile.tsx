@@ -256,12 +256,12 @@ const Profile = () => {
           ) : (
             <button
               onClick={() => { setTempName(fullName); setEditingName(true); }}
-              className="flex items-center gap-1.5 justify-center w-full group"
+              className="relative flex items-center justify-center w-full group"
             >
               <h1 className="text-xl font-semibold text-foreground">
                 {fullName || 'Set your name'}
               </h1>
-              <Edit3 className="w-3.5 h-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+              <Edit3 className="w-3.5 h-3.5 text-muted-foreground absolute right-1/4 opacity-0 group-hover:opacity-100 transition-opacity" />
             </button>
           )}
 
