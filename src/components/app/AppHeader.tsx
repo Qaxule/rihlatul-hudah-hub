@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Moon, Sun, Sunset, CloudSun, MoonStar, Sunrise } from 'lucide-react';
+import { Moon, Sun, Sunset, CloudSun, MoonStar, Sunrise, Settings2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { usePrayerTimes, formatPrayerTime } from '@/hooks/usePrayerTimes';
+import { usePrayerTimes, formatPrayerTime, CALCULATION_METHODS } from '@/hooks/usePrayerTimes';
 import { LocationSearchDialog } from './LocationSearchDialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 // Hijri date calculation with adjustment
 const getHijriDate = (): string => {
@@ -60,7 +62,7 @@ export const AppHeader = () => {
   const { user } = useAuth();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [userName, setUserName] = useState<string>('');
-  const { prayerTimes, nextPrayer, locationCoords, isPrayerPassed, setManualLocation } = usePrayerTimes();
+  const { prayerTimes, nextPrayer, locationCoords, isPrayerPassed, setManualLocation, calculationMethod, setCalculationMethod } = usePrayerTimes();
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -102,11 +104,37 @@ export const AppHeader = () => {
           <p className="text-5xl font-bold text-foreground tracking-tight">
             {formatTime(currentTime)}
           </p>
-          <LocationSearchDialog
-            currentCity={locationCoords?.city}
-            currentCountry={locationCoords?.country}
-            onLocationSelect={setManualLocation}
-          />
+          <div className="flex items-center justify-center gap-2">
+            <LocationSearchDialog
+              currentCity={locationCoords?.city}
+              currentCountry={locationCoords?.country}
+              onLocationSelect={setManualLocation}
+            />
+            <Popover>
+              <PopoverTrigger asChild>
+                <button className="p-1.5 rounded-full hover:bg-muted transition-colors">
+                  <Settings2 className="w-4 h-4 text-muted-foreground" />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-72" align="center">
+                <div className="space-y-2">
+                  <p className="text-sm font-medium">Calculation Method</p>
+                  <Select value={String(calculationMethod)} onValueChange={(v) => setCalculationMethod(Number(v))}>
+                    <SelectTrigger className="w-full text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {CALCULATION_METHODS.map((m) => (
+                        <SelectItem key={m.value} value={String(m.value)} className="text-xs">
+                          {m.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </PopoverContent>
+            </Popover>
+          </div>
         </div>
 
         {/* Next Prayer Countdown */}

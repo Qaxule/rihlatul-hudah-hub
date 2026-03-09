@@ -21,6 +21,23 @@ interface NextPrayer {
 }
 
 const LOCATION_STORAGE_KEY = 'user-prayer-location';
+const METHOD_STORAGE_KEY = 'prayer-calculation-method';
+
+export const CALCULATION_METHODS = [
+  { value: 3, label: 'Muslim World League' },
+  { value: 2, label: 'ISNA (Islamic Society of North America)' },
+  { value: 5, label: 'Egyptian General Authority of Survey' },
+  { value: 4, label: 'Umm Al-Qura University, Makkah' },
+  { value: 1, label: 'University of Islamic Sciences, Karachi' },
+  { value: 0, label: 'Shia Ithna-Ashari' },
+  { value: 7, label: 'Institute of Geophysics, University of Tehran' },
+  { value: 8, label: 'Gulf Region' },
+  { value: 9, label: 'Kuwait' },
+  { value: 10, label: 'Qatar' },
+  { value: 11, label: 'Majlis Ugama Islam Singapura' },
+  { value: 13, label: 'Diyanet İşleri Başkanlığı, Turkey' },
+  { value: 15, label: 'Moonsighting Committee Worldwide' },
+] as const;
 
 const parseTimeToDate = (timeStr: string): Date => {
   const cleaned = timeStr.replace(/\s*\(.*\)/, '').trim();
@@ -56,6 +73,14 @@ export const usePrayerTimes = () => {
   const [nextPrayer, setNextPrayer] = useState<NextPrayer | null>(null);
   const [locationCoords, setLocationCoords] = useState<LocationCoords | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [calculationMethod, setCalculationMethodState] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem(METHOD_STORAGE_KEY);
+      return saved ? parseInt(saved, 10) : 3; // Default: Muslim World League
+    } catch {
+      return 3;
+    }
+  });
 
   const getSavedLocation = (): LocationCoords | null => {
     try {
@@ -76,7 +101,7 @@ export const usePrayerTimes = () => {
       setIsLoading(true);
       const date = new Date();
       const timestamp = Math.floor(date.getTime() / 1000);
-      const url = `https://api.aladhan.com/v1/timings/${timestamp}?latitude=${lat}&longitude=${lon}&method=2`;
+      const url = `https://api.aladhan.com/v1/timings/${timestamp}?latitude=${lat}&longitude=${lon}&method=${calculationMethod}`;
 
       const response = await fetch(url);
       if (!response.ok) throw new Error(`AlAdhan API error: ${response.status}`);
@@ -129,7 +154,15 @@ export const usePrayerTimes = () => {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [calculationMethod]);
+
+  const setCalculationMethod = useCallback((method: number) => {
+    setCalculationMethodState(method);
+    localStorage.setItem(METHOD_STORAGE_KEY, String(method));
+    if (locationCoords) {
+      fetchPrayerTimes(locationCoords.latitude, locationCoords.longitude);
+    }
+  }, [locationCoords, fetchPrayerTimes]);
 
   const setManualLocation = useCallback(async (city: string, country: string, lat: number, lon: number) => {
     const coords: LocationCoords = { latitude: lat, longitude: lon, city, country };
@@ -202,5 +235,7 @@ export const usePrayerTimes = () => {
     isLoading,
     isPrayerPassed,
     setManualLocation,
+    calculationMethod,
+    setCalculationMethod,
   };
 };
