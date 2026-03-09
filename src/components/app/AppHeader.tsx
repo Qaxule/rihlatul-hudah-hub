@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Moon, Sun, Sunset, CloudSun, MoonStar, Sunrise } from 'lucide-react';
+import { Moon, Sun, Sunset, CloudSun, MoonStar, Sunrise, Settings2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { usePrayerTimes, formatPrayerTime } from '@/hooks/usePrayerTimes';
+import { usePrayerTimes, formatPrayerTime, CALCULATION_METHODS } from '@/hooks/usePrayerTimes';
 import { LocationSearchDialog } from './LocationSearchDialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 // Hijri date calculation with adjustment
 const getHijriDate = (): string => {
