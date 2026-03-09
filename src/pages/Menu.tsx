@@ -200,6 +200,17 @@ const Menu = () => {
           </div>
         </div>
 
+        {/* Sign Out */}
+        {user && (
+          <button
+            onClick={signOut}
+            className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-destructive/20 bg-destructive/5 text-destructive hover:bg-destructive/10 transition-colors text-sm font-medium"
+          >
+            <LogOut className="w-4 h-4" />
+            Sign Out
+          </button>
+        )}
+
         {/* Footer */}
         <div className="text-center py-4">
           <p className="text-xs text-muted-foreground font-medium">Rihlatul Hudah</p>
