@@ -73,6 +73,14 @@ export const usePrayerTimes = () => {
   const [nextPrayer, setNextPrayer] = useState<NextPrayer | null>(null);
   const [locationCoords, setLocationCoords] = useState<LocationCoords | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [calculationMethod, setCalculationMethodState] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem(METHOD_STORAGE_KEY);
+      return saved ? parseInt(saved, 10) : 3; // Default: Muslim World League
+    } catch {
+      return 3;
+    }
+  });
 
   const getSavedLocation = (): LocationCoords | null => {
     try {
