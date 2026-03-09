@@ -87,10 +87,19 @@ export const MobileBottomNav = () => {
               whileTap={{ scale: 0.9 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
-              <div className="p-2 rounded-2xl bg-transparent">
-                <MoreHorizontal className="w-5 h-5 text-muted-foreground" />
+              <div className={cn(
+                "p-2 rounded-2xl transition-all duration-200",
+                menuOpen ? "bg-primary/10" : "bg-transparent"
+              )}>
+                <MoreHorizontal className={cn(
+                  "w-5 h-5 transition-all duration-200",
+                  menuOpen ? "text-primary" : "text-muted-foreground"
+                )} />
               </div>
-              <span className="text-[10px] mt-0.5 font-medium text-muted-foreground">
+              <span className={cn(
+                "text-[10px] mt-0.5 font-medium transition-all duration-200",
+                menuOpen ? "text-primary" : "text-muted-foreground"
+              )}>
                 More
               </span>
             </motion.div>
