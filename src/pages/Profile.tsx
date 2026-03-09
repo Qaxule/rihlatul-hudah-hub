@@ -256,7 +256,7 @@ const Profile = () => {
           ) : (
             <button
               onClick={() => { setTempName(fullName); setEditingName(true); }}
-              className="flex items-center gap-1.5 justify-center mx-auto group"
+              className="flex items-center gap-1.5 justify-center w-full group"
             >
               <h1 className="text-xl font-semibold text-foreground">
                 {fullName || 'Set your name'}
