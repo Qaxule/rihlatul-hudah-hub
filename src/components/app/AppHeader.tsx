@@ -62,7 +62,7 @@ export const AppHeader = () => {
   const { user } = useAuth();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [userName, setUserName] = useState<string>('');
-  const { prayerTimes, nextPrayer, locationCoords, isPrayerPassed, setManualLocation } = usePrayerTimes();
+  const { prayerTimes, nextPrayer, locationCoords, isPrayerPassed, setManualLocation, calculationMethod, setCalculationMethod } = usePrayerTimes();
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
