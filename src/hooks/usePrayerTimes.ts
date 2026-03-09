@@ -154,7 +154,15 @@ export const usePrayerTimes = () => {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [calculationMethod]);
+
+  const setCalculationMethod = useCallback((method: number) => {
+    setCalculationMethodState(method);
+    localStorage.setItem(METHOD_STORAGE_KEY, String(method));
+    if (locationCoords) {
+      fetchPrayerTimes(locationCoords.latitude, locationCoords.longitude);
+    }
+  }, [locationCoords, fetchPrayerTimes]);
 
   const setManualLocation = useCallback(async (city: string, country: string, lat: number, lon: number) => {
     const coords: LocationCoords = { latitude: lat, longitude: lon, city, country };
