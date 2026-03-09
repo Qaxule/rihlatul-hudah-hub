@@ -88,7 +88,6 @@ const Profile = () => {
 
   const fetchAllData = async () => {
     if (!user) return;
-    setLoading(true);
 
     const [profileRes, streakRes, badgeRes, quranRes, hadithRes, duaRes] = await Promise.all([
       supabase.from('profiles').select('full_name, location, avatar_url').eq('id', user.id).single(),
