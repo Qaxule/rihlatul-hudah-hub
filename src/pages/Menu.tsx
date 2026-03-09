@@ -89,24 +89,19 @@ const Menu = () => {
           transition={{ duration: 0.3 }}
         >
           {user ? (
-            <div className="rounded-2xl bg-primary/5 border border-primary/10 p-4">
-              <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center ring-2 ring-primary/20">
-                  <User className="w-5 h-5 text-primary" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-foreground truncate">{user.email}</p>
-                  <p className="text-[11px] text-muted-foreground">Signed in</p>
-                </div>
+            <Link
+              to="/profile"
+              className="flex items-center gap-3 p-4 rounded-2xl bg-primary/5 border border-primary/10 hover:bg-primary/10 transition-all group"
+            >
+              <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center ring-2 ring-primary/20 group-hover:bg-primary/20 transition-colors">
+                <User className="w-5 h-5 text-primary" />
               </div>
-              <button
-                onClick={signOut}
-                className="mt-3 flex items-center gap-2 text-xs font-medium text-destructive hover:text-destructive/80 transition-colors"
-              >
-                <LogOut className="w-3.5 h-3.5" />
-                Sign Out
-              </button>
-            </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-foreground truncate">{user.email}</p>
+                <p className="text-[11px] text-muted-foreground">View your profile</p>
+              </div>
+              <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+            </Link>
           ) : (
             <Link
               to="/login"
