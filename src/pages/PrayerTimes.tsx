@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { CALCULATION_METHODS } from "@/hooks/usePrayerTimes";
 import { Compass, MapPin, Loader2, Bell, Volume2, WifiOff } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
@@ -32,6 +33,14 @@ const PrayerTimes = () => {
   });
   const [notificationSound, setNotificationSound] = useState(() => {
     return localStorage.getItem("prayerNotificationSound") || "adhan1";
+  });
+  const [calculationMethod, setCalculationMethod] = useState(() => {
+    try {
+      const saved = localStorage.getItem("prayer-calculation-method");
+      return saved ? parseInt(saved, 10) : 3;
+    } catch {
+      return 3;
+    }
   });
 
   const soundOptions = [
@@ -234,6 +243,29 @@ const PrayerTimes = () => {
                 )}
                 Get My Location
               </Button>
+
+              <div className="flex items-center gap-2">
+                <Label className="text-sm text-muted-foreground">Calculation Method</Label>
+                <Select value={String(calculationMethod)} onValueChange={(v) => {
+                  const method = Number(v);
+                  setCalculationMethod(method);
+                  localStorage.setItem("prayer-calculation-method", v);
+                  if (location) {
+                    fetchPrayerTimes(location.lat, location.lon);
+                  }
+                }}>
+                  <SelectTrigger className="w-[260px]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CALCULATION_METHODS.map((m) => (
+                      <SelectItem key={m.value} value={String(m.value)}>
+                        {m.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
               
               {prayerTimes && (
                 <div className="flex flex-col items-center gap-3">
