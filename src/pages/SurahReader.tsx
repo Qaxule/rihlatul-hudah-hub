@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { PageWrapper } from "@/components/app/PageWrapper";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, BookOpen, Bookmark, BookmarkCheck, ChevronDown, ChevronUp, Share2, Menu, WifiOff, Play, Pause, ArrowUp, Eye, EyeOff, Link2, Copy, Loader2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, BookOpen, Bookmark, BookmarkCheck, ChevronDown, ChevronUp, Share2, WifiOff, Play, Pause, ArrowUp, Eye, EyeOff, Link2, Copy, Loader2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,6 +26,7 @@ import AudioControlBar from "@/components/AudioControlBar";
 import { WordByWordPopover } from "@/components/quran/WordByWordPopover";
 import { ReflectionDialog } from "@/components/quran/ReflectionDialog";
 import { HifzModePanel } from "@/components/quran/HifzModePanel";
+import { SurahToolbar } from "@/components/quran/SurahToolbar";
 import { StreakDisplay } from "@/components/quran/StreakDisplay";
 import { useReadingStreak } from "@/hooks/useReadingStreak";
 import { useQuranAudioPlayer } from "@/hooks/useQuranAudioPlayer";
@@ -651,12 +652,37 @@ const SurahReader = () => {
       
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
+          {/* Sticky Toolbar */}
+          <SurahToolbar
+            isPlaying={audioPlayer.isPlaying}
+            isPaused={audioPlayer.isPaused}
+            onPlaySurah={handlePlaySurah}
+            selectedReciter={selectedReciter}
+            onReciterChange={setSelectedReciter}
+            wordByWordMode={wordByWordMode}
+            onWordByWordChange={setWordByWordMode}
+            arabicOnlyMode={arabicOnlyMode}
+            onArabicOnlyChange={setArabicOnlyMode}
+            onNavigateOpen={() => setNavigatorOpen(true)}
+            hifzProps={{
+              surahNumber: surahNum,
+              surahName: arabicData.englishName,
+              totalAyahs: arabicData.numberOfAyahs,
+              hiddenAyahs,
+              onToggleHide: toggleAyahVisibility,
+              onHideAll: hideAllAyahs,
+              onShowAll: showAllAyahs,
+              onTestMode: setTestMode,
+              testMode,
+            }}
+          />
+
           {/* Header */}
-          <div className="text-center mb-8">
+          <div className="text-center py-6">
             <div className="flex items-center justify-between mb-3">
-              <Link to="/quran" className="inline-flex items-center text-primary hover:underline">
-                <BookOpen className="h-4 w-4 mr-2" />
-                Back to Quran
+              <Link to="/quran" className="inline-flex items-center text-primary hover:underline text-sm">
+                <BookOpen className="h-4 w-4 mr-1.5" />
+                Quran
               </Link>
               <div className="flex items-center gap-2">
                 {user && <StreakDisplay compact />}
@@ -666,89 +692,6 @@ const SurahReader = () => {
                     Offline
                   </div>
                 )}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setNavigatorOpen(true)}
-                  className="gap-2"
-                >
-                  <Menu className="h-4 w-4" />
-                  Navigate
-                </Button>
-              </div>
-            </div>
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
-              <div className="flex flex-wrap items-center gap-2">
-                <Button
-                  onClick={handlePlaySurah}
-                  variant="outline"
-                  className="gap-2"
-                >
-                  {audioPlayer.isPlaying ? (
-                    <>
-                      <Pause className="h-4 w-4" />
-                      Pause
-                    </>
-                  ) : audioPlayer.isPaused ? (
-                    <>
-                      <Play className="h-4 w-4" />
-                      Resume
-                    </>
-                  ) : (
-                    <>
-                      <Play className="h-4 w-4" />
-                      Play Surah
-                    </>
-                  )}
-                </Button>
-                <Select value={selectedReciter} onValueChange={setSelectedReciter}>
-                  <SelectTrigger className="w-[200px] h-9 bg-background">
-                    <SelectValue placeholder="Select Reciter" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-background z-50">
-                    <SelectItem value="ar.alafasy">Mishary Alafasy</SelectItem>
-                    <SelectItem value="ar.abdulsamad">Abdul Basit Abdul Samad</SelectItem>
-                    <SelectItem value="ar.abdurrahmaansudais">Abdur-Rahman Al-Sudais</SelectItem>
-                    <SelectItem value="ar.shaatree">Abu Bakr Al-Shatri</SelectItem>
-                    <SelectItem value="ar.husary">Mahmoud Al-Husary</SelectItem>
-                    <SelectItem value="ar.minshawi">Mohamed Al-Minshawi</SelectItem>
-                    <SelectItem value="ar.muhammadayyoub">Muhammad Ayyub</SelectItem>
-                    <SelectItem value="ar.muhammadjibreel">Muhammad Jibreel</SelectItem>
-                  </SelectContent>
-                </Select>
-                <HifzModePanel
-                  surahNumber={surahNum}
-                  surahName={arabicData.englishName}
-                  totalAyahs={arabicData.numberOfAyahs}
-                  hiddenAyahs={hiddenAyahs}
-                  onToggleHide={toggleAyahVisibility}
-                  onHideAll={hideAllAyahs}
-                  onShowAll={showAllAyahs}
-                  onTestMode={setTestMode}
-                  testMode={testMode}
-                />
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-muted">
-                  <Switch
-                    id="word-by-word"
-                    checked={wordByWordMode}
-                    onCheckedChange={setWordByWordMode}
-                  />
-                  <Label htmlFor="word-by-word" className="text-xs font-medium cursor-pointer whitespace-nowrap">
-                    Word-by-Word
-                  </Label>
-                </div>
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-muted">
-                  <Switch
-                    id="arabic-only"
-                    checked={arabicOnlyMode}
-                    onCheckedChange={setArabicOnlyMode}
-                  />
-                  <Label htmlFor="arabic-only" className="text-xs font-medium cursor-pointer whitespace-nowrap">
-                    Arabic Only
-                  </Label>
-                </div>
               </div>
             </div>
             <h1 className="text-4xl font-bold mb-2" dir="rtl">

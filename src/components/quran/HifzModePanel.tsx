@@ -71,9 +71,8 @@ export function HifzModePanel({
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-2">
+        <Button variant="ghost" size="icon" className="h-9 w-9" title="Hifz Mode">
           <Brain className="h-4 w-4" />
-          Hifz Mode
         </Button>
       </SheetTrigger>
       <SheetContent side="right" className="w-[320px] sm:w-[400px]">
