@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { PageWrapper } from "@/components/app/PageWrapper";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, BookOpen, Bookmark, BookmarkCheck, ChevronDown, ChevronUp, Share2, Menu, WifiOff, Play, Pause, ArrowUp, Eye, EyeOff, Link2, Copy, Loader2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, BookOpen, Bookmark, BookmarkCheck, ChevronDown, ChevronUp, Share2, WifiOff, Play, Pause, ArrowUp, Eye, EyeOff, Link2, Copy, Loader2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,6 +26,7 @@ import AudioControlBar from "@/components/AudioControlBar";
 import { WordByWordPopover } from "@/components/quran/WordByWordPopover";
 import { ReflectionDialog } from "@/components/quran/ReflectionDialog";
 import { HifzModePanel } from "@/components/quran/HifzModePanel";
+import { SurahToolbar } from "@/components/quran/SurahToolbar";
 import { StreakDisplay } from "@/components/quran/StreakDisplay";
 import { useReadingStreak } from "@/hooks/useReadingStreak";
 import { useQuranAudioPlayer } from "@/hooks/useQuranAudioPlayer";
