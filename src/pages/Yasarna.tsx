@@ -32,7 +32,7 @@ const Yasarna = () => {
   const [timerDuration, setTimerDuration] = useState(5); // in minutes
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null); // in seconds
   const [quizStartTime, setQuizStartTime] = useState<Date | null>(null);
-  const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const timerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem("yasarna_progress");
