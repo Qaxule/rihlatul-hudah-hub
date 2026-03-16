@@ -60,76 +60,98 @@ export function SurahToolbar({
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   return (
-    <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-sm border-b border-border">
-      <div className="flex items-center justify-between gap-2 px-1 py-2">
-        {/* Left: Play + Reciter */}
-        <div className="flex items-center gap-1.5 min-w-0">
-          <Button
-            onClick={onPlaySurah}
-            variant={isPlaying ? "default" : "outline"}
-            size="icon"
-            className="h-9 w-9 shrink-0"
-            title={isPlaying ? "Pause" : isPaused ? "Resume" : "Play Surah"}
-          >
-            {isPlaying ? (
-              <Pause className="h-4 w-4" />
-            ) : (
-              <Play className="h-4 w-4" />
-            )}
-          </Button>
-          <Select value={selectedReciter} onValueChange={onReciterChange}>
-            <SelectTrigger className="h-9 w-[130px] sm:w-[160px] text-xs bg-background shrink-0">
-              <SelectValue placeholder="Reciter" />
-            </SelectTrigger>
-            <SelectContent className="bg-background z-50">
-              {RECITERS.map((r) => (
-                <SelectItem key={r.id} value={r.id} className="text-xs">
-                  {r.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+    <TooltipProvider delayDuration={300}>
+      <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-sm border-b border-border">
+        <div className="flex items-center justify-between gap-2 px-1 py-2">
+          {/* Left: Play + Reciter */}
+          <div className="flex items-center gap-1.5 min-w-0">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={onPlaySurah}
+                  variant={isPlaying ? "default" : "outline"}
+                  size="icon"
+                  className="h-9 w-9 shrink-0"
+                >
+                  {isPlaying ? (
+                    <Pause className="h-4 w-4" />
+                  ) : (
+                    <Play className="h-4 w-4" />
+                  )}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{isPlaying ? "Pause" : isPaused ? "Resume" : "Play Surah"}</p>
+              </TooltipContent>
+            </Tooltip>
+            <Select value={selectedReciter} onValueChange={onReciterChange}>
+              <SelectTrigger className="h-9 w-[130px] sm:w-[160px] text-xs bg-background shrink-0">
+                <SelectValue placeholder="Reciter" />
+              </SelectTrigger>
+              <SelectContent className="bg-background z-50">
+                {RECITERS.map((r) => (
+                  <SelectItem key={r.id} value={r.id} className="text-xs">
+                    {r.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-        {/* Right: Quick toggles + Settings + Navigate */}
-        <div className="flex items-center gap-1">
-          {/* Word-by-Word quick toggle */}
-          <Button
-            variant={wordByWordMode ? "default" : "ghost"}
-            size="icon"
-            className="h-9 w-9"
-            onClick={() => onWordByWordChange(!wordByWordMode)}
-            title="Word-by-Word"
-          >
-            <Type className="h-4 w-4" />
-          </Button>
+          {/* Right: Quick toggles + Navigate */}
+          <div className="flex items-center gap-1">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant={wordByWordMode ? "default" : "ghost"}
+                  size="icon"
+                  className="h-9 w-9"
+                  onClick={() => onWordByWordChange(!wordByWordMode)}
+                >
+                  <Type className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Word-by-Word</p>
+              </TooltipContent>
+            </Tooltip>
 
-          {/* Arabic Only quick toggle */}
-          <Button
-            variant={arabicOnlyMode ? "default" : "ghost"}
-            size="icon"
-            className="h-9 w-9"
-            onClick={() => onArabicOnlyChange(!arabicOnlyMode)}
-            title="Arabic Only"
-          >
-            <BookOpenText className="h-4 w-4" />
-          </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant={arabicOnlyMode ? "default" : "ghost"}
+                  size="icon"
+                  className="h-9 w-9"
+                  onClick={() => onArabicOnlyChange(!arabicOnlyMode)}
+                >
+                  <BookOpenText className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Arabic Only</p>
+              </TooltipContent>
+            </Tooltip>
 
-          {/* Hifz Mode */}
-          <HifzModePanel {...hifzProps} />
+            <HifzModePanel {...hifzProps} />
 
-          {/* Navigate */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-9 w-9"
-            onClick={onNavigateOpen}
-            title="Navigate"
-          >
-            <Menu className="h-4 w-4" />
-          </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-9 w-9"
+                  onClick={onNavigateOpen}
+                >
+                  <Menu className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Navigate Surahs</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
         </div>
       </div>
-    </div>
+    </TooltipProvider>
   );
 }
