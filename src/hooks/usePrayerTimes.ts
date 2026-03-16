@@ -53,7 +53,9 @@ const getTimeUntil = (targetTime: Date): string => {
   if (diff < 0) diff += 24 * 60 * 60 * 1000;
   const hours = Math.floor(diff / (1000 * 60 * 60));
   const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+  if (hours > 0) return `${hours}h ${minutes}m ${seconds}s`;
+  return `${minutes}m ${seconds}s`;
 };
 
 export const formatPrayerTime = (timeStr: string): string => {
