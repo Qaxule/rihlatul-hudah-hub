@@ -41,7 +41,7 @@ const getHijriDate = (): string => {
 };
 
 const formatTime = (date: Date): string => {
-  return date.toLocaleTimeString('en-US', {
+  return date.toLocaleTimeString('ar-SA', {
     hour: '2-digit',
     minute: '2-digit',
     hour12: true,
