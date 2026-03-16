@@ -101,7 +101,7 @@ export const AppHeader = () => {
 
         {/* Current Time */}
         <div className="text-center mb-4 space-y-2">
-          <p className="text-6xl font-bold text-foreground tracking-tight text-center" dir="ltr">
+          <p className="text-6xl font-bold text-foreground tracking-tight text-center flex justify-center" dir="ltr">
             {formatTime(currentTime)}
           </p>
           <LocationSearchDialog
