@@ -215,13 +215,13 @@ export const usePrayerTimes = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Update countdown every minute
+  // Update countdown every second
   useEffect(() => {
     if (nextPrayer) {
       const timer = setInterval(() => {
         const prayerTime = parseTimeToDate(nextPrayer.time);
         setNextPrayer(prev => prev ? { ...prev, countdown: getTimeUntil(prayerTime) } : null);
-      }, 60000);
+      }, 1000);
       return () => clearInterval(timer);
     }
   }, [nextPrayer?.time]);
