@@ -1,6 +1,7 @@
 import { PageWrapper } from "@/components/app/PageWrapper";
 import { Card, CardContent } from "@/components/ui/card";
-import { Book, Search, ArrowUpDown, ChevronRight } from "lucide-react";
+import { Search, ArrowUpDown, ChevronRight } from "lucide-react";
+import quranIcon from "@/assets/quran-icon.png";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { useState, useMemo } from "react";
@@ -74,7 +75,7 @@ const Quran = () => {
         {/* Header */}
         <div className="max-w-4xl mx-auto text-center space-y-6 mb-12">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10">
-            <Book className="w-8 h-8 text-primary" />
+            <img src={quranIcon} alt="Quran" className="w-8 h-8 dark:invert" />
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-foreground">
             The Holy Qur'an
