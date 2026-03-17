@@ -1,20 +1,24 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Home, BookOpen, Lightbulb, MoreHorizontal, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import navHome from '@/assets/nav-home.png';
+import navQuran from '@/assets/nav-quran.png';
+import navReflections from '@/assets/nav-reflections.png';
+import navProfile from '@/assets/nav-profile.png';
+import navMore from '@/assets/nav-more.png';
 
 interface NavItem {
   path: string;
   label: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: string;
 }
 
 const navItems: NavItem[] = [
-  { path: '/', label: 'Home', icon: Home },
-  { path: '/quran', label: 'Quran', icon: BookOpen },
-  { path: '/reflections', label: 'Reflections', icon: Lightbulb },
-  { path: '/profile', label: 'Profile', icon: User },
-  { path: '/menu', label: 'More', icon: MoreHorizontal },
+  { path: '/', label: 'Home', icon: navHome },
+  { path: '/quran', label: 'Quran', icon: navQuran },
+  { path: '/reflections', label: 'Reflections', icon: navReflections },
+  { path: '/profile', label: 'Profile', icon: navProfile },
+  { path: '/menu', label: 'More', icon: navMore },
 ];
 
 export const MobileBottomNav = () => {
@@ -47,10 +51,14 @@ export const MobileBottomNav = () => {
                   "p-2 rounded-2xl transition-all duration-200",
                   active ? "bg-primary/10" : "bg-transparent"
                 )}>
-                  <item.icon className={cn(
-                    "w-5 h-5 transition-all duration-200",
-                    active ? "text-primary" : "text-muted-foreground"
-                  )} />
+                  <img
+                    src={item.icon}
+                    alt={item.label}
+                    className={cn(
+                      "w-5 h-5 transition-all duration-200 dark:invert",
+                      active ? "opacity-100" : "opacity-50"
+                    )}
+                  />
                 </div>
                 <span className={cn(
                   "text-[10px] mt-0.5 font-medium transition-all duration-200",
