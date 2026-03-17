@@ -1,6 +1,7 @@
 import { PageWrapper } from "@/components/app/PageWrapper";
 import { Card, CardContent } from "@/components/ui/card";
-import { Book, Search, ArrowUpDown, ChevronRight } from "lucide-react";
+import { Search, ArrowUpDown, ChevronRight } from "lucide-react";
+import quranIcon from "@/assets/quran-icon.png";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { useState, useMemo } from "react";
