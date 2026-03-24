@@ -8,6 +8,8 @@ interface AudioControlBarProps {
   currentAyah: number;
   totalAyahs: number;
   surahName: string;
+  repeatCount?: number;
+  currentRepeatIndex?: number;
   onPlayPause: () => void;
   onNext: () => void;
   onPrevious: () => void;
