@@ -135,7 +135,21 @@ export const useQuranAudioPlayer = ({
           return { ...prev, currentRepeatIndex: prev.currentRepeatIndex + 1 };
         }
         
-        // Done repeating (or no repeat), advance to next ayah
+        // Done repeating (or no repeat)
+        // If single ayah loop mode, stop here instead of advancing
+        if (singleAyahLoopRef.current) {
+          isTransitioningRef.current = false;
+          singleAyahLoopRef.current = false;
+          return {
+            ...prev,
+            isPlaying: false,
+            isBuffering: false,
+            isPaused: false,
+            currentRepeatIndex: 0,
+          };
+        }
+        
+        // Advance to next ayah (continuous playback mode)
         const nextAyah = ayahNumber + 1;
         if (nextAyah <= totalAyahs) {
           isTransitioningRef.current = false;
