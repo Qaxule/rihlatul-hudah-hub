@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Play, Pause, Menu, Type, BookOpenText } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Play, Pause, Menu, Type, BookOpenText, Repeat } from "lucide-react";
 import { HifzModePanel } from "./HifzModePanel";
 
 interface SurahToolbarProps {
