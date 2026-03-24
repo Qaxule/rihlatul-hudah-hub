@@ -31,6 +31,8 @@ export const useQuranAudioPlayer = ({
     isPlaying: false,
     isBuffering: false,
     isPaused: false,
+    repeatCount: 0,
+    currentRepeatIndex: 0,
   });
 
   // Audio element refs
