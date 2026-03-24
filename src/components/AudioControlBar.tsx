@@ -22,6 +22,8 @@ const AudioControlBar = ({
   currentAyah,
   totalAyahs,
   surahName,
+  repeatCount = 0,
+  currentRepeatIndex = 0,
   onPlayPause,
   onNext,
   onPrevious,
