@@ -663,6 +663,8 @@ const SurahReader = () => {
             onWordByWordChange={setWordByWordMode}
             arabicOnlyMode={arabicOnlyMode}
             onArabicOnlyChange={setArabicOnlyMode}
+            repeatCount={audioPlayer.repeatCount}
+            onRepeatCountChange={audioPlayer.setRepeatCount}
             onNavigateOpen={() => setNavigatorOpen(true)}
             hifzProps={{
               surahNumber: surahNum,
