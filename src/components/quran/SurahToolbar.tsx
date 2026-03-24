@@ -58,10 +58,14 @@ export function SurahToolbar({
   onWordByWordChange,
   arabicOnlyMode,
   onArabicOnlyChange,
+  repeatCount,
+  onRepeatCountChange,
   onNavigateOpen,
   hifzProps,
 }: SurahToolbarProps) {
   const [settingsOpen, setSettingsOpen] = useState(false);
+
+  const REPEAT_OPTIONS = [0, 1, 2, 3, 5, 10, 15, 20];
 
   return (
     <TooltipProvider delayDuration={300}>
