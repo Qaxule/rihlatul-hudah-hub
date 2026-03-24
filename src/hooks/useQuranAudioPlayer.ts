@@ -262,12 +262,14 @@ export const useQuranAudioPlayer = ({
       preloadedAyahRef.current = null;
     }
     isTransitioningRef.current = false;
-    setState({
+    setState(prev => ({
       currentAyah: null,
       isPlaying: false,
       isBuffering: false,
       isPaused: false,
-    });
+      repeatCount: prev.repeatCount,
+      currentRepeatIndex: 0,
+    }));
   }, []);
 
   // Cleanup on unmount or reciter change
