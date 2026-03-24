@@ -40,6 +40,7 @@ export const useQuranAudioPlayer = ({
   const preloadedAudioRef = useRef<HTMLAudioElement | null>(null);
   const preloadedAyahRef = useRef<number | null>(null);
   const isTransitioningRef = useRef(false);
+  const singleAyahLoopRef = useRef(false); // true when looping a single ayah (not continuous playback)
 
   // Preload the next ayah's audio
   const preloadNextAyah = useCallback((currentAyahNumber: number) => {
