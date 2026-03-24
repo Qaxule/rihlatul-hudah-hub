@@ -212,17 +212,16 @@ export const useQuranAudioPlayer = ({
     }
   }, [state.isPaused]);
 
-  // Toggle play/pause
+  // Toggle play/pause (continuous surah playback)
   const togglePlayPause = useCallback(() => {
+    singleAyahLoopRef.current = false; // Continuous mode
     if (state.isPlaying) {
       pause();
     } else if (state.isPaused && currentAudioRef.current) {
       resume();
     } else if (state.currentAyah) {
-      // Resume from last known ayah
       playAyah(state.currentAyah);
     } else {
-      // Start from beginning
       playAyah(1);
       onAyahChange?.(1);
     }
