@@ -40,6 +40,7 @@ export const useQuranAudioPlayer = ({
   const preloadedAudioRef = useRef<HTMLAudioElement | null>(null);
   const preloadedAyahRef = useRef<number | null>(null);
   const isTransitioningRef = useRef(false);
+  const singleAyahLoopRef = useRef(false); // true when looping a single ayah (not continuous playback)
 
   // Preload the next ayah's audio
   const preloadNextAyah = useCallback((currentAyahNumber: number) => {
@@ -134,7 +135,21 @@ export const useQuranAudioPlayer = ({
           return { ...prev, currentRepeatIndex: prev.currentRepeatIndex + 1 };
         }
         
-        // Done repeating (or no repeat), advance to next ayah
+        // Done repeating (or no repeat)
+        // If single ayah loop mode, stop here instead of advancing
+        if (singleAyahLoopRef.current) {
+          isTransitioningRef.current = false;
+          singleAyahLoopRef.current = false;
+          return {
+            ...prev,
+            isPlaying: false,
+            isBuffering: false,
+            isPaused: false,
+            currentRepeatIndex: 0,
+          };
+        }
+        
+        // Advance to next ayah (continuous playback mode)
         const nextAyah = ayahNumber + 1;
         if (nextAyah <= totalAyahs) {
           isTransitioningRef.current = false;
@@ -197,23 +212,23 @@ export const useQuranAudioPlayer = ({
     }
   }, [state.isPaused]);
 
-  // Toggle play/pause
+  // Toggle play/pause (continuous surah playback)
   const togglePlayPause = useCallback(() => {
+    singleAyahLoopRef.current = false; // Continuous mode
     if (state.isPlaying) {
       pause();
     } else if (state.isPaused && currentAudioRef.current) {
       resume();
     } else if (state.currentAyah) {
-      // Resume from last known ayah
       playAyah(state.currentAyah);
     } else {
-      // Start from beginning
       playAyah(1);
       onAyahChange?.(1);
     }
   }, [state.isPlaying, state.isPaused, state.currentAyah, pause, resume, playAyah, onAyahChange]);
 
   // Play/pause a specific ayah (for individual ayah buttons)
+  // When repeat is active, this enters single-ayah loop mode
   const toggleAyah = useCallback((ayahNumber: number) => {
     if (state.currentAyah === ayahNumber) {
       if (state.isPlaying) {
@@ -222,10 +237,15 @@ export const useQuranAudioPlayer = ({
         resume();
       }
     } else {
+      // If repeat is active, enable single ayah loop mode
+      if (state.repeatCount > 0) {
+        singleAyahLoopRef.current = true;
+      }
+      setState(prev => ({ ...prev, currentRepeatIndex: 0 }));
       playAyah(ayahNumber);
       onAyahChange?.(ayahNumber);
     }
-  }, [state.currentAyah, state.isPlaying, state.isPaused, pause, resume, playAyah, onAyahChange]);
+  }, [state.currentAyah, state.isPlaying, state.isPaused, state.repeatCount, pause, resume, playAyah, onAyahChange]);
 
   // Skip to next ayah
   const next = useCallback(() => {
