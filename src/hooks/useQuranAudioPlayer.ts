@@ -14,6 +14,8 @@ interface AudioPlayerState {
   isPlaying: boolean;
   isBuffering: boolean;
   isPaused: boolean;
+  repeatCount: number; // 0 = no repeat, 1+ = number of times to repeat
+  currentRepeatIndex: number; // which repeat we're on (0-based)
 }
 
 export const useQuranAudioPlayer = ({
