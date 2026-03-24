@@ -18,6 +18,9 @@ interface SurahToolbarProps {
   onWordByWordChange: (value: boolean) => void;
   arabicOnlyMode: boolean;
   onArabicOnlyChange: (value: boolean) => void;
+  // Repeat
+  repeatCount: number;
+  onRepeatCountChange: (count: number) => void;
   // Navigation
   onNavigateOpen: () => void;
   // Hifz
