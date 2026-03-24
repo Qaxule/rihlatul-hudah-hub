@@ -294,11 +294,18 @@ export const useQuranAudioPlayer = ({
     stop();
   }, [reciterId, stop]);
 
+  // Set repeat count
+  const setRepeatCount = useCallback((count: number) => {
+    setState(prev => ({ ...prev, repeatCount: count, currentRepeatIndex: 0 }));
+  }, []);
+
   return {
     currentAyah: state.currentAyah,
     isPlaying: state.isPlaying,
     isBuffering: state.isBuffering,
     isPaused: state.isPaused,
+    repeatCount: state.repeatCount,
+    currentRepeatIndex: state.currentRepeatIndex,
     playAyah,
     toggleAyah,
     togglePlayPause,
@@ -307,5 +314,6 @@ export const useQuranAudioPlayer = ({
     next,
     previous,
     stop,
+    setRepeatCount,
   };
 };
