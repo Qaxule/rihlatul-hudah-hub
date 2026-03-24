@@ -36,6 +36,7 @@ const AudioControlBar = ({
           <span className="text-sm font-semibold text-foreground">{surahName}</span>
           <span className="text-xs text-muted-foreground">
             Ayah {currentAyah} of {totalAyahs}
+            {repeatCount > 0 && ` • Loop ${currentRepeatIndex + 1}/${repeatCount + 1}`}
           </span>
         </div>
         
