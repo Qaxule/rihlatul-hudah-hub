@@ -123,23 +123,40 @@ export const useQuranAudioPlayer = ({
     };
 
     audio.onended = () => {
-      const nextAyah = ayahNumber + 1;
-      if (nextAyah <= totalAyahs) {
-        // Auto-advance to next ayah
-        isTransitioningRef.current = false; // Allow transition
-        playAyah(nextAyah);
-        onAyahChange?.(nextAyah);
-      } else {
-        // Surah complete
-        isTransitioningRef.current = false;
-        setState({
-          currentAyah: null,
-          isPlaying: false,
-          isBuffering: false,
-          isPaused: false,
-        });
-        onComplete?.();
-      }
+      // Check if we need to repeat this ayah
+      setState(prev => {
+        if (prev.repeatCount > 0 && prev.currentRepeatIndex < prev.repeatCount) {
+          // Need to repeat - replay same ayah
+          isTransitioningRef.current = false;
+          setTimeout(() => {
+            playAyah(ayahNumber);
+          }, 0);
+          return { ...prev, currentRepeatIndex: prev.currentRepeatIndex + 1 };
+        }
+        
+        // Done repeating (or no repeat), advance to next ayah
+        const nextAyah = ayahNumber + 1;
+        if (nextAyah <= totalAyahs) {
+          isTransitioningRef.current = false;
+          setTimeout(() => {
+            playAyah(nextAyah);
+            onAyahChange?.(nextAyah);
+          }, 0);
+          return { ...prev, currentRepeatIndex: 0 };
+        } else {
+          // Surah complete
+          isTransitioningRef.current = false;
+          onComplete?.();
+          return {
+            currentAyah: null,
+            isPlaying: false,
+            isBuffering: false,
+            isPaused: false,
+            repeatCount: prev.repeatCount,
+            currentRepeatIndex: 0,
+          };
+        }
+      });
     };
 
     audio.onerror = (e) => {
