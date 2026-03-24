@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Play, Pause, Menu, Type, BookOpenText } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Play, Pause, Menu, Type, BookOpenText, Repeat } from "lucide-react";
 import { HifzModePanel } from "./HifzModePanel";
 
 interface SurahToolbarProps {
@@ -17,6 +18,9 @@ interface SurahToolbarProps {
   onWordByWordChange: (value: boolean) => void;
   arabicOnlyMode: boolean;
   onArabicOnlyChange: (value: boolean) => void;
+  // Repeat
+  repeatCount: number;
+  onRepeatCountChange: (count: number) => void;
   // Navigation
   onNavigateOpen: () => void;
   // Hifz
@@ -54,10 +58,14 @@ export function SurahToolbar({
   onWordByWordChange,
   arabicOnlyMode,
   onArabicOnlyChange,
+  repeatCount,
+  onRepeatCountChange,
   onNavigateOpen,
   hifzProps,
 }: SurahToolbarProps) {
   const [settingsOpen, setSettingsOpen] = useState(false);
+
+  const REPEAT_OPTIONS = [0, 1, 2, 3, 5, 10, 15, 20];
 
   return (
     <TooltipProvider delayDuration={300}>
@@ -131,6 +139,46 @@ export function SurahToolbar({
                 <p>Arabic Only</p>
               </TooltipContent>
             </Tooltip>
+
+            <Popover>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={repeatCount > 0 ? "default" : "ghost"}
+                      size="icon"
+                      className="h-9 w-9 relative"
+                    >
+                      <Repeat className="h-4 w-4" />
+                      {repeatCount > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-[10px] rounded-full h-4 w-4 flex items-center justify-center font-bold">
+                          {repeatCount}
+                        </span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Repeat Ayah {repeatCount > 0 ? `(${repeatCount}×)` : ""}</p>
+                </TooltipContent>
+              </Tooltip>
+              <PopoverContent className="w-48 p-2" align="end">
+                <p className="text-xs font-medium text-muted-foreground mb-2 px-1">Repeat each ayah</p>
+                <div className="grid grid-cols-4 gap-1">
+                  {REPEAT_OPTIONS.map((count) => (
+                    <Button
+                      key={count}
+                      variant={repeatCount === count ? "default" : "outline"}
+                      size="sm"
+                      className="h-8 text-xs"
+                      onClick={() => onRepeatCountChange(count)}
+                    >
+                      {count === 0 ? "Off" : `${count}×`}
+                    </Button>
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
 
             <HifzModePanel {...hifzProps} />
 

@@ -8,6 +8,8 @@ interface AudioControlBarProps {
   currentAyah: number;
   totalAyahs: number;
   surahName: string;
+  repeatCount?: number;
+  currentRepeatIndex?: number;
   onPlayPause: () => void;
   onNext: () => void;
   onPrevious: () => void;
@@ -20,6 +22,8 @@ const AudioControlBar = ({
   currentAyah,
   totalAyahs,
   surahName,
+  repeatCount = 0,
+  currentRepeatIndex = 0,
   onPlayPause,
   onNext,
   onPrevious,
@@ -32,6 +36,7 @@ const AudioControlBar = ({
           <span className="text-sm font-semibold text-foreground">{surahName}</span>
           <span className="text-xs text-muted-foreground">
             Ayah {currentAyah} of {totalAyahs}
+            {repeatCount > 0 && ` • Loop ${currentRepeatIndex + 1}/${repeatCount + 1}`}
           </span>
         </div>
         
