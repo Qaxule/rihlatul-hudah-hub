@@ -140,6 +140,46 @@ export function SurahToolbar({
               </TooltipContent>
             </Tooltip>
 
+            <Popover>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={repeatCount > 0 ? "default" : "ghost"}
+                      size="icon"
+                      className="h-9 w-9 relative"
+                    >
+                      <Repeat className="h-4 w-4" />
+                      {repeatCount > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-[10px] rounded-full h-4 w-4 flex items-center justify-center font-bold">
+                          {repeatCount}
+                        </span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Repeat Ayah {repeatCount > 0 ? `(${repeatCount}×)` : ""}</p>
+                </TooltipContent>
+              </Tooltip>
+              <PopoverContent className="w-48 p-2" align="end">
+                <p className="text-xs font-medium text-muted-foreground mb-2 px-1">Repeat each ayah</p>
+                <div className="grid grid-cols-4 gap-1">
+                  {REPEAT_OPTIONS.map((count) => (
+                    <Button
+                      key={count}
+                      variant={repeatCount === count ? "default" : "outline"}
+                      size="sm"
+                      className="h-8 text-xs"
+                      onClick={() => onRepeatCountChange(count)}
+                    >
+                      {count === 0 ? "Off" : `${count}×`}
+                    </Button>
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
+
             <HifzModePanel {...hifzProps} />
 
             <Tooltip>
