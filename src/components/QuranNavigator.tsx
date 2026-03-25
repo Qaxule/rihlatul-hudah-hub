@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
@@ -38,6 +38,23 @@ export function QuranNavigator({
   const [selectedJuz, setSelectedJuz] = useState<number | null>(null);
   const [selectedSurah, setSelectedSurah] = useState<number | null>(currentSurah || null);
   const [ayahCount, setAyahCount] = useState<number>(0);
+  const [selectedAyah, setSelectedAyah] = useState<number | null>(currentAyah || 1);
+
+  const juzScrollRef = useRef<HTMLDivElement>(null);
+  const surahScrollRef = useRef<HTMLDivElement>(null);
+  const ayahScrollRef = useRef<HTMLDivElement>(null);
+
+  // Scroll selected item into view within a column
+  const scrollToSelected = useCallback((container: HTMLDivElement | null, index: number) => {
+    if (!container) return;
+    const viewport = container.querySelector('[data-radix-scroll-area-viewport]') as HTMLElement;
+    if (!viewport) return;
+    const items = viewport.querySelectorAll('[data-nav-item]');
+    const target = items[index];
+    if (target) {
+      target.scrollIntoView({ block: 'nearest', behavior: 'instant' });
+    }
+  }, []);
 
   // Initialize with current surah's juz if available
   useEffect(() => {
@@ -51,16 +68,26 @@ export function QuranNavigator({
     }
   }, [currentSurah, selectedJuz]);
 
-  const [selectedAyah, setSelectedAyah] = useState<number | null>(currentAyah || 1);
+  // Scroll to selected items when dialog opens
+  useEffect(() => {
+    if (!open) return;
+    const timer = setTimeout(() => {
+      if (selectedJuz) scrollToSelected(juzScrollRef.current, selectedJuz - 1);
+      if (selectedSurah) scrollToSelected(surahScrollRef.current, selectedSurah - 1);
+      if (selectedAyah) scrollToSelected(ayahScrollRef.current, selectedAyah - 1);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [open, scrollToSelected, selectedJuz, selectedSurah, selectedAyah]);
 
   const handleJuzSelect = (juzNumber: number) => {
     setSelectedJuz(juzNumber);
-    // Auto-select first surah in the juz
     const surahs = getSurahsByJuz(juzNumber);
     if (surahs.length > 0) {
       setSelectedSurah(surahs[0].number);
       setAyahCount(surahs[0].numberOfAyahs);
       setSelectedAyah(1);
+      // Scroll surah column to selection
+      setTimeout(() => scrollToSelected(surahScrollRef.current, surahs[0].number - 1), 50);
     }
   };
 
@@ -68,10 +95,12 @@ export function QuranNavigator({
     setSelectedSurah(surah.number);
     setAyahCount(surah.numberOfAyahs);
     setSelectedAyah(1);
-    // Auto-highlight the juz this surah belongs to
     if (surah.juz && surah.juz.length > 0) {
       setSelectedJuz(surah.juz[0]);
+      setTimeout(() => scrollToSelected(juzScrollRef.current, surah.juz[0] - 1), 50);
     }
+    // Scroll ayah column to top
+    setTimeout(() => scrollToSelected(ayahScrollRef.current, 0), 50);
   };
 
   const handleGo = () => {
@@ -87,78 +116,94 @@ export function QuranNavigator({
 
   const NavigatorContent = () => (
     <div className="flex flex-col gap-3">
-      <div className="grid grid-cols-3 gap-2 h-[50vh] md:h-[440px]">
+      <div className="grid grid-cols-3 gap-1.5 sm:gap-2 h-[50vh] md:h-[440px]">
         {/* Juz Column */}
-        <div className="flex flex-col min-h-0">
-          <div className="text-sm font-semibold mb-2 px-2 py-1 bg-muted rounded-t-md">Juz</div>
-          <ScrollArea className="flex-1 rounded-b-md border">
-            <div className="p-2 space-y-1">
+        <div className="flex flex-col min-h-0 overflow-hidden rounded-lg border border-border">
+          <div className="text-xs font-semibold px-2 py-1.5 bg-muted/60 border-b border-border text-center">
+            Juz
+          </div>
+          <ScrollArea className="flex-1" ref={juzScrollRef}>
+            <div className="p-1">
               {juzList.map((juz) => (
-                <Button
+                <div
                   key={juz.number}
-                  variant="ghost"
-                  size="sm"
+                  data-nav-item
                   className={cn(
-                    "w-full justify-start text-xs",
-                    selectedJuz === juz.number && "bg-primary text-primary-foreground"
+                    "px-2 py-1.5 text-xs text-center rounded cursor-pointer transition-colors",
+                    selectedJuz === juz.number
+                      ? "bg-primary text-primary-foreground font-semibold"
+                      : "hover:bg-muted/50"
                   )}
                   onClick={() => handleJuzSelect(juz.number)}
                 >
                   {juz.number}
-                </Button>
+                </div>
               ))}
             </div>
           </ScrollArea>
         </div>
 
-        {/* Surah Column - always shows all surahs */}
-        <div className="flex flex-col min-h-0">
-          <div className="text-sm font-semibold mb-2 px-2 py-1 bg-muted rounded-t-md">Surah</div>
-          <ScrollArea className="flex-1 rounded-b-md border">
-            <div className="p-2 space-y-1">
+        {/* Surah Column */}
+        <div className="flex flex-col min-h-0 overflow-hidden rounded-lg border border-border">
+          <div className="text-xs font-semibold px-2 py-1.5 bg-muted/60 border-b border-border text-center">
+            Surah
+          </div>
+          <ScrollArea className="flex-1" ref={surahScrollRef}>
+            <div className="p-1">
               {surahList.map((surah) => (
-                <Button
+                <div
                   key={surah.number}
-                  variant="ghost"
-                  size="sm"
+                  data-nav-item
                   className={cn(
-                    "w-full justify-start text-xs flex-col items-start h-auto py-2",
-                    selectedSurah === surah.number && "bg-primary text-primary-foreground"
+                    "px-1.5 py-1.5 rounded cursor-pointer transition-colors",
+                    selectedSurah === surah.number
+                      ? "bg-primary text-primary-foreground"
+                      : "hover:bg-muted/50"
                   )}
                   onClick={() => handleSurahSelect(surah)}
                 >
-                  <div className="font-semibold">{surah.number}. {surah.englishName}</div>
-                  <div className="text-[10px] opacity-70">{surah.name}</div>
-                </Button>
+                  <div className="text-[11px] font-medium leading-tight truncate">
+                    {surah.number}. {surah.englishName}
+                  </div>
+                  <div className={cn(
+                    "text-[9px] leading-tight truncate",
+                    selectedSurah === surah.number ? "text-primary-foreground/70" : "text-muted-foreground"
+                  )}>
+                    {surah.name}
+                  </div>
+                </div>
               ))}
             </div>
           </ScrollArea>
         </div>
 
         {/* Ayah Column */}
-        <div className="flex flex-col min-h-0">
-          <div className="text-sm font-semibold mb-2 px-2 py-1 bg-muted rounded-t-md">Ayah</div>
-          <ScrollArea className="flex-1 rounded-b-md border">
+        <div className="flex flex-col min-h-0 overflow-hidden rounded-lg border border-border">
+          <div className="text-xs font-semibold px-2 py-1.5 bg-muted/60 border-b border-border text-center">
+            Ayah
+          </div>
+          <ScrollArea className="flex-1" ref={ayahScrollRef}>
             {selectedSurah ? (
-              <div className="p-2 space-y-1">
+              <div className="p-1">
                 {Array.from({ length: ayahCount }, (_, i) => i + 1).map((ayahNum) => (
-                  <Button
+                  <div
                     key={ayahNum}
-                    variant="ghost"
-                    size="sm"
+                    data-nav-item
                     className={cn(
-                      "w-full justify-center text-xs",
-                      selectedAyah === ayahNum && "bg-primary text-primary-foreground"
+                      "px-2 py-1.5 text-xs text-center rounded cursor-pointer transition-colors",
+                      selectedAyah === ayahNum
+                        ? "bg-primary text-primary-foreground font-semibold"
+                        : "hover:bg-muted/50"
                     )}
                     onClick={() => setSelectedAyah(ayahNum)}
                   >
                     {ayahNum}
-                  </Button>
+                  </div>
                 ))}
               </div>
             ) : (
               <div className="p-4 text-xs text-muted-foreground text-center">
-                Select a surah first
+                Select a surah
               </div>
             )}
           </ScrollArea>
@@ -180,10 +225,10 @@ export function QuranNavigator({
     return (
       <Drawer open={open} onOpenChange={onOpenChange}>
         <DrawerContent className="max-h-[85vh]">
-          <DrawerHeader>
-            <DrawerTitle>Navigate Quran</DrawerTitle>
+          <DrawerHeader className="pb-2">
+            <DrawerTitle className="text-base">Navigate Quran</DrawerTitle>
           </DrawerHeader>
-          <div className="px-4 pb-4">
+          <div className="px-3 pb-4">
             <NavigatorContent />
           </div>
         </DrawerContent>
