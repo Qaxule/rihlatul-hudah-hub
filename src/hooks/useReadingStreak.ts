@@ -199,20 +199,19 @@ export function useReadingStreak() {
     const badgeDef = BADGE_DEFINITIONS.find((b) => b.id === badgeId);
     if (!badgeDef) return;
 
-    // Check if already has badge
+    // Check if already has badge locally
     const hasIt = badges.some((b) => b.badge_id === badgeId);
     if (hasIt) return;
 
     try {
-      const { error } = await supabase.from('user_badges').insert({
-        user_id: user.id,
-        badge_id: badgeId,
-        badge_name: badgeDef.name,
-        badge_description: badgeDef.description,
-        badge_icon: badgeDef.icon,
+      const { data: earned, error } = await supabase.rpc('award_badge_if_earned', {
+        _badge_id: badgeId,
+        _badge_name: badgeDef.name,
+        _badge_description: badgeDef.description,
+        _badge_icon: badgeDef.icon,
       });
 
-      if (!error) {
+      if (!error && earned) {
         setBadges((prev) => [
           ...prev,
           {
