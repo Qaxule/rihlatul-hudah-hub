@@ -107,7 +107,7 @@ export function SurahToolbar({
           </div>
 
           {/* Right: Quick toggles + Navigate */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
