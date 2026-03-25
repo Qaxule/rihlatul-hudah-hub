@@ -70,21 +70,21 @@ export function SurahToolbar({
   return (
     <TooltipProvider delayDuration={300}>
       <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-sm border-b border-border">
-        <div className="flex items-center justify-between px-2 sm:px-3 py-2">
+        <div className="flex items-center justify-between px-1.5 sm:px-3 py-1.5 sm:py-2">
           {/* Left: Play + Reciter */}
-          <div className="flex items-center gap-2 sm:gap-2 min-w-0">
+          <div className="flex items-center gap-1 sm:gap-2 min-w-0">
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
                   onClick={onPlaySurah}
                   variant={isPlaying ? "default" : "outline"}
                   size="icon"
-                  className="h-9 w-9 shrink-0"
+                  className="h-8 w-8 sm:h-9 sm:w-9 shrink-0"
                 >
                   {isPlaying ? (
-                    <Pause className="h-4 w-4" />
+                    <Pause className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   ) : (
-                    <Play className="h-4 w-4" />
+                    <Play className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   )}
                 </Button>
               </TooltipTrigger>
@@ -93,7 +93,7 @@ export function SurahToolbar({
               </TooltipContent>
             </Tooltip>
             <Select value={selectedReciter} onValueChange={onReciterChange}>
-              <SelectTrigger className="h-9 w-[100px] sm:w-[160px] text-xs bg-background shrink-0 truncate">
+              <SelectTrigger className="h-8 sm:h-9 w-[80px] sm:w-[160px] text-[11px] sm:text-xs bg-background shrink-0 truncate px-2">
                 <SelectValue placeholder="Reciter" />
               </SelectTrigger>
               <SelectContent className="bg-background z-50">
