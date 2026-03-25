@@ -149,7 +149,7 @@ export function SurahToolbar({
                       size="icon"
                       className="h-8 w-8 sm:h-9 sm:w-9 relative"
                     >
-                      <Repeat className="h-4 w-4" />
+                      <Repeat className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                       {repeatCount > 0 && (
                         <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-[10px] rounded-full h-4 w-4 flex items-center justify-center font-bold">
                           {repeatCount}
