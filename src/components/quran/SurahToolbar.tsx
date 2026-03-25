@@ -70,9 +70,9 @@ export function SurahToolbar({
   return (
     <TooltipProvider delayDuration={300}>
       <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-sm border-b border-border">
-        <div className="flex items-center justify-between gap-2 px-1 py-2">
+        <div className="flex items-center justify-between px-2 sm:px-3 py-2">
           {/* Left: Play + Reciter */}
-          <div className="flex items-center gap-1.5 min-w-0">
+          <div className="flex items-center gap-2 sm:gap-2 min-w-0">
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
