@@ -122,17 +122,17 @@ export function QuranNavigator({
           <div className="text-xs font-semibold px-2 py-1.5 bg-muted/60 border-b border-border text-center">
             Juz
           </div>
-          <ScrollArea className="flex-1" ref={juzScrollRef}>
+          <ScrollArea className="flex-1 [&_[data-radix-scroll-area-scrollbar]]:hidden" ref={juzScrollRef}>
             <div className="p-1">
               {juzList.map((juz) => (
                 <div
                   key={juz.number}
                   data-nav-item
                   className={cn(
-                    "px-2 py-1.5 text-xs text-center rounded cursor-pointer transition-colors",
+                    "px-2 py-1.5 text-xs text-center rounded cursor-pointer select-none",
                     selectedJuz === juz.number
                       ? "bg-primary text-primary-foreground font-semibold"
-                      : "hover:bg-muted/50"
+                      : ""
                   )}
                   onClick={() => handleJuzSelect(juz.number)}
                 >
@@ -148,17 +148,17 @@ export function QuranNavigator({
           <div className="text-xs font-semibold px-2 py-1.5 bg-muted/60 border-b border-border text-center">
             Surah
           </div>
-          <ScrollArea className="flex-1" ref={surahScrollRef}>
+          <ScrollArea className="flex-1 [&_[data-radix-scroll-area-scrollbar]]:hidden" ref={surahScrollRef}>
             <div className="p-1">
               {surahList.map((surah) => (
                 <div
                   key={surah.number}
                   data-nav-item
                   className={cn(
-                    "px-1.5 py-1.5 rounded cursor-pointer transition-colors",
+                    "px-1.5 py-1.5 rounded cursor-pointer select-none",
                     selectedSurah === surah.number
                       ? "bg-primary text-primary-foreground"
-                      : "hover:bg-muted/50"
+                      : ""
                   )}
                   onClick={() => handleSurahSelect(surah)}
                 >
@@ -182,7 +182,7 @@ export function QuranNavigator({
           <div className="text-xs font-semibold px-2 py-1.5 bg-muted/60 border-b border-border text-center">
             Ayah
           </div>
-          <ScrollArea className="flex-1" ref={ayahScrollRef}>
+          <ScrollArea className="flex-1 [&_[data-radix-scroll-area-scrollbar]]:hidden" ref={ayahScrollRef}>
             {selectedSurah ? (
               <div className="p-1">
                 {Array.from({ length: ayahCount }, (_, i) => i + 1).map((ayahNum) => (
@@ -190,10 +190,10 @@ export function QuranNavigator({
                     key={ayahNum}
                     data-nav-item
                     className={cn(
-                      "px-2 py-1.5 text-xs text-center rounded cursor-pointer transition-colors",
+                      "px-2 py-1.5 text-xs text-center rounded cursor-pointer select-none",
                       selectedAyah === ayahNum
                         ? "bg-primary text-primary-foreground font-semibold"
-                        : "hover:bg-muted/50"
+                        : ""
                     )}
                     onClick={() => setSelectedAyah(ayahNum)}
                   >
