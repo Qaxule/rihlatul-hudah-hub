@@ -122,17 +122,17 @@ export function QuranNavigator({
           <div className="text-xs font-semibold px-2 py-1.5 bg-muted/60 border-b border-border text-center">
             Juz
           </div>
-          <ScrollArea className="flex-1" ref={juzScrollRef}>
+          <ScrollArea className="flex-1 [&_[data-radix-scroll-area-scrollbar]]:hidden" ref={juzScrollRef}>
             <div className="p-1">
               {juzList.map((juz) => (
                 <div
                   key={juz.number}
                   data-nav-item
                   className={cn(
-                    "px-2 py-1.5 text-xs text-center rounded cursor-pointer transition-colors",
+                    "px-2 py-1.5 text-xs text-center rounded cursor-pointer select-none",
                     selectedJuz === juz.number
                       ? "bg-primary text-primary-foreground font-semibold"
-                      : "hover:bg-muted/50"
+                      : ""
                   )}
                   onClick={() => handleJuzSelect(juz.number)}
                 >
