@@ -93,7 +93,7 @@ export function SurahToolbar({
               </TooltipContent>
             </Tooltip>
             <Select value={selectedReciter} onValueChange={onReciterChange}>
-              <SelectTrigger className="h-9 w-[130px] sm:w-[160px] text-xs bg-background shrink-0">
+              <SelectTrigger className="h-9 w-[100px] sm:w-[160px] text-xs bg-background shrink-0 truncate">
                 <SelectValue placeholder="Reciter" />
               </SelectTrigger>
               <SelectContent className="bg-background z-50">
