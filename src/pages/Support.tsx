@@ -113,8 +113,6 @@ const Support = () => {
     }
     setIsProcessing(true);
     try {
-      const callbackUrl = `${window.location.origin}/support?payment=complete`;
-      const ipnUrl = `${window.location.origin}/support?ipn=true`;
       const {
         data,
         error
@@ -124,8 +122,6 @@ const Support = () => {
           amount,
           currency: selectedCurrency,
           description: `Donation to Rihlatul Hudah - ${formatAmount(amount)}`,
-          callbackUrl,
-          ipnUrl,
           donorName: donorName || undefined,
           donorEmail: donorEmail || undefined,
           donorPhone: donorPhone || undefined

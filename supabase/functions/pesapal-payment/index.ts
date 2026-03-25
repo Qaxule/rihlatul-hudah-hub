@@ -13,9 +13,36 @@ const PESAPAL_AUTH_URL = 'https://pay.pesapal.com/v3/api/Auth/RequestToken';
 const PESAPAL_SUBMIT_ORDER_URL = 'https://pay.pesapal.com/v3/api/Transactions/SubmitOrderRequest';
 const PESAPAL_REGISTER_IPN_URL = 'https://pay.pesapal.com/v3/api/URLSetup/RegisterIPN';
 
+// Hardcoded allowed origins for IPN/callback — not client-controlled
+const ALLOWED_ORIGIN = Deno.env.get('APP_ORIGIN') || 'https://rihlatul-hudah-hub.lovable.app';
+const IPN_URL = `${ALLOWED_ORIGIN}/support?ipn=true`;
+
+// Server-side amount limits per currency (matching client config)
+const CURRENCY_LIMITS: Record<string, { min: number; max: number }> = {
+  UGX: { min: 1000, max: 25000 },
+  KES: { min: 100, max: 700 },
+  USD: { min: 1, max: 7 },
+  EUR: { min: 1, max: 7 },
+  AED: { min: 1, max: 25 },
+};
+
+// Simple in-memory rate limiter
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT_WINDOW_MS = 60_000; // 1 minute
+const RATE_LIMIT_MAX = 5; // 5 requests per minute per IP
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    return false;
+  }
+  entry.count++;
+  return entry.count > RATE_LIMIT_MAX;
+}
+
 async function getAuthToken(): Promise<string> {
-  console.log('Requesting PesaPal auth token...');
-  
   const response = await fetch(PESAPAL_AUTH_URL, {
     method: 'POST',
     headers: {
@@ -31,17 +58,14 @@ async function getAuthToken(): Promise<string> {
   if (!response.ok) {
     const errorText = await response.text();
     console.error('Auth error:', errorText);
-    throw new Error(`Failed to authenticate with PesaPal: ${errorText}`);
+    throw new Error('Failed to authenticate with payment provider');
   }
 
   const data = await response.json();
-  console.log('Auth successful');
   return data.token;
 }
 
-async function registerIPN(token: string, callbackUrl: string): Promise<string> {
-  console.log('Registering IPN URL:', callbackUrl);
-  
+async function registerIPN(token: string): Promise<string> {
   const response = await fetch(PESAPAL_REGISTER_IPN_URL, {
     method: 'POST',
     headers: {
@@ -50,7 +74,7 @@ async function registerIPN(token: string, callbackUrl: string): Promise<string> 
       'Authorization': `Bearer ${token}`,
     },
     body: JSON.stringify({
-      url: callbackUrl,
+      url: IPN_URL,
       ipn_notification_type: 'GET',
     }),
   });
@@ -58,11 +82,10 @@ async function registerIPN(token: string, callbackUrl: string): Promise<string> 
   if (!response.ok) {
     const errorText = await response.text();
     console.error('IPN registration error:', errorText);
-    throw new Error(`Failed to register IPN: ${errorText}`);
+    throw new Error('Failed to register IPN');
   }
 
   const data = await response.json();
-  console.log('IPN registered:', data.ipn_id);
   return data.ipn_id;
 }
 
@@ -77,8 +100,6 @@ async function submitOrder(
   donorName?: string,
   donorPhone?: string
 ): Promise<{ redirect_url: string; order_tracking_id: string }> {
-  console.log('Submitting order:', { amount, currency, description });
-  
   const merchantReference = `DONATION-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   
   const orderRequest = {
@@ -107,22 +128,18 @@ async function submitOrder(
   });
 
   const data = await response.json();
-  console.log('PesaPal order response:', JSON.stringify(data));
 
   if (!response.ok) {
     console.error('Order submission error:', JSON.stringify(data));
-    throw new Error(`Failed to submit order: ${data.error?.message || data.message || JSON.stringify(data)}`);
+    throw new Error('Failed to submit order');
   }
 
-  // Handle different response structures from PesaPal API
   const redirectUrl = data.redirect_url || data.redirectUrl || data.payment_url;
   const trackingId = data.order_tracking_id || data.orderTrackingId || data.tracking_id || data.merchant_reference;
   
-  console.log('Order submitted successfully:', { redirectUrl, trackingId });
-  
   if (!redirectUrl) {
     console.error('No redirect URL in response:', JSON.stringify(data));
-    throw new Error('PesaPal did not return a payment URL');
+    throw new Error('Payment provider did not return a payment URL');
   }
   
   return {
@@ -132,32 +149,45 @@ async function submitOrder(
 }
 
 serve(async (req) => {
-  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    if (!PESAPAL_CONSUMER_KEY || !PESAPAL_CONSUMER_SECRET) {
-      throw new Error('PesaPal credentials not configured');
+    // Rate limiting
+    const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    if (isRateLimited(clientIp)) {
+      return new Response(
+        JSON.stringify({ success: false, error: 'Too many requests. Please try again later.' }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
-    const { action, amount, currency = 'KES', description, callbackUrl, ipnUrl, donorEmail, donorName, donorPhone } = await req.json();
+    if (!PESAPAL_CONSUMER_KEY || !PESAPAL_CONSUMER_SECRET) {
+      throw new Error('Payment credentials not configured');
+    }
 
-    console.log('Request action:', action);
+    const { action, amount, currency = 'KES', description, donorEmail, donorName, donorPhone } = await req.json();
 
     if (action === 'initiate-payment') {
-      if (!amount || !callbackUrl || !ipnUrl) {
-        throw new Error('Missing required fields: amount, callbackUrl, ipnUrl');
+      if (!amount) {
+        throw new Error('Missing required field: amount');
       }
 
-      // Step 1: Get auth token
+      // Server-side amount validation
+      const limits = CURRENCY_LIMITS[currency];
+      if (!limits) {
+        throw new Error(`Unsupported currency: ${currency}`);
+      }
+      if (typeof amount !== 'number' || amount < limits.min || amount > limits.max) {
+        throw new Error(`Amount must be between ${limits.min} and ${limits.max} ${currency}`);
+      }
+
+      // Hardcoded callback URL using allowed origin
+      const callbackUrl = `${ALLOWED_ORIGIN}/support?payment=complete`;
+
       const token = await getAuthToken();
-
-      // Step 2: Register IPN URL
-      const ipnId = await registerIPN(token, ipnUrl);
-
-      // Step 3: Submit order
+      const ipnId = await registerIPN(token);
       const result = await submitOrder(
         token,
         ipnId,
@@ -184,7 +214,7 @@ serve(async (req) => {
 
     throw new Error('Invalid action');
   } catch (error) {
-    console.error('PesaPal payment error:', error);
+    console.error('Payment error:', error);
     return new Response(
       JSON.stringify({
         success: false,

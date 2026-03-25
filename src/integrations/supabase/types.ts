@@ -507,7 +507,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      award_badge_if_earned: {
+        Args: {
+          _badge_description: string
+          _badge_icon: string
+          _badge_id: string
+          _badge_name: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
