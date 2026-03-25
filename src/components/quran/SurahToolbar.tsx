@@ -187,10 +187,10 @@ export function SurahToolbar({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-9 w-9"
+                  className="h-8 w-8 sm:h-9 sm:w-9"
                   onClick={onNavigateOpen}
                 >
-                  <Menu className="h-4 w-4" />
+                  <Menu className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
