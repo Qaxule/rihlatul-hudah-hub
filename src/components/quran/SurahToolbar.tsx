@@ -107,16 +107,16 @@ export function SurahToolbar({
           </div>
 
           {/* Right: Quick toggles + Navigate */}
-          <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="flex items-center gap-0.5 sm:gap-2">
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
                   variant={wordByWordMode ? "default" : "ghost"}
                   size="icon"
-                  className="h-9 w-9"
+                  className="h-8 w-8 sm:h-9 sm:w-9"
                   onClick={() => onWordByWordChange(!wordByWordMode)}
                 >
-                  <Type className="h-4 w-4" />
+                  <Type className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
@@ -129,10 +129,10 @@ export function SurahToolbar({
                 <Button
                   variant={arabicOnlyMode ? "default" : "ghost"}
                   size="icon"
-                  className="h-9 w-9"
+                  className="h-8 w-8 sm:h-9 sm:w-9"
                   onClick={() => onArabicOnlyChange(!arabicOnlyMode)}
                 >
-                  <BookOpenText className="h-4 w-4" />
+                  <BookOpenText className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
@@ -147,7 +147,7 @@ export function SurahToolbar({
                     <Button
                       variant={repeatCount > 0 ? "default" : "ghost"}
                       size="icon"
-                      className="h-9 w-9 relative"
+                      className="h-8 w-8 sm:h-9 sm:w-9 relative"
                     >
                       <Repeat className="h-4 w-4" />
                       {repeatCount > 0 && (
