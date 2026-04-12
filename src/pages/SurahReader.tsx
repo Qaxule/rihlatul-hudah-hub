@@ -48,6 +48,18 @@ interface SurahData {
   ayahs: Ayah[];
 }
 
+// Map reciter IDs to display names
+const RECITER_NAMES: Record<string, string> = {
+  "ar.alafasy": "Mishary Alafasy",
+  "ar.abdulsamad": "Abdul Basit",
+  "ar.abdurrahmaansudais": "Al-Sudais",
+  "ar.shaatree": "Al-Shatri",
+  "ar.husary": "Al-Husary",
+  "ar.minshawi": "Al-Minshawi",
+  "ar.muhammadayyoub": "Muhammad Ayyub",
+  "ar.muhammadjibreel": "Muhammad Jibreel",
+};
+
 // Map reciter IDs to everyayah.com folder names (more reliable CDN)
 const RECITER_AUDIO_FOLDERS: Record<string, string> = {
   "ar.alafasy": "Alafasy_128kbps",
