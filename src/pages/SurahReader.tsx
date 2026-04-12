@@ -972,8 +972,10 @@ const SurahReader = () => {
           currentAyah={audioPlayer.currentAyah || 1}
           totalAyahs={arabicData.numberOfAyahs}
           surahName={arabicData.englishName}
+          reciterName={RECITER_NAMES[selectedReciter]}
           repeatCount={audioPlayer.repeatCount}
           currentRepeatIndex={audioPlayer.currentRepeatIndex}
+          mode={audioPlayer.mode}
           onPlayPause={handlePlaySurah}
           onNext={() => audioPlayer.next()}
           onPrevious={() => audioPlayer.previous()}
