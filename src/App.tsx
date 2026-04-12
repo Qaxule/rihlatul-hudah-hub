@@ -47,6 +47,7 @@ const App = () => (
         <BrowserRouter>
           <ScrollToTop />
           <BackButton />
+          <SwipeBackGesture />
           <AppLayout>
             <AnimatedRoutes>
               <Routes>
