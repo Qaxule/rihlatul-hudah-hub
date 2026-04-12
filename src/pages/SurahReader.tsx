@@ -122,11 +122,13 @@ const SurahReader = () => {
   const { user } = useAuth();
   const { updateStreak } = useReadingStreak();
 
-  // Quran audio player hook with preloading for seamless playback
+  // Quran audio player hook with full surah mode and Media Session
   const audioPlayer = useQuranAudioPlayer({
     surahNumber: surahNum,
     totalAyahs: arabicData?.numberOfAyahs || 0,
     reciterId: selectedReciter,
+    reciterName: RECITER_NAMES[selectedReciter] || "Reciter",
+    surahName: arabicData?.englishName || "Surah",
     getAudioUrl,
     onAyahChange: (ayahNumber) => {
       setTimeout(() => scrollToAyah(ayahNumber), 100);
@@ -454,7 +456,8 @@ const SurahReader = () => {
         audioPlayer.resume();
       }
     } else {
-      audioPlayer.playAyah(1);
+      // Use full surah mode for seamless continuous playback
+      audioPlayer.playFullSurah();
       scrollToAyah(1);
     }
   };
