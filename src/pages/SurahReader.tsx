@@ -683,8 +683,8 @@ const SurahReader = () => {
           <div className="text-center py-6">
             <div className="flex items-center justify-between mb-3">
               <Link to="/quran" className="inline-flex items-center text-primary hover:underline text-sm">
-                <BookOpen className="h-4 w-4 mr-1.5" />
-                Quran
+                <ChevronLeft className="h-4 w-4 mr-0.5" />
+                Back to Quran
               </Link>
               <div className="flex items-center gap-2">
                 {user && <StreakDisplay compact />}
