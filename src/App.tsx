@@ -46,6 +46,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <ScrollToTop />
+          <BackButton />
           <AppLayout>
             <AnimatedRoutes>
               <Routes>
