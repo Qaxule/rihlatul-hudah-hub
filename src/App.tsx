@@ -7,6 +7,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { AppLayout } from "./components/app/AppLayout";
 import { AnimatedRoutes } from "./components/app/AnimatedRoutes";
 import ScrollToTop from "./components/ScrollToTop";
+import { BackButton } from "./components/app/BackButton";
 import Index from "./pages/Index";
 import Quran from "./pages/Quran";
 import Popular from "./pages/Popular";
@@ -45,6 +46,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <ScrollToTop />
+          <BackButton />
           <AppLayout>
             <AnimatedRoutes>
               <Routes>
