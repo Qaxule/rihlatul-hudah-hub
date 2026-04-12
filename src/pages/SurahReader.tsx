@@ -48,6 +48,18 @@ interface SurahData {
   ayahs: Ayah[];
 }
 
+// Map reciter IDs to display names
+const RECITER_NAMES: Record<string, string> = {
+  "ar.alafasy": "Mishary Alafasy",
+  "ar.abdulsamad": "Abdul Basit",
+  "ar.abdurrahmaansudais": "Al-Sudais",
+  "ar.shaatree": "Al-Shatri",
+  "ar.husary": "Al-Husary",
+  "ar.minshawi": "Al-Minshawi",
+  "ar.muhammadayyoub": "Muhammad Ayyub",
+  "ar.muhammadjibreel": "Muhammad Jibreel",
+};
+
 // Map reciter IDs to everyayah.com folder names (more reliable CDN)
 const RECITER_AUDIO_FOLDERS: Record<string, string> = {
   "ar.alafasy": "Alafasy_128kbps",
@@ -110,11 +122,13 @@ const SurahReader = () => {
   const { user } = useAuth();
   const { updateStreak } = useReadingStreak();
 
-  // Quran audio player hook with preloading for seamless playback
+  // Quran audio player hook with full surah mode and Media Session
   const audioPlayer = useQuranAudioPlayer({
     surahNumber: surahNum,
     totalAyahs: arabicData?.numberOfAyahs || 0,
     reciterId: selectedReciter,
+    reciterName: RECITER_NAMES[selectedReciter] || "Reciter",
+    surahName: arabicData?.englishName || "Surah",
     getAudioUrl,
     onAyahChange: (ayahNumber) => {
       setTimeout(() => scrollToAyah(ayahNumber), 100);
@@ -442,7 +456,8 @@ const SurahReader = () => {
         audioPlayer.resume();
       }
     } else {
-      audioPlayer.playAyah(1);
+      // Use full surah mode for seamless continuous playback
+      audioPlayer.playFullSurah();
       scrollToAyah(1);
     }
   };
@@ -957,8 +972,10 @@ const SurahReader = () => {
           currentAyah={audioPlayer.currentAyah || 1}
           totalAyahs={arabicData.numberOfAyahs}
           surahName={arabicData.englishName}
+          reciterName={RECITER_NAMES[selectedReciter]}
           repeatCount={audioPlayer.repeatCount}
           currentRepeatIndex={audioPlayer.currentRepeatIndex}
+          mode={audioPlayer.mode}
           onPlayPause={handlePlaySurah}
           onNext={() => audioPlayer.next()}
           onPrevious={() => audioPlayer.previous()}

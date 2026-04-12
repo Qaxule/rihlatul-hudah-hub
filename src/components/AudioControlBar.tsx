@@ -8,8 +8,10 @@ interface AudioControlBarProps {
   currentAyah: number;
   totalAyahs: number;
   surahName: string;
+  reciterName?: string;
   repeatCount?: number;
   currentRepeatIndex?: number;
+  mode?: 'idle' | 'surah' | 'ayah';
   onPlayPause: () => void;
   onNext: () => void;
   onPrevious: () => void;
@@ -22,21 +24,32 @@ const AudioControlBar = ({
   currentAyah,
   totalAyahs,
   surahName,
+  reciterName,
   repeatCount = 0,
   currentRepeatIndex = 0,
+  mode = 'ayah',
   onPlayPause,
   onNext,
   onPrevious,
   onClose,
 }: AudioControlBarProps) => {
+  const isSurahMode = mode === 'surah';
+
   return (
     <Card className="fixed bottom-20 md:bottom-4 left-1/2 transform -translate-x-1/2 z-50 shadow-lg border-border bg-background/95 backdrop-blur-sm">
       <div className="flex items-center gap-4 px-4 py-3">
         <div className="flex flex-col min-w-[120px]">
           <span className="text-sm font-semibold text-foreground">{surahName}</span>
           <span className="text-xs text-muted-foreground">
-            Ayah {currentAyah} of {totalAyahs}
-            {repeatCount > 0 && ` • Loop ${currentRepeatIndex + 1}/${repeatCount + 1}`}
+            {isSurahMode ? (
+              reciterName || "Playing full surah"
+            ) : (
+              <>
+                Ayah {currentAyah} of {totalAyahs}
+                {reciterName && ` • ${reciterName}`}
+                {repeatCount > 0 && ` • Loop ${currentRepeatIndex + 1}/${repeatCount + 1}`}
+              </>
+            )}
           </span>
         </div>
         
@@ -45,7 +58,7 @@ const AudioControlBar = ({
             variant="ghost"
             size="icon"
             onClick={onPrevious}
-            disabled={currentAyah === 1 || isBuffering}
+            disabled={isSurahMode || currentAyah === 1 || isBuffering}
             className="h-9 w-9"
           >
             <SkipBack className="h-4 w-4" />
@@ -71,7 +84,7 @@ const AudioControlBar = ({
             variant="ghost"
             size="icon"
             onClick={onNext}
-            disabled={currentAyah === totalAyahs || isBuffering}
+            disabled={isSurahMode || currentAyah === totalAyahs || isBuffering}
             className="h-9 w-9"
           >
             <SkipForward className="h-4 w-4" />
