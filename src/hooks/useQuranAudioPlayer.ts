@@ -4,24 +4,36 @@ interface UseQuranAudioPlayerOptions {
   surahNumber: number;
   totalAyahs: number;
   reciterId: string;
+  reciterName?: string;
+  surahName?: string;
   getAudioUrl: (surahNum: number, ayahNum: number, reciterId: string) => string;
   onAyahChange?: (ayahNumber: number) => void;
   onComplete?: () => void;
 }
+
+type PlaybackMode = 'idle' | 'surah' | 'ayah';
 
 interface AudioPlayerState {
   currentAyah: number | null;
   isPlaying: boolean;
   isBuffering: boolean;
   isPaused: boolean;
-  repeatCount: number; // 0 = no repeat, 1+ = number of times to repeat
-  currentRepeatIndex: number; // which repeat we're on (0-based)
+  repeatCount: number;
+  currentRepeatIndex: number;
+  mode: PlaybackMode;
 }
+
+// Full surah audio URL from Islamic Network CDN
+const getFullSurahAudioUrl = (surahNum: number, reciterId: string): string => {
+  return `https://cdn.islamic.network/quran/audio-surah/128/${reciterId}/${surahNum}.mp3`;
+};
 
 export const useQuranAudioPlayer = ({
   surahNumber,
   totalAyahs,
   reciterId,
+  reciterName = "Reciter",
+  surahName = "Surah",
   getAudioUrl,
   onAyahChange,
   onComplete,
@@ -33,26 +45,116 @@ export const useQuranAudioPlayer = ({
     isPaused: false,
     repeatCount: 0,
     currentRepeatIndex: 0,
+    mode: 'idle',
   });
 
-  // Audio element refs
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
   const preloadedAudioRef = useRef<HTMLAudioElement | null>(null);
   const preloadedAyahRef = useRef<number | null>(null);
   const isTransitioningRef = useRef(false);
-  const singleAyahLoopRef = useRef(false); // true when looping a single ayah (not continuous playback)
+  const singleAyahLoopRef = useRef(false);
 
-  // Preload the next ayah's audio
+  // --- Media Session API ---
+  const updateMediaSession = useCallback((playing: boolean) => {
+    if (!('mediaSession' in navigator)) return;
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: `Surah ${surahName} (${surahNumber})`,
+      artist: reciterName,
+      album: 'Rihlatul Hudah - Holy Quran',
+    });
+
+    navigator.mediaSession.playbackState = playing ? 'playing' : 'paused';
+  }, [surahName, surahNumber, reciterName]);
+
+  const clearMediaSession = useCallback(() => {
+    if (!('mediaSession' in navigator)) return;
+    navigator.mediaSession.metadata = null;
+    navigator.mediaSession.playbackState = 'none';
+  }, []);
+
+  // --- Cleanup helper ---
+  const cleanupAudio = useCallback(() => {
+    if (currentAudioRef.current) {
+      const audio = currentAudioRef.current;
+      audio.pause();
+      audio.oncanplay = null;
+      audio.onplaying = null;
+      audio.onended = null;
+      audio.onerror = null;
+      audio.ontimeupdate = null;
+      audio.src = "";
+      currentAudioRef.current = null;
+    }
+    if (preloadedAudioRef.current) {
+      preloadedAudioRef.current.src = "";
+      preloadedAudioRef.current = null;
+      preloadedAyahRef.current = null;
+    }
+    isTransitioningRef.current = false;
+  }, []);
+
+  // --- Full Surah Playback ---
+  const playFullSurah = useCallback(() => {
+    cleanupAudio();
+
+    const url = getFullSurahAudioUrl(surahNumber, reciterId);
+    const audio = new Audio(url);
+    currentAudioRef.current = audio;
+
+    setState(prev => ({
+      ...prev,
+      currentAyah: 1,
+      isPlaying: true,
+      isBuffering: true,
+      isPaused: false,
+      mode: 'surah',
+      currentRepeatIndex: 0,
+    }));
+
+    updateMediaSession(true);
+
+    audio.oncanplay = () => {
+      setState(prev => ({ ...prev, isBuffering: false }));
+    };
+
+    audio.onplaying = () => {
+      setState(prev => ({ ...prev, isBuffering: false }));
+      updateMediaSession(true);
+    };
+
+    audio.onended = () => {
+      onComplete?.();
+      clearMediaSession();
+      setState(prev => ({
+        ...prev,
+        currentAyah: null,
+        isPlaying: false,
+        isBuffering: false,
+        isPaused: false,
+        mode: 'idle',
+      }));
+    };
+
+    audio.onerror = (e) => {
+      console.error("Full surah audio error:", e);
+      setState(prev => ({ ...prev, isBuffering: false, isPlaying: false, mode: 'idle' }));
+      clearMediaSession();
+    };
+
+    audio.play().catch((err) => {
+      console.error("Full surah play error:", err);
+      setState(prev => ({ ...prev, isBuffering: false, isPlaying: false, mode: 'idle' }));
+      clearMediaSession();
+    });
+  }, [surahNumber, reciterId, cleanupAudio, updateMediaSession, clearMediaSession, onComplete]);
+
+  // --- Per-Ayah Playback (for individual ayah buttons) ---
   const preloadNextAyah = useCallback((currentAyahNumber: number) => {
     const nextAyah = currentAyahNumber + 1;
     if (nextAyah > totalAyahs) return;
+    if (preloadedAyahRef.current === nextAyah && preloadedAudioRef.current) return;
 
-    // Don't preload if already preloaded
-    if (preloadedAyahRef.current === nextAyah && preloadedAudioRef.current) {
-      return;
-    }
-
-    // Clean up old preloaded audio
     if (preloadedAudioRef.current) {
       preloadedAudioRef.current.src = "";
       preloadedAudioRef.current = null;
@@ -62,42 +164,24 @@ export const useQuranAudioPlayer = ({
     const audio = new Audio();
     audio.preload = "auto";
     audio.src = nextUrl;
-    
-    // Start loading
     audio.load();
-    
+
     preloadedAudioRef.current = audio;
     preloadedAyahRef.current = nextAyah;
   }, [surahNumber, totalAyahs, reciterId, getAudioUrl]);
 
-  // Play a specific ayah
   const playAyah = useCallback((ayahNumber: number) => {
-    // Prevent multiple rapid transitions
     if (isTransitioningRef.current) return;
     isTransitioningRef.current = true;
 
-    // Clean up current audio first (remove all listeners)
-    if (currentAudioRef.current) {
-      const oldAudio = currentAudioRef.current;
-      oldAudio.pause();
-      oldAudio.oncanplay = null;
-      oldAudio.onplaying = null;
-      oldAudio.onended = null;
-      oldAudio.onerror = null;
-      oldAudio.src = "";
-      currentAudioRef.current = null;
-    }
+    cleanupAudio();
 
-    // Check if we have this ayah preloaded
     let audio: HTMLAudioElement;
-    
     if (preloadedAyahRef.current === ayahNumber && preloadedAudioRef.current) {
-      // Use preloaded audio - instant start!
       audio = preloadedAudioRef.current;
       preloadedAudioRef.current = null;
       preloadedAyahRef.current = null;
     } else {
-      // Create new audio element
       audio = new Audio(getAudioUrl(surahNumber, ayahNumber, reciterId));
     }
 
@@ -109,9 +193,11 @@ export const useQuranAudioPlayer = ({
       isPlaying: true,
       isBuffering: true,
       isPaused: false,
+      mode: 'ayah',
     }));
 
-    // Use property assignment instead of addEventListener to auto-cleanup
+    updateMediaSession(true);
+
     audio.oncanplay = () => {
       setState(prev => ({ ...prev, isBuffering: false }));
     };
@@ -119,27 +205,22 @@ export const useQuranAudioPlayer = ({
     audio.onplaying = () => {
       setState(prev => ({ ...prev, isBuffering: false }));
       isTransitioningRef.current = false;
-      // Start preloading next ayah as soon as current starts playing
       preloadNextAyah(ayahNumber);
+      updateMediaSession(true);
     };
 
     audio.onended = () => {
-      // Check if we need to repeat this ayah
       setState(prev => {
         if (prev.repeatCount > 0 && prev.currentRepeatIndex < prev.repeatCount) {
-          // Need to repeat - replay same ayah
           isTransitioningRef.current = false;
-          setTimeout(() => {
-            playAyah(ayahNumber);
-          }, 0);
+          setTimeout(() => playAyah(ayahNumber), 0);
           return { ...prev, currentRepeatIndex: prev.currentRepeatIndex + 1 };
         }
-        
-        // Done repeating (or no repeat)
-        // If single ayah loop mode, stop here instead of advancing
+
         if (singleAyahLoopRef.current) {
           isTransitioningRef.current = false;
           singleAyahLoopRef.current = false;
+          clearMediaSession();
           return {
             ...prev,
             isPlaying: false,
@@ -148,8 +229,7 @@ export const useQuranAudioPlayer = ({
             currentRepeatIndex: 0,
           };
         }
-        
-        // Advance to next ayah (continuous playback mode)
+
         const nextAyah = ayahNumber + 1;
         if (nextAyah <= totalAyahs) {
           isTransitioningRef.current = false;
@@ -159,9 +239,9 @@ export const useQuranAudioPlayer = ({
           }, 0);
           return { ...prev, currentRepeatIndex: 0 };
         } else {
-          // Surah complete
           isTransitioningRef.current = false;
           onComplete?.();
+          clearMediaSession();
           return {
             currentAyah: null,
             isPlaying: false,
@@ -169,6 +249,7 @@ export const useQuranAudioPlayer = ({
             isPaused: false,
             repeatCount: prev.repeatCount,
             currentRepeatIndex: 0,
+            mode: 'idle',
           };
         }
       });
@@ -178,66 +259,55 @@ export const useQuranAudioPlayer = ({
       console.error("Audio error for ayah:", ayahNumber, e);
       isTransitioningRef.current = false;
       setState(prev => ({ ...prev, isBuffering: false }));
-      // Don't auto-skip on error - let user manually retry or skip
     };
 
     audio.play().catch((err) => {
       console.error("Play error:", err);
       isTransitioningRef.current = false;
       setState(prev => ({ ...prev, isBuffering: false, isPlaying: false }));
+      clearMediaSession();
     });
-  }, [surahNumber, totalAyahs, reciterId, getAudioUrl, preloadNextAyah, onAyahChange, onComplete]);
+  }, [surahNumber, totalAyahs, reciterId, getAudioUrl, preloadNextAyah, onAyahChange, onComplete, cleanupAudio, updateMediaSession, clearMediaSession]);
 
-  // Pause playback (resume will continue from same position)
+  // --- Pause / Resume ---
   const pause = useCallback(() => {
     if (currentAudioRef.current && state.isPlaying) {
       currentAudioRef.current.pause();
-      setState(prev => ({
-        ...prev,
-        isPlaying: false,
-        isPaused: true,
-      }));
+      setState(prev => ({ ...prev, isPlaying: false, isPaused: true }));
+      updateMediaSession(false);
     }
-  }, [state.isPlaying]);
+  }, [state.isPlaying, updateMediaSession]);
 
-  // Resume from paused position
   const resume = useCallback(() => {
     if (currentAudioRef.current && state.isPaused) {
       currentAudioRef.current.play().catch(console.error);
-      setState(prev => ({
-        ...prev,
-        isPlaying: true,
-        isPaused: false,
-      }));
+      setState(prev => ({ ...prev, isPlaying: true, isPaused: false }));
+      updateMediaSession(true);
     }
-  }, [state.isPaused]);
+  }, [state.isPaused, updateMediaSession]);
 
-  // Toggle play/pause (continuous surah playback)
+  // --- Toggle Play/Pause (full surah mode) ---
   const togglePlayPause = useCallback(() => {
-    singleAyahLoopRef.current = false; // Continuous mode
     if (state.isPlaying) {
       pause();
     } else if (state.isPaused && currentAudioRef.current) {
       resume();
-    } else if (state.currentAyah) {
-      playAyah(state.currentAyah);
     } else {
-      playAyah(1);
+      // Start fresh - use full surah mode
+      playFullSurah();
       onAyahChange?.(1);
     }
-  }, [state.isPlaying, state.isPaused, state.currentAyah, pause, resume, playAyah, onAyahChange]);
+  }, [state.isPlaying, state.isPaused, pause, resume, playFullSurah, onAyahChange]);
 
-  // Play/pause a specific ayah (for individual ayah buttons)
-  // When repeat is active, this enters single-ayah loop mode
+  // --- Toggle individual ayah ---
   const toggleAyah = useCallback((ayahNumber: number) => {
-    if (state.currentAyah === ayahNumber) {
+    if (state.currentAyah === ayahNumber && state.mode === 'ayah') {
       if (state.isPlaying) {
         pause();
       } else if (state.isPaused) {
         resume();
       }
     } else {
-      // If repeat is active, enable single ayah loop mode
       if (state.repeatCount > 0) {
         singleAyahLoopRef.current = true;
       }
@@ -245,43 +315,29 @@ export const useQuranAudioPlayer = ({
       playAyah(ayahNumber);
       onAyahChange?.(ayahNumber);
     }
-  }, [state.currentAyah, state.isPlaying, state.isPaused, state.repeatCount, pause, resume, playAyah, onAyahChange]);
+  }, [state.currentAyah, state.isPlaying, state.isPaused, state.repeatCount, state.mode, pause, resume, playAyah, onAyahChange]);
 
-  // Skip to next ayah
+  // --- Skip next/previous (only in ayah mode) ---
   const next = useCallback(() => {
-    if (state.currentAyah && state.currentAyah < totalAyahs) {
+    if (state.mode === 'ayah' && state.currentAyah && state.currentAyah < totalAyahs) {
       const nextAyah = state.currentAyah + 1;
       playAyah(nextAyah);
       onAyahChange?.(nextAyah);
     }
-  }, [state.currentAyah, totalAyahs, playAyah, onAyahChange]);
+  }, [state.currentAyah, state.mode, totalAyahs, playAyah, onAyahChange]);
 
-  // Skip to previous ayah
   const previous = useCallback(() => {
-    if (state.currentAyah && state.currentAyah > 1) {
+    if (state.mode === 'ayah' && state.currentAyah && state.currentAyah > 1) {
       const prevAyah = state.currentAyah - 1;
       playAyah(prevAyah);
       onAyahChange?.(prevAyah);
     }
-  }, [state.currentAyah, playAyah, onAyahChange]);
+  }, [state.currentAyah, state.mode, playAyah, onAyahChange]);
 
-  // Stop playback completely
+  // --- Stop ---
   const stop = useCallback(() => {
-    if (currentAudioRef.current) {
-      currentAudioRef.current.pause();
-      currentAudioRef.current.oncanplay = null;
-      currentAudioRef.current.onplaying = null;
-      currentAudioRef.current.onended = null;
-      currentAudioRef.current.onerror = null;
-      currentAudioRef.current.src = "";
-      currentAudioRef.current = null;
-    }
-    if (preloadedAudioRef.current) {
-      preloadedAudioRef.current.src = "";
-      preloadedAudioRef.current = null;
-      preloadedAyahRef.current = null;
-    }
-    isTransitioningRef.current = false;
+    cleanupAudio();
+    clearMediaSession();
     setState(prev => ({
       currentAyah: null,
       isPlaying: false,
@@ -289,18 +345,43 @@ export const useQuranAudioPlayer = ({
       isPaused: false,
       repeatCount: prev.repeatCount,
       currentRepeatIndex: 0,
+      mode: 'idle',
     }));
-  }, []);
+  }, [cleanupAudio, clearMediaSession]);
 
-  // Cleanup on unmount or reciter change
+  // --- Media Session action handlers ---
+  useEffect(() => {
+    if (!('mediaSession' in navigator)) return;
+
+    navigator.mediaSession.setActionHandler('play', () => {
+      if (state.isPaused) resume();
+      else if (!state.isPlaying) playFullSurah();
+    });
+    navigator.mediaSession.setActionHandler('pause', () => {
+      if (state.isPlaying) pause();
+    });
+    navigator.mediaSession.setActionHandler('stop', () => stop());
+    navigator.mediaSession.setActionHandler('previoustrack', () => {
+      if (state.mode === 'ayah') previous();
+    });
+    navigator.mediaSession.setActionHandler('nexttrack', () => {
+      if (state.mode === 'ayah') next();
+    });
+
+    return () => {
+      navigator.mediaSession.setActionHandler('play', null);
+      navigator.mediaSession.setActionHandler('pause', null);
+      navigator.mediaSession.setActionHandler('stop', null);
+      navigator.mediaSession.setActionHandler('previoustrack', null);
+      navigator.mediaSession.setActionHandler('nexttrack', null);
+    };
+  }, [state.isPlaying, state.isPaused, state.mode, pause, resume, stop, previous, next, playFullSurah]);
+
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (currentAudioRef.current) {
         currentAudioRef.current.pause();
-        currentAudioRef.current.oncanplay = null;
-        currentAudioRef.current.onplaying = null;
-        currentAudioRef.current.onended = null;
-        currentAudioRef.current.onerror = null;
         currentAudioRef.current.src = "";
       }
       if (preloadedAudioRef.current) {
@@ -309,12 +390,11 @@ export const useQuranAudioPlayer = ({
     };
   }, []);
 
-  // When reciter changes, stop current playback
+  // Stop on reciter change
   useEffect(() => {
     stop();
   }, [reciterId, stop]);
 
-  // Set repeat count
   const setRepeatCount = useCallback((count: number) => {
     setState(prev => ({ ...prev, repeatCount: count, currentRepeatIndex: 0 }));
   }, []);
@@ -326,7 +406,9 @@ export const useQuranAudioPlayer = ({
     isPaused: state.isPaused,
     repeatCount: state.repeatCount,
     currentRepeatIndex: state.currentRepeatIndex,
+    mode: state.mode,
     playAyah,
+    playFullSurah,
     toggleAyah,
     togglePlayPause,
     pause,
