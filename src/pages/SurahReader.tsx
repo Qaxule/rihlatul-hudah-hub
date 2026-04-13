@@ -976,10 +976,12 @@ const SurahReader = () => {
           repeatCount={audioPlayer.repeatCount}
           currentRepeatIndex={audioPlayer.currentRepeatIndex}
           mode={audioPlayer.mode}
+          playbackSpeed={audioPlayer.playbackSpeed}
           onPlayPause={handlePlaySurah}
           onNext={() => audioPlayer.next()}
           onPrevious={() => audioPlayer.previous()}
           onClose={handleCloseAudioBar}
+          onSpeedChange={(speed) => audioPlayer.setPlaybackSpeed(speed)}
         />
       )}
 
