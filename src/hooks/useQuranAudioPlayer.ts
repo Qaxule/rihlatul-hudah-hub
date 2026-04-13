@@ -21,6 +21,7 @@ interface AudioPlayerState {
   repeatCount: number;
   currentRepeatIndex: number;
   mode: PlaybackMode;
+  playbackSpeed: number;
 }
 
 // Map app reciter IDs to full surah audio CDN URLs
