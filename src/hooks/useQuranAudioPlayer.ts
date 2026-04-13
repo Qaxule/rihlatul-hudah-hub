@@ -21,6 +21,7 @@ interface AudioPlayerState {
   repeatCount: number;
   currentRepeatIndex: number;
   mode: PlaybackMode;
+  playbackSpeed: number;
 }
 
 // Map app reciter IDs to full surah audio CDN URLs
@@ -34,6 +35,8 @@ const FULL_SURAH_CDN_MAP: Record<string, string> = {
   "ar.muhammadayyoub": "https://server8.mp3quran.net/ayyub",
   "ar.muhammadjibreel": "https://server8.mp3quran.net/jbrl",
 };
+
+// (duplicate removed)
 
 // Full surah audio URL
 const getFullSurahAudioUrl = (surahNum: number, reciterId: string): string => {
@@ -60,6 +63,7 @@ export const useQuranAudioPlayer = ({
     repeatCount: 0,
     currentRepeatIndex: 0,
     mode: 'idle',
+    playbackSpeed: 1,
   });
 
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -267,7 +271,8 @@ export const useQuranAudioPlayer = ({
             isPaused: false,
             repeatCount: prev.repeatCount,
             currentRepeatIndex: 0,
-            mode: 'idle',
+            mode: 'idle' as PlaybackMode,
+            playbackSpeed: prev.playbackSpeed,
           };
         }
       });
@@ -363,7 +368,8 @@ export const useQuranAudioPlayer = ({
       isPaused: false,
       repeatCount: prev.repeatCount,
       currentRepeatIndex: 0,
-      mode: 'idle',
+      mode: 'idle' as PlaybackMode,
+      playbackSpeed: prev.playbackSpeed,
     }));
   }, [cleanupAudio, clearMediaSession]);
 
@@ -417,6 +423,20 @@ export const useQuranAudioPlayer = ({
     setState(prev => ({ ...prev, repeatCount: count, currentRepeatIndex: 0 }));
   }, []);
 
+  const setPlaybackSpeed = useCallback((speed: number) => {
+    setState(prev => ({ ...prev, playbackSpeed: speed }));
+    if (currentAudioRef.current) {
+      currentAudioRef.current.playbackRate = speed;
+    }
+  }, []);
+
+  // Apply playback speed when audio element changes
+  useEffect(() => {
+    if (currentAudioRef.current) {
+      currentAudioRef.current.playbackRate = state.playbackSpeed;
+    }
+  }, [state.isPlaying, state.currentAyah, state.playbackSpeed]);
+
   return {
     currentAyah: state.currentAyah,
     isPlaying: state.isPlaying,
@@ -425,6 +445,7 @@ export const useQuranAudioPlayer = ({
     repeatCount: state.repeatCount,
     currentRepeatIndex: state.currentRepeatIndex,
     mode: state.mode,
+    playbackSpeed: state.playbackSpeed,
     playAyah,
     playFullSurah,
     toggleAyah,
@@ -435,5 +456,6 @@ export const useQuranAudioPlayer = ({
     previous,
     stop,
     setRepeatCount,
+    setPlaybackSpeed,
   };
 };
