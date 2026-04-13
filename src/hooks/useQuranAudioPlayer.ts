@@ -33,8 +33,20 @@ const FULL_SURAH_CDN_MAP: Record<string, string> = {
   "ar.minshawi": "https://server10.mp3quran.net/minsh",
   "ar.muhammadayyoub": "https://server8.mp3quran.net/ayyub",
   "ar.muhammadjibreel": "https://server8.mp3quran.net/jbrl",
-  playbackSpeed: number;
 };
+
+type PlaybackMode = 'idle' | 'surah' | 'ayah';
+
+interface AudioPlayerState {
+  currentAyah: number | null;
+  isPlaying: boolean;
+  isBuffering: boolean;
+  isPaused: boolean;
+  repeatCount: number;
+  currentRepeatIndex: number;
+  mode: PlaybackMode;
+  playbackSpeed: number;
+}
 
 // Full surah audio URL
 const getFullSurahAudioUrl = (surahNum: number, reciterId: string): string => {
