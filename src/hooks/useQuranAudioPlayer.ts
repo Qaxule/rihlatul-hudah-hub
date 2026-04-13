@@ -23,9 +23,23 @@ interface AudioPlayerState {
   mode: PlaybackMode;
 }
 
-// Full surah audio URL from Islamic Network CDN
+// Map app reciter IDs to full surah audio CDN URLs
+const FULL_SURAH_CDN_MAP: Record<string, string> = {
+  "ar.alafasy": "https://server8.mp3quran.net/afs",
+  "ar.abdulsamad": "https://server7.mp3quran.net/basit",
+  "ar.abdurrahmaansudais": "https://server11.mp3quran.net/sds",
+  "ar.shaatree": "https://server11.mp3quran.net/shatri",
+  "ar.husary": "https://server13.mp3quran.net/husr",
+  "ar.minshawi": "https://server10.mp3quran.net/minsh",
+  "ar.muhammadayyoub": "https://server8.mp3quran.net/ayyub",
+  "ar.muhammadjibreel": "https://server8.mp3quran.net/jbrl",
+};
+
+// Full surah audio URL
 const getFullSurahAudioUrl = (surahNum: number, reciterId: string): string => {
-  return `https://cdn.islamic.network/quran/audio-surah/128/${reciterId}/${surahNum}.mp3`;
+  const baseUrl = FULL_SURAH_CDN_MAP[reciterId] || FULL_SURAH_CDN_MAP["ar.alafasy"];
+  const surahPadded = surahNum.toString().padStart(3, "0");
+  return `${baseUrl}/${surahPadded}.mp3`;
 };
 
 export const useQuranAudioPlayer = ({
@@ -58,10 +72,14 @@ export const useQuranAudioPlayer = ({
   const updateMediaSession = useCallback((playing: boolean) => {
     if (!('mediaSession' in navigator)) return;
 
+    const artworkUrl = `${window.location.origin}/quran-artwork.png`;
     navigator.mediaSession.metadata = new MediaMetadata({
       title: `Surah ${surahName} (${surahNumber})`,
       artist: reciterName,
       album: 'Rihlatul Hudah - Holy Quran',
+      artwork: [
+        { src: artworkUrl, sizes: '512x512', type: 'image/png' },
+      ],
     });
 
     navigator.mediaSession.playbackState = playing ? 'playing' : 'paused';
