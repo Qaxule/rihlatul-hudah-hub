@@ -23,22 +23,23 @@ interface AudioPlayerState {
   mode: PlaybackMode;
 }
 
-// Map app reciter IDs to Islamic Network CDN identifiers for full surah audio
-const SURAH_AUDIO_RECITER_MAP: Record<string, string> = {
-  "ar.alafasy": "ar.alafasy",
-  "ar.abdulsamad": "ar.abdulsamad",
-  "ar.abdurrahmaansudais": "ar.abdurrahmaansudais",
-  "ar.shaatree": "ar.shaatree",
-  "ar.husary": "ar.husary",
-  "ar.minshawi": "ar.minshawi",
-  "ar.muhammadayyoub": "ar.muhammadayyoub",
-  "ar.muhammadjibreel": "ar.muhammadjibreel",
+// Map app reciter IDs to full surah audio CDN URLs
+const FULL_SURAH_CDN_MAP: Record<string, string> = {
+  "ar.alafasy": "https://server8.mp3quran.net/afs",
+  "ar.abdulsamad": "https://server7.mp3quran.net/basit",
+  "ar.abdurrahmaansudais": "https://server11.mp3quran.net/sds",
+  "ar.shaatree": "https://server11.mp3quran.net/shatri",
+  "ar.husary": "https://server13.mp3quran.net/husr",
+  "ar.minshawi": "https://server10.mp3quran.net/minsh",
+  "ar.muhammadayyoub": "https://server8.mp3quran.net/ayyub",
+  "ar.muhammadjibreel": "https://server8.mp3quran.net/jbrl",
 };
 
-// Full surah audio URL from Islamic Network CDN
+// Full surah audio URL
 const getFullSurahAudioUrl = (surahNum: number, reciterId: string): string => {
-  const cdnId = SURAH_AUDIO_RECITER_MAP[reciterId] || reciterId;
-  return `https://cdn.islamic.network/quran/audio-surah/128/${cdnId}/${surahNum}.mp3`;
+  const baseUrl = FULL_SURAH_CDN_MAP[reciterId] || FULL_SURAH_CDN_MAP["ar.alafasy"];
+  const surahPadded = surahNum.toString().padStart(3, "0");
+  return `${baseUrl}/${surahPadded}.mp3`;
 };
 
 export const useQuranAudioPlayer = ({
