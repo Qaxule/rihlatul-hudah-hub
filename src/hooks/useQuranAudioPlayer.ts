@@ -36,18 +36,7 @@ const FULL_SURAH_CDN_MAP: Record<string, string> = {
   "ar.muhammadjibreel": "https://server8.mp3quran.net/jbrl",
 };
 
-type PlaybackMode = 'idle' | 'surah' | 'ayah';
-
-interface AudioPlayerState {
-  currentAyah: number | null;
-  isPlaying: boolean;
-  isBuffering: boolean;
-  isPaused: boolean;
-  repeatCount: number;
-  currentRepeatIndex: number;
-  mode: PlaybackMode;
-  playbackSpeed: number;
-}
+// (duplicate removed)
 
 // Full surah audio URL
 const getFullSurahAudioUrl = (surahNum: number, reciterId: string): string => {
@@ -282,7 +271,8 @@ export const useQuranAudioPlayer = ({
             isPaused: false,
             repeatCount: prev.repeatCount,
             currentRepeatIndex: 0,
-            mode: 'idle',
+            mode: 'idle' as PlaybackMode,
+            playbackSpeed: prev.playbackSpeed,
           };
         }
       });
@@ -378,7 +368,8 @@ export const useQuranAudioPlayer = ({
       isPaused: false,
       repeatCount: prev.repeatCount,
       currentRepeatIndex: 0,
-      mode: 'idle',
+      mode: 'idle' as PlaybackMode,
+      playbackSpeed: prev.playbackSpeed,
     }));
   }, [cleanupAudio, clearMediaSession]);
 
