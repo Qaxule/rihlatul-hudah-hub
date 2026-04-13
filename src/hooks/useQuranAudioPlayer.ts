@@ -23,9 +23,22 @@ interface AudioPlayerState {
   mode: PlaybackMode;
 }
 
+// Map app reciter IDs to Islamic Network CDN identifiers for full surah audio
+const SURAH_AUDIO_RECITER_MAP: Record<string, string> = {
+  "ar.alafasy": "ar.alafasy",
+  "ar.abdulsamad": "ar.abdulsamad",
+  "ar.abdurrahmaansudais": "ar.abdurrahmaansudais",
+  "ar.shaatree": "ar.shaatree",
+  "ar.husary": "ar.husary",
+  "ar.minshawi": "ar.minshawi",
+  "ar.muhammadayyoub": "ar.muhammadayyoub",
+  "ar.muhammadjibreel": "ar.muhammadjibreel",
+};
+
 // Full surah audio URL from Islamic Network CDN
 const getFullSurahAudioUrl = (surahNum: number, reciterId: string): string => {
-  return `https://cdn.islamic.network/quran/audio-surah/128/${reciterId}/${surahNum}.mp3`;
+  const cdnId = SURAH_AUDIO_RECITER_MAP[reciterId] || reciterId;
+  return `https://cdn.islamic.network/quran/audio-surah/128/${cdnId}/${surahNum}.mp3`;
 };
 
 export const useQuranAudioPlayer = ({
@@ -58,10 +71,14 @@ export const useQuranAudioPlayer = ({
   const updateMediaSession = useCallback((playing: boolean) => {
     if (!('mediaSession' in navigator)) return;
 
+    const artworkUrl = `${window.location.origin}/quran-artwork.png`;
     navigator.mediaSession.metadata = new MediaMetadata({
       title: `Surah ${surahName} (${surahNumber})`,
       artist: reciterName,
       album: 'Rihlatul Hudah - Holy Quran',
+      artwork: [
+        { src: artworkUrl, sizes: '512x512', type: 'image/png' },
+      ],
     });
 
     navigator.mediaSession.playbackState = playing ? 'playing' : 'paused';
