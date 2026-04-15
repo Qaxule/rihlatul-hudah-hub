@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { PageWrapper } from "@/components/app/PageWrapper";
 import { Button } from "@/components/ui/button";
@@ -29,7 +29,7 @@ import { HifzModePanel } from "@/components/quran/HifzModePanel";
 import { SurahToolbar } from "@/components/quran/SurahToolbar";
 import { StreakDisplay } from "@/components/quran/StreakDisplay";
 import { useReadingStreak } from "@/hooks/useReadingStreak";
-import { useQuranAudioPlayer } from "@/hooks/useQuranAudioPlayer";
+import { useQuranAudioPlayer, type EndAction } from "@/hooks/useQuranAudioPlayer";
 
 interface Ayah {
   number: number;
@@ -82,6 +82,7 @@ const getAudioUrl = (surahNum: number, ayahNum: number, reciterId: string): stri
 
 const SurahReader = () => {
   const { surahNumber } = useParams<{ surahNumber: string }>();
+  const navigate = useNavigate();
   const surahNum = parseInt(surahNumber || "1");
   
   // Reciter state needs to be declared before the hooks that use it
@@ -133,8 +134,18 @@ const SurahReader = () => {
     onAyahChange: (ayahNumber) => {
       setTimeout(() => scrollToAyah(ayahNumber), 100);
     },
-    onComplete: () => {
-      toast.success("Surah completed");
+    onComplete: (endAction: EndAction) => {
+      if (endAction === 'repeat_surah') {
+        // Replay from ayah 1
+        setTimeout(() => {
+          audioPlayer.playSurahFromStart();
+        }, 300);
+      } else if (endAction === 'next_surah' && surahNum < 114) {
+        navigate(`/surah/${surahNum + 1}`);
+      } else {
+        toast.success("Surah completed");
+        setShowAudioBar(false);
+      }
     },
   });
 
@@ -456,9 +467,8 @@ const SurahReader = () => {
         audioPlayer.resume();
       }
     } else {
-      // Use full surah mode for seamless continuous playback
-      audioPlayer.playFullSurah();
-      scrollToAyah(1);
+      // Use ayah-by-ayah mode for scroll tracking
+      audioPlayer.playSurahFromStart();
     }
   };
 
@@ -977,11 +987,13 @@ const SurahReader = () => {
           currentRepeatIndex={audioPlayer.currentRepeatIndex}
           mode={audioPlayer.mode}
           playbackSpeed={audioPlayer.playbackSpeed}
+          endAction={audioPlayer.endAction}
           onPlayPause={handlePlaySurah}
           onNext={() => audioPlayer.next()}
           onPrevious={() => audioPlayer.previous()}
           onClose={handleCloseAudioBar}
           onSpeedChange={(speed) => audioPlayer.setPlaybackSpeed(speed)}
+          onEndActionChange={(action) => audioPlayer.setEndAction(action)}
         />
       )}
 
