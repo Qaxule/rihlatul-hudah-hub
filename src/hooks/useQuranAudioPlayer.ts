@@ -1,5 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 
+export type EndAction = 'stop' | 'repeat_surah' | 'next_surah';
+
 interface UseQuranAudioPlayerOptions {
   surahNumber: number;
   totalAyahs: number;
@@ -8,7 +10,7 @@ interface UseQuranAudioPlayerOptions {
   surahName?: string;
   getAudioUrl: (surahNum: number, ayahNum: number, reciterId: string) => string;
   onAyahChange?: (ayahNumber: number) => void;
-  onComplete?: () => void;
+  onComplete?: (action: EndAction) => void;
 }
 
 type PlaybackMode = 'idle' | 'surah' | 'ayah';
@@ -22,6 +24,7 @@ interface AudioPlayerState {
   currentRepeatIndex: number;
   mode: PlaybackMode;
   playbackSpeed: number;
+  endAction: EndAction;
 }
 
 // Map app reciter IDs to full surah audio CDN URLs
