@@ -1005,7 +1005,7 @@ const SurahReader = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             onClick={scrollToTop}
-            className="fixed bottom-24 right-4 z-40 p-3 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl transition-shadow"
+            className={`fixed right-4 z-40 p-3 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl transition-all ${showAudioBar ? 'bottom-36 md:bottom-20' : 'bottom-24'}`}
             aria-label="Scroll to top"
           >
             <ArrowUp className="h-5 w-5" />
