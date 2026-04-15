@@ -67,6 +67,7 @@ export const useQuranAudioPlayer = ({
     currentRepeatIndex: 0,
     mode: 'idle',
     playbackSpeed: 1,
+    endAction: 'stop',
   });
 
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -149,16 +150,18 @@ export const useQuranAudioPlayer = ({
     };
 
     audio.onended = () => {
-      onComplete?.();
-      clearMediaSession();
-      setState(prev => ({
-        ...prev,
-        currentAyah: null,
-        isPlaying: false,
-        isBuffering: false,
-        isPaused: false,
-        mode: 'idle',
-      }));
+      setState(prev => {
+        onComplete?.(prev.endAction);
+        clearMediaSession();
+        return {
+          ...prev,
+          currentAyah: null,
+          isPlaying: false,
+          isBuffering: false,
+          isPaused: false,
+          mode: 'idle' as PlaybackMode,
+        };
+      });
     };
 
     audio.onerror = (e) => {
@@ -265,17 +268,16 @@ export const useQuranAudioPlayer = ({
           return { ...prev, currentRepeatIndex: 0 };
         } else {
           isTransitioningRef.current = false;
-          onComplete?.();
+          onComplete?.(prev.endAction);
           clearMediaSession();
           return {
+            ...prev,
             currentAyah: null,
             isPlaying: false,
             isBuffering: false,
             isPaused: false,
-            repeatCount: prev.repeatCount,
             currentRepeatIndex: 0,
             mode: 'idle' as PlaybackMode,
-            playbackSpeed: prev.playbackSpeed,
           };
         }
       });
@@ -334,9 +336,8 @@ export const useQuranAudioPlayer = ({
         resume();
       }
     } else {
-      if (state.repeatCount > 0) {
-        singleAyahLoopRef.current = true;
-      }
+      // Only set single ayah loop if repeat is active; otherwise ensure it's cleared
+      singleAyahLoopRef.current = state.repeatCount > 0;
       setState(prev => ({ ...prev, currentRepeatIndex: 0 }));
       playAyah(ayahNumber);
       onAyahChange?.(ayahNumber);
@@ -365,14 +366,13 @@ export const useQuranAudioPlayer = ({
     cleanupAudio();
     clearMediaSession();
     setState(prev => ({
+      ...prev,
       currentAyah: null,
       isPlaying: false,
       isBuffering: false,
       isPaused: false,
-      repeatCount: prev.repeatCount,
       currentRepeatIndex: 0,
       mode: 'idle' as PlaybackMode,
-      playbackSpeed: prev.playbackSpeed,
     }));
   }, [cleanupAudio, clearMediaSession]);
 
@@ -440,6 +440,18 @@ export const useQuranAudioPlayer = ({
     }
   }, [state.isPlaying, state.currentAyah, state.playbackSpeed]);
 
+  const setEndAction = useCallback((action: EndAction) => {
+    setState(prev => ({ ...prev, endAction: action }));
+  }, []);
+
+  // Start playing from ayah 1 in ayah-by-ayah mode (for scroll tracking)
+  const playSurahFromStart = useCallback(() => {
+    singleAyahLoopRef.current = false;
+    setState(prev => ({ ...prev, currentRepeatIndex: 0 }));
+    playAyah(1);
+    onAyahChange?.(1);
+  }, [playAyah, onAyahChange]);
+
   return {
     currentAyah: state.currentAyah,
     isPlaying: state.isPlaying,
@@ -449,8 +461,10 @@ export const useQuranAudioPlayer = ({
     currentRepeatIndex: state.currentRepeatIndex,
     mode: state.mode,
     playbackSpeed: state.playbackSpeed,
+    endAction: state.endAction,
     playAyah,
     playFullSurah,
+    playSurahFromStart,
     toggleAyah,
     togglePlayPause,
     pause,
@@ -460,5 +474,6 @@ export const useQuranAudioPlayer = ({
     stop,
     setRepeatCount,
     setPlaybackSpeed,
+    setEndAction,
   };
 };
