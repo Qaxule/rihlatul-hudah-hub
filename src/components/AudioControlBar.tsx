@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Play, Pause, SkipForward, SkipBack, X, Loader2, Repeat, Square, SkipForward as NextIcon } from "lucide-react";
+import { Play, Pause, SkipForward, SkipBack, X, Loader2, Repeat, Square } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import {
   DropdownMenu,
@@ -15,12 +15,6 @@ const END_ACTION_LABELS: Record<EndAction, string> = {
   stop: "Stop",
   repeat_surah: "Repeat",
   next_surah: "Next Surah",
-};
-
-const END_ACTION_ICONS: Record<EndAction, React.ReactNode> = {
-  stop: <Square className="h-3 w-3" />,
-  repeat_surah: <Repeat className="h-3 w-3" />,
-  next_surah: <SkipForward className="h-3 w-3" />,
 };
 
 interface AudioControlBarProps {
@@ -70,33 +64,48 @@ const AudioControlBar = ({
     onSpeedChange?.(SPEED_OPTIONS[nextIndex]);
   };
 
+  const cycleEndAction = () => {
+    const actions: EndAction[] = ['stop', 'repeat_surah', 'next_surah'];
+    const currentIndex = actions.indexOf(endAction);
+    const nextIndex = (currentIndex + 1) % actions.length;
+    onEndActionChange?.(actions[nextIndex]);
+  };
+
+  const endActionIcon = endAction === 'stop' 
+    ? <Square className="h-3.5 w-3.5" /> 
+    : endAction === 'repeat_surah' 
+      ? <Repeat className="h-3.5 w-3.5" /> 
+      : <SkipForward className="h-3.5 w-3.5" />;
+
   return (
-    <Card className="fixed bottom-20 md:bottom-4 left-1/2 transform -translate-x-1/2 z-50 shadow-lg border-border bg-background/95 backdrop-blur-sm">
-      <div className="flex items-center gap-2 px-3 py-2.5">
-        <div className="flex flex-col min-w-[100px]">
-          <span className="text-sm font-semibold text-foreground truncate">{surahName}</span>
-          <span className="text-xs text-muted-foreground truncate">
+    <Card className="fixed bottom-20 md:bottom-4 left-2 right-2 md:left-auto md:right-auto md:left-1/2 md:-translate-x-1/2 md:w-auto md:max-w-lg z-50 shadow-lg border-border bg-background/95 backdrop-blur-sm">
+      <div className="flex items-center gap-1.5 px-2.5 py-2">
+        {/* Surah info - flexible width */}
+        <div className="flex flex-col min-w-0 flex-1">
+          <span className="text-xs font-semibold text-foreground truncate">{surahName}</span>
+          <span className="text-[10px] text-muted-foreground truncate">
             {isSurahMode ? (
-              reciterName || "Playing full surah"
+              reciterName || "Full surah"
             ) : (
               <>
-                Ayah {currentAyah}/{totalAyahs}
-                {reciterName && ` • ${reciterName}`}
-                {repeatCount > 0 && ` • ${currentRepeatIndex + 1}/${repeatCount + 1}`}
+                {currentAyah}/{totalAyahs}
+                {reciterName && ` · ${reciterName}`}
+                {repeatCount > 0 && ` · ${currentRepeatIndex + 1}/${repeatCount + 1}`}
               </>
             )}
           </span>
         </div>
         
-        <div className="flex items-center gap-0.5">
+        {/* Transport controls */}
+        <div className="flex items-center gap-0 shrink-0">
           <Button
             variant="ghost"
             size="icon"
             onClick={onPrevious}
             disabled={isSurahMode || currentAyah === 1 || isBuffering}
-            className="h-8 w-8"
+            className="h-7 w-7"
           >
-            <SkipBack className="h-4 w-4" />
+            <SkipBack className="h-3.5 w-3.5" />
           </Button>
           
           <Button
@@ -104,14 +113,14 @@ const AudioControlBar = ({
             size="icon"
             onClick={onPlayPause}
             disabled={isBuffering}
-            className="h-9 w-9"
+            className="h-8 w-8"
           >
             {isBuffering ? (
-              <Loader2 className="h-5 w-5 animate-spin" />
+              <Loader2 className="h-4 w-4 animate-spin" />
             ) : isPlaying ? (
-              <Pause className="h-5 w-5" />
+              <Pause className="h-4 w-4" />
             ) : (
-              <Play className="h-5 w-5" />
+              <Play className="h-4 w-4" />
             )}
           </Button>
           
@@ -120,55 +129,42 @@ const AudioControlBar = ({
             size="icon"
             onClick={onNext}
             disabled={isSurahMode || currentAyah === totalAyahs || isBuffering}
-            className="h-8 w-8"
+            className="h-7 w-7"
           >
-            <SkipForward className="h-4 w-4" />
+            <SkipForward className="h-3.5 w-3.5" />
           </Button>
         </div>
 
+        {/* Speed toggle */}
         <Button
           variant="outline"
           size="sm"
           onClick={cycleSpeed}
-          className="h-7 px-1.5 text-xs font-semibold min-w-[40px] tabular-nums"
+          className="h-7 px-1.5 text-[10px] font-bold min-w-[34px] tabular-nums shrink-0"
           title="Playback speed"
         >
           {playbackSpeed}x
         </Button>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-7 px-1.5 text-xs gap-1"
-              title="When surah ends"
-            >
-              {END_ACTION_ICONS[endAction]}
-              <span className="hidden sm:inline">{END_ACTION_LABELS[endAction]}</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="min-w-[140px]">
-            {(Object.keys(END_ACTION_LABELS) as EndAction[]).map((action) => (
-              <DropdownMenuItem
-                key={action}
-                onClick={() => onEndActionChange?.(action)}
-                className={endAction === action ? "bg-accent" : ""}
-              >
-                <span className="mr-2">{END_ACTION_ICONS[action]}</span>
-                {END_ACTION_LABELS[action]}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {/* End action toggle */}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={cycleEndAction}
+          className="h-7 w-7 p-0 shrink-0"
+          title={`When done: ${END_ACTION_LABELS[endAction]}`}
+        >
+          {endActionIcon}
+        </Button>
 
+        {/* Close */}
         <Button
           variant="ghost"
           size="icon"
           onClick={onClose}
-          className="h-7 w-7"
+          className="h-7 w-7 shrink-0"
         >
-          <X className="h-4 w-4" />
+          <X className="h-3.5 w-3.5" />
         </Button>
       </div>
     </Card>
