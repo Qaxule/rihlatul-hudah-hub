@@ -137,7 +137,7 @@ const SurahReader = () => {
     onComplete: (endAction: EndAction) => {
       if (endAction === 'repeat_surah') {
         setTimeout(() => {
-          audioPlayer.playFullSurah();
+          audioPlayer.playSurahFromStart();
         }, 300);
       } else if (endAction === 'next_surah' && surahNum < 114) {
         navigate(`/surah/${surahNum + 1}`);
