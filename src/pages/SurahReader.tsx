@@ -747,11 +747,16 @@ const SurahReader = () => {
           <div className="divide-y divide-border/40">
             {arabicData.ayahs.map((ayah, index) => {
               const isHidden = hiddenAyahs.has(ayah.numberInSurah);
+              const isCurrentlyPlaying = audioPlayer.currentAyah === ayah.numberInSurah && (audioPlayer.isPlaying || audioPlayer.isPaused || audioPlayer.isBuffering);
               
               return (
                 <div
                   key={ayah.number}
-                  className="py-6 md:py-8"
+                  className={`py-6 md:py-8 transition-colors duration-300 -mx-4 px-4 rounded-lg ${
+                    isCurrentlyPlaying 
+                      ? 'bg-primary/8 border-l-2 border-primary shadow-[inset_0_0_20px_hsl(var(--primary)/0.05)]' 
+                      : ''
+                  }`}
                   ref={(el) => (ayahRefs.current[ayah.numberInSurah] = el)}
                   data-ayah={ayah.numberInSurah}
                 >
