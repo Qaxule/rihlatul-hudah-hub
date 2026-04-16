@@ -466,8 +466,8 @@ const SurahReader = () => {
         audioPlayer.resume();
       }
     } else {
-      // Use full surah stream for continuous background playback
-      audioPlayer.playFullSurah();
+      // Use ayah-by-ayah mode for per-verse highlighting and auto-scroll
+      audioPlayer.playSurahFromStart();
     }
   };
 
