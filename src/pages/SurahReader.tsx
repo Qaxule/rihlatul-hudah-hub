@@ -137,7 +137,7 @@ const SurahReader = () => {
     onComplete: (endAction: EndAction) => {
       if (endAction === 'repeat_surah') {
         setTimeout(() => {
-          audioPlayer.playFullSurah();
+          audioPlayer.playSurahFromStart();
         }, 300);
       } else if (endAction === 'next_surah' && surahNum < 114) {
         navigate(`/surah/${surahNum + 1}`);
@@ -466,8 +466,8 @@ const SurahReader = () => {
         audioPlayer.resume();
       }
     } else {
-      // Use full surah stream for continuous background playback
-      audioPlayer.playFullSurah();
+      // Use ayah-by-ayah mode for per-verse highlighting and auto-scroll
+      audioPlayer.playSurahFromStart();
     }
   };
 
