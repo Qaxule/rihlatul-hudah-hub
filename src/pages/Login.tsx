@@ -87,7 +87,40 @@ const Login = () => {
           <p className="text-sm text-muted-foreground mt-1">Sign in to continue your journey</p>
         </div>
 
-        <Card className="p-6 border-border/40">
+        <Card className="p-6 border-border/40 space-y-4">
+          {/* Apple Sign In - placed first for mobile visibility */}
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full h-11"
+            onClick={async () => {
+              const result = await lovable.auth.signInWithOAuth("apple", {
+                redirect_uri: window.location.origin,
+              });
+              if (result.error) {
+                toast({
+                  title: "Sign in failed",
+                  description: result.error.message,
+                  variant: "destructive",
+                });
+              }
+            }}
+          >
+            <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" />
+            </svg>
+            Sign in with Apple
+          </Button>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-border" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-card px-2 text-muted-foreground">Or use email</span>
+            </div>
+          </div>
+
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-1.5 text-foreground">Email</label>
@@ -132,39 +165,7 @@ const Login = () => {
             </Button>
           </form>
 
-          <div className="relative my-4">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-border" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
-            </div>
-          </div>
-
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full"
-            onClick={async () => {
-              const result = await lovable.auth.signInWithOAuth("apple", {
-                redirect_uri: window.location.origin,
-              });
-              if (result.error) {
-                toast({
-                  title: "Sign in failed",
-                  description: result.error.message,
-                  variant: "destructive",
-                });
-              }
-            }}
-          >
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" />
-            </svg>
-            Sign in with Apple
-          </Button>
-
-          <p className="text-center mt-4 text-sm text-muted-foreground">
+          <p className="text-center text-sm text-muted-foreground">
             Don't have an account?{" "}
             <Link to="/signup" className="text-primary hover:underline font-medium">
               Create account
