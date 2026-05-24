@@ -1,0 +1,25 @@
+# Rihlatul Hudah
+
+> A comprehensive Islamic knowledge hub: read the Quran with translation and tafsir, study Hadith, learn the 99 Names of Allah, find duas and prayer times, and follow guides for new Muslims.
+
+## Pages
+
+- [Home](/): Overview, daily ayat, continue reading, and quick navigation.
+- [Quran](/quran): Browse all 114 Surahs with Arabic, translation, and tafsir.
+- [Popular Verses](/popular): Curated, frequently recited verses.
+- [Hadith](/hadith): Authentic Hadith collections (Bukhari, Muslim, and more).
+- [Duas](/duas): Authentic supplications by category.
+- [99 Names of Allah](/names): Asma ul Husna with meanings and explanations.
+- [Prayer Times](/prayer-times): Accurate prayer times and Qibla direction.
+- [Dhikr Counter](/dhikr): Digital dhikr counter for daily remembrance.
+- [Learning](/learning): Structured Islamic lessons with quizzes.
+- [Yasarna Quran](/yasarna): Learn to read Arabic and the Quran from scratch.
+- [Islamic Calendar](/calendar): Hijri calendar with events and Ramadan tracking.
+- [Guides](/guides): Step-by-step guides for new Muslims (wudu, salah, more).
+- [Support](/support): Support the mission via donations.
+
+## Optional
+
+- [Privacy Policy](/privacy-policy)
+- [Terms of Use](/terms-of-use)
+- [Disclaimer](/disclaimer)
