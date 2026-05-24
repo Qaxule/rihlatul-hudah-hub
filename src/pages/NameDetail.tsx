@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { namesOfAllah } from "@/data/namesOfAllah";
 import { namesOfAllahDetails } from "@/data/namesOfAllahDetails";
 import { BookOpen, Quote, ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 const NameDetail = () => {
   const { nameIndex } = useParams();
@@ -16,6 +17,15 @@ const NameDetail = () => {
   const isValidIndex = currentIndex >= 0 && currentIndex < namesOfAllah.length;
   const name = isValidIndex ? namesOfAllah[currentIndex] : null;
   const details = name ? namesOfAllahDetails[name.transliteration] : null;
+
+  useSEO({
+    title: name ? `${name.transliteration} — ${name.meaning}` : 'Name of Allah',
+    description: name
+      ? `Learn about ${name.transliteration} (${name.meaning}), one of the 99 Names of Allah. Meaning, explanation, and reflection.`
+      : 'Explore the 99 Names of Allah with meanings and explanations.',
+    path: `/names/${currentIndex + 1}`,
+  });
+
 
   // Swipe gesture state
   const touchStartX = useRef<number | null>(null);

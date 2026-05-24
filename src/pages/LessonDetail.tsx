@@ -12,6 +12,7 @@ import { useEffect, useState, useRef } from "react";
 import { toast } from "sonner";
 import LessonQuiz from "@/components/LessonQuiz";
 import LessonContent from "@/components/LessonContent";
+import { useSEO } from "@/hooks/useSEO";
 
 const LessonDetail = () => {
   const { lessonId } = useParams();
@@ -31,6 +32,14 @@ const LessonDetail = () => {
   };
 
   const lesson = lessons.find((l) => l.id === lessonId);
+
+  useSEO({
+    title: lesson ? `${lesson.title} — Islamic Lesson` : 'Islamic Lesson',
+    description: lesson
+      ? `${lesson.description ?? `Study ${lesson.title}, an Islamic lesson covering core principles with a quiz.`}`.slice(0, 158)
+      : 'Structured Islamic lessons covering faith, prayer, fasting, and more.',
+    path: `/learning/${lessonId ?? ''}`,
+  });
 
   useEffect(() => {
     if (user && lessonId) {

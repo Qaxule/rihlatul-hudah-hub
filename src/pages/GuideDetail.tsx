@@ -11,6 +11,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useSEO } from "@/hooks/useSEO";
 
 const GuideDetail = () => {
   const { guideId } = useParams();
@@ -20,6 +21,14 @@ const GuideDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const guide = guides.find((g) => g.id === guideId);
+
+  useSEO({
+    title: guide ? `${guide.title} — Islamic Guide` : 'Islamic Guide',
+    description: guide
+      ? `${guide.description}`.slice(0, 158)
+      : 'Step-by-step Islamic guides for new Muslims: wudu, salah, dhikr, and more.',
+    path: `/guides/${guideId ?? ''}`,
+  });
 
   useEffect(() => {
     const loadProgress = async () => {
