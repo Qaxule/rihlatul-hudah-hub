@@ -30,6 +30,8 @@ import { SurahToolbar } from "@/components/quran/SurahToolbar";
 import { StreakDisplay } from "@/components/quran/StreakDisplay";
 import { useReadingStreak } from "@/hooks/useReadingStreak";
 import { useQuranAudioPlayer, type EndAction } from "@/hooks/useQuranAudioPlayer";
+import { useSEO } from "@/hooks/useSEO";
+import { getSurahInfo } from "@/data/quranMetadata";
 
 interface Ayah {
   number: number;
@@ -84,6 +86,15 @@ const SurahReader = () => {
   const { surahNumber } = useParams<{ surahNumber: string }>();
   const navigate = useNavigate();
   const surahNum = parseInt(surahNumber || "1");
+
+  const surahInfo = getSurahInfo(surahNum);
+  useSEO({
+    title: surahInfo ? `Surah ${surahInfo.englishName} (${surahInfo.englishNameTranslation})` : `Surah ${surahNum}`,
+    description: surahInfo
+      ? `Read Surah ${surahInfo.englishName} with Arabic, English translation, and tafsir. ${surahInfo.numberOfAyahs} verses, revealed in ${surahInfo.revelationType}.`
+      : `Read Surah ${surahNum} of the Holy Quran with Arabic, translation, and tafsir.`,
+    path: `/surah/${surahNum}`,
+  });
   
   // Reciter state needs to be declared before the hooks that use it
   const [selectedReciter, setSelectedReciter] = useState<string>("ar.alafasy");

@@ -80,8 +80,8 @@ export const useSEO = ({ title, description, path, noIndex = false }: SEOProps) 
 // SEO data for all public pages
 export const SEO_DATA = {
   home: {
-    title: 'Your Comprehensive Islamic Knowledge Hub',
-    description: 'Explore the Quran with translation and tafsir, learn the 99 Names of Allah, discover authentic Hadith, and find comprehensive guides for new Muslims. Your spiritual journey starts here.',
+    title: 'Islamic Knowledge Hub',
+    description: 'Explore the Quran with translation and tafsir, the 99 Names of Allah, authentic Hadith, and guides for new Muslims.',
     path: '/',
   },
   quran: {

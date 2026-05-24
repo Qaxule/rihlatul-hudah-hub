@@ -2,8 +2,10 @@ import { PageWrapper } from "@/components/app/PageWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Shield } from "lucide-react";
+import { useSEO, SEO_DATA } from "@/hooks/useSEO";
 
 const PrivacyPolicy = () => {
+  useSEO(SEO_DATA.privacyPolicy);
   return (
     <PageWrapper>
       <main className="flex-1 container mx-auto px-4 py-8">

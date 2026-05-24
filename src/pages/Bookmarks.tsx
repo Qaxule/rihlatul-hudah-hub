@@ -8,6 +8,7 @@ import { Trash2, BookOpen, Book, Heart } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { PageWrapper } from "@/components/app/PageWrapper";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useSEO, SEO_DATA } from "@/hooks/useSEO";
 
 interface QuranBookmark {
   id: string;
@@ -36,6 +37,7 @@ interface DuaBookmark {
 }
 
 const Bookmarks = () => {
+  useSEO({ ...SEO_DATA.bookmarks, noIndex: true });
   const [quranBookmarks, setQuranBookmarks] = useState<QuranBookmark[]>([]);
   const [hadithBookmarks, setHadithBookmarks] = useState<HadithBookmark[]>([]);
   const [duaBookmarks, setDuaBookmarks] = useState<DuaBookmark[]>([]);
