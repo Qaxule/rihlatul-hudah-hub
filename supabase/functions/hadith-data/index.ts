@@ -88,58 +88,61 @@ serve(async (req) => {
     }
     // Otherwise, get collection metadata and first few hadiths
     else {
-      // Paginated lightweight fetch to avoid loading huge collection files (e.g., Musnad Ahmad)
+      // Paginated lightweight fetch with parallel batches
       const page = Math.max(1, Number(requestData.page) || 1);
-      const limit = Math.min(50, Math.max(1, Number(requestData.limit) || 20)); // Cap to 50 per call
+      const limit = Math.min(50, Math.max(1, Number(requestData.limit) || 20));
       const start = (page - 1) * limit + 1;
+
+      const fetchOne = async (col: string, n: number) => {
+        const urls = [
+          `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${col}/${n}.min.json`,
+          `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${col}/${n}.json`,
+        ];
+        try {
+          return await fetchWithFallback(urls);
+        } catch {
+          return null;
+        }
+      };
 
       const hadiths: any[] = [];
       let metadata: any = null;
+      const BATCH = 20;
+      let cursor = start;
+      let consecutiveEmpty = 0;
+      const maxConsecutiveEmpty = 60;
 
-      // Try sequential hadith numbers, skipping missing ones
-      let num = start;
-      let attempts = 0;
-      let consecutiveFailures = 0;
-      const maxConsecutiveFailures = 50; // Stop if we hit 50 consecutive failures
-      
-      while (hadiths.length < limit && consecutiveFailures < maxConsecutiveFailures) {
-        const urls = [
-          `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${collection}/${num}.min.json`,
-          `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${collection}/${num}.json`,
-          `https://raw.githubusercontent.com/fawazahmed0/hadith-api/1/editions/${collection}/${num}.json`
-        ];
-        try {
-          const item = await fetchWithFallback(urls);
+      while (hadiths.length < limit && consecutiveEmpty < maxConsecutiveEmpty) {
+        const needed = limit - hadiths.length;
+        const batchSize = Math.min(BATCH, needed + 10); // overfetch slightly to cover gaps
+        const nums = Array.from({ length: batchSize }, (_, i) => cursor + i);
+
+        // Fire English + Arabic for entire batch in parallel
+        const [engResults, araResults] = await Promise.all([
+          Promise.all(nums.map((n) => fetchOne(collection, n))),
+          Promise.all(nums.map((n) => fetchOne(arabicCollection, n))),
+        ]);
+
+        let batchAdded = 0;
+        for (let i = 0; i < nums.length; i++) {
+          if (hadiths.length >= limit) break;
+          const item = engResults[i];
           if (!metadata && item?.metadata) metadata = item.metadata;
-
           const baseHadith = item?.hadiths?.[0];
-          // Skip entries that don't have English text, but DON'T count as failure
-          // Only actual API failures should count toward consecutiveFailures
           if (baseHadith && baseHadith.text) {
-            // Try to fetch Arabic version for this hadith
-            const arabicUrls = [
-              `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${arabicCollection}/${num}.min.json`,
-              `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${arabicCollection}/${num}.json`,
-              `https://raw.githubusercontent.com/fawazahmed0/hadith-api/1/editions/${arabicCollection}/${num}.json`
-            ];
-            try {
-              const arabicItem = await fetchWithFallback(arabicUrls);
-              if (arabicItem?.hadiths?.[0]?.text) {
-                baseHadith.arabictext = arabicItem.hadiths[0].text;
-              }
-            } catch (_) {
-              // If Arabic not available, continue with English only
-            }
+            const arabicText = araResults[i]?.hadiths?.[0]?.text;
+            if (arabicText) baseHadith.arabictext = arabicText;
             hadiths.push(baseHadith);
-            consecutiveFailures = 0; // Reset on finding a valid hadith
+            batchAdded++;
           }
-          // If hadith exists but has no text, just skip it without counting as failure
-        } catch (_) {
-          // Only actual API failures count toward consecutive failures
-          consecutiveFailures++;
         }
-        num++;
-        attempts++;
+
+        cursor += batchSize;
+        if (batchAdded === 0) {
+          consecutiveEmpty += batchSize;
+        } else {
+          consecutiveEmpty = 0;
+        }
       }
 
       // If nothing could be fetched, return error
@@ -149,6 +152,7 @@ serve(async (req) => {
 
       data = { metadata: metadata ?? { name: collection }, hadiths };
     }
+
 
     return new Response(
       JSON.stringify(data),
