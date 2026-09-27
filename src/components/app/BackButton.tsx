@@ -13,6 +13,7 @@ const PAGE_TITLES: Record<string, string> = {
   '/yasarna': 'Yasarna',
   '/calendar': 'Calendar',
   '/guides': 'Guides',
+  '/clarified': 'Islam Clarified',
   '/bookmarks': 'Bookmarks',
   '/profile': 'Profile',
   '/support': 'Support',
@@ -30,6 +31,7 @@ const PAGES_WITH_OWN_BACK = [
   '/reflections',
   '/surah/',
   '/guides/',
+  '/clarified/',
 ];
 
 const getPageTitle = (pathname: string): string | null => {

@@ -56,6 +56,7 @@ const menuSections = [
       { path: '/learning', label: 'Learn Islam', icon: GraduationCap },
       { path: '/yasarna', label: 'Yasarna', icon: BookMarked },
       { path: '/guides', label: 'Guides', icon: Compass },
+      { path: '/clarified', label: 'Islam Clarified', icon: Compass },
     ],
   },
   {
