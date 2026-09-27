@@ -24,6 +24,8 @@ import Calendar from "./pages/Calendar";
 import Yasarna from "./pages/Yasarna";
 import Guides from "./pages/Guides";
 import GuideDetail from "./pages/GuideDetail";
+import Clarified from "./pages/Clarified";
+import ClarifiedDetail from "./pages/ClarifiedDetail";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Bookmarks from "./pages/Bookmarks";
@@ -67,6 +69,8 @@ const App = () => (
                 <Route path="/calendar" element={<Calendar />} />
                 <Route path="/guides" element={<Guides />} />
                 <Route path="/guides/:guideId" element={<GuideDetail />} />
+                <Route path="/clarified" element={<Clarified />} />
+                <Route path="/clarified/:articleId" element={<ClarifiedDetail />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/bookmarks" element={<Bookmarks />} />
